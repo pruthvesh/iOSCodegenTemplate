@@ -1,17 +1,16 @@
-import Foundation
 import ApolloCodegenLib
 import ArgumentParser
+import Foundation
 
 // An outer structure to hold all commands and sub-commands handled by this script.
 struct SwiftScript: ParsableCommand {
-
     static var configuration = CommandConfiguration(
-            abstract: """
+        abstract: """
         A swift-based utility for performing Apollo-related tasks.
         
         NOTE: If running from a compiled binary, prefix subcommands with `swift-script`. Otherwise use `swift run ApolloCodegen [subcommand]`.
         """,
-            subcommands: [DownloadSchema.self, GenerateCode.self, DownloadSchemaAndGenerateCode.self])
+        subcommands: [DownloadSchema.self, GenerateCode.self, DownloadSchemaAndGenerateCode.self])
     
     /// The sub-command to download a schema from a provided endpoint.
     struct DownloadSchema: ParsableCommand {
@@ -25,13 +24,12 @@ struct SwiftScript: ParsableCommand {
             
             // Set up the URL you want to use to download the project
             // TODO: Replace the placeholder with the GraphQL endpoint you're using to download the schema.
-            let endpoint = URL(string: "http://localhost:8080/graphql")!
-            
+            let endpoint = URL(string: "https://app.stg.castingnetworks.com/api-gw/graphql")!
             
             // Calculate where you want to create the folder where the schema will be downloaded by the ApolloCodegenLib framework.
             // TODO: Replace the placeholder with the name of the actual folder where you want the downloaded schema saved. The default is set up to put it in your project's root.
             let folderForDownloadedSchema = fileStructure.sourceRootURL
-                .apollo.childFolderURL(folderName: "MyProject")
+                .apollo.childFolderURL(folderName: "graphql")
             
             // Make sure the folder is created before trying to download something to it.
             try FileManager.default.apollo.createFolderIfNeeded(at: folderForDownloadedSchema)
@@ -58,14 +56,20 @@ struct SwiftScript: ParsableCommand {
             // Get the root of the target for which you want to generate code.
             // TODO: Replace the placeholder here with the name of of the folder containing your project's code files.
             let targetRootURL = fileStructure.sourceRootURL
-                .apollo.childFolderURL(folderName: "MyProject")
+                .apollo.childFolderURL(folderName: "graphql")
+            
+            let schema = targetRootURL.appendingPathComponent("schema.graphqls")
+            let outputFolderURL = targetRootURL.appendingPathComponent("swiftcodegen", isDirectory: true)
             
             // Make sure the folder exists before trying to generate code.
             try FileManager.default.apollo.createFolderIfNeeded(at: targetRootURL)
 
             // Create the Codegen options object. This default setup assumes `schema.graphqls` is in the target root folder, all queries are in some kind of subfolder of the target folder and will output as a single file to `API.swift` in the target folder. For alternate setup options, check out https://www.apollographql.com/docs/ios/api/ApolloCodegenLib/structs/ApolloCodegenOptions/
-            let codegenOptions = ApolloCodegenOptions(targetRootURL: targetRootURL)
-            
+            let codegenOptions = ApolloCodegenOptions(
+                outputFormat: .multipleFiles(inFolderAtURL: outputFolderURL),
+                customScalarFormat: .passthrough,
+                urlToSchemaFile: schema)
+
             // Actually attempt to generate code.
             try ApolloCodegen.run(from: targetRootURL,
                                   with: fileStructure.cliFolderURL,
