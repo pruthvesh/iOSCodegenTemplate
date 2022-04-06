@@ -1,496 +1,507 @@
 query TALENT_PROFILE_DETAIL($ids: ID!) {
-    profiles(ids: [$ids]) {
-      ...ProfileDetails
-      __typename
-    }
+  profiles(ids: [$ids]) {
+    ...ProfileDetails
+    __typename
   }
-  
-  fragment ProfileDetails on Profile {
-    profileId
-    stageName
-    talentEmail
+}
+
+fragment ProfileDetails on Profile {
+  profileId
+  stageName
+  talentEmail
+  phone
+  blurb
+  otherExperiences
+  hideCreditYear
+  artistId
+  managerEmail
+  contactInfo {
     phone
-    blurb
-    otherExperiences
-    hideCreditYear
-    artistId
-    managerEmail
-    contactInfo {
-      phone
-      email
-      __typename
-    }
-    isOverscaled
-    overscaleNote
-    defaultSubmissionNote
-    ageInYears
-    guid
-    workPermitExp
-    profileMainDivision {
-      id
-      name
-      parentName
-      logo {
-        id
-        fileKey
-        __typename
-      }
-      __typename
-    }
-    profileBookOuts {
-      profileBookoutId
-      startDate
-      endDate
-      __typename
-    }
-    multipleBirth {
-      id
-      name
-      __typename
-    }
-    mediaAssets {
-      ...ProfileMediaValues
-      __typename
-    }
-    billingItems {
-      ...BillingItems
-      __typename
-    }
-    height {
-      id
-      IMPERIAL_FEET_INCHES
-      METRIC_CENTIMETERS
-      __typename
-    }
-    weight {
-      id
-      IMPERIAL_LBS
-      METRIC_KG
-      kgRounded
-      __typename
-    }
-    waist {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    inseam {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    gloveSize {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    hatSize {
-      id
-      inch
-      cm
-      __typename
-    }
-    profileTshirtSizes {
-      id
-      name
-      category {
-        id
-        name
-        __typename
-      }
-      __typename
-    }
-    profileShoeSizes {
-      id
-      shoeSizeUS
-      shoeSizeUK
-      shoeSizeEU
-      shoeSizeAU
-      category {
-        id
-        name
-        __typename
-      }
-      shoeModifier {
-        id
-        name
-        __typename
-      }
-      __typename
-    }
-    dressSize {
-      id
-      sizeUS
-      sizeUK
-      sizeEU
-      sizeAU
-      __typename
-    }
-    bust {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    underbust {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    hipSize {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    cupSize {
-      id
-      name
-      __typename
-    }
-    profilePants {
-      id
-      sizeUS
-      sizeUK
-      sizeEU
-      sizeAU
-      gender {
-        id
-        code
-        name
-        __typename
-      }
-      __typename
-    }
-    chestSize {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    sleeve {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    neck {
-      id
-      inch
-      cm
-      inchRounded
-      __typename
-    }
-    coat {
-      id
-      name
-      __typename
-    }
-    profileSizes {
-      id
-      name
-      category {
-        id
-        name
-        __typename
-      }
-      sizeModifier {
-        id
-        name
-        __typename
-      }
-      __typename
-    }
-    playableAgeMin
-    playableAgeMax
-    playableAge
-    profileGenderIdentities {
-      genderIdentity {
-        id
-        code
-        name
-        __typename
-      }
-      genderOtherIdentityNote
-      __typename
-    }
-    genderAppearances {
-      id
-      code
-      name
-      __typename
-    }
-    ethnicAppearances {
-      id
-      name
-      order
-      __typename
-    }
-    hairColor {
-      id
-      name
-      __typename
-    }
-    willingness {
-      id
-      code
-      name
-      childObjects {
-        id
-        name
-        code
-        __typename
-      }
-      __typename
-    }
-    hairStyle {
-      id
-      name
-      __typename
-    }
-    facialHair {
-      id
-      name
-      __typename
-    }
-    eyeColor {
-      id
-      name
-      __typename
-    }
-    tattoo {
-      id
-      name
-      __typename
-    }
-    tattooNote
-    profilePiercings {
-      id
-      name
-      __typename
-    }
-    piercingNote
-    pursuing {
-      id
-      name
-      __typename
-    }
-    uniqueAttributes {
-      id
-      name
-      __typename
-    }
-    workingLocations {
-      id
-      name
-      sortOrder
-      __typename
-    }
-    seekingRepresentations {
-      id
-      name
-      __typename
-    }
-    hasRepresentation
-    profession
-    pregnancy
-    profileMedia {
-      media {
-        ...MediaAsset
-        __typename
-      }
-      __typename
-    }
-    talentUnions {
-      id
-      name
-      code
-      sortOrder
-      parentObject {
-        id
-        code
-        name
-        sortOrder
-        __typename
-      }
-      __typename
-    }
-    skills {
-      id
-      code
-      name
-      profileMediaId
-      parentObject {
-        id
-        name
-        parentObject {
-          id
-          name
-          __typename
-        }
-        __typename
-      }
-      level {
-        id
-        name
-        __typename
-      }
-      __typename
-    }
-    profileVehicles {
-      vehicleName
-      vehicleYear
-      vehicleTypeMake {
-        make {
-          id
-          name
-          __typename
-        }
-        __typename
-      }
-      __typename
-    }
-    profilePets {
-      id
-      name
-      __typename
-    }
-    props {
-      id
-      name
-      __typename
-    }
-    sportEquipments {
-      id
-      name
-      __typename
-    }
-    profileWardrobes {
-      id
-      name
-      __typename
-    }
-    documentTypes {
-      id
-      name
-      __typename
-    }
-    resume {
-      media {
-        ...MediaAsset
-        __typename
-      }
-      __typename
-    }
-    dateOfBirth
-    credits {
-      id
-      year
-      title
-      role
-      director
-      highlighted
-      sortOrder
-      creditOrder
-      profileCreditTypeId
-      creditType {
-        id
-        name
-        __typename
-      }
-      creditMedia {
-        ...MediaAsset
-        __typename
-      }
-      __typename
-    }
+    email
     __typename
   }
-  
-  fragment ProfileMediaValues on ProfileMedia {
-    profileMediaId
-    isPrimary
-    hidden
-    order
-    created
-    media {
-      ...BaseMediaWithThumbnail
-      __typename
-    }
-    __typename
-  }
-  
-  fragment BaseMediaWithThumbnail on Media {
-    ...BaseMedia
-    thumbnail {
-      ...BaseMedia
-      __typename
-    }
-    __typename
-  }
-  
-  fragment BaseMedia on Media {
+  isOverscaled
+  overscaleNote
+  defaultSubmissionNote
+  ageInYears
+  guid
+  workPermitExp
+  profileMainDivision {
     id
-    mediaId
-    fileKey
-    thumbnailUrl
     name
-    url
-    transformation {
-      xAxis
-      yAxis
-      width
-      height
-      rotate
-      startOffset
-      __typename
-    }
-    mediaStorageStatus {
+    parentName
+    logo {
       id
-      code
+      fileKey
       __typename
     }
-    fileType {
+    __typename
+  }
+  profileBookOuts {
+    profileBookoutId
+    startDate
+    endDate
+    __typename
+  }
+  multipleBirth {
+    id
+    name
+    __typename
+  }
+  mediaAssets {
+    ...ProfileMediaValues
+    __typename
+  }
+  billingItems {
+    ...BillingItems
+    __typename
+  }
+  height {
+    id
+    IMPERIAL_FEET_INCHES
+    METRIC_CENTIMETERS
+    __typename
+  }
+  photos {
+    __typename
+    ...ProfileMediaValues
+  }
+  videos {
+    __typename
+    ...ProfileMediaValues
+  }
+  audios {
+    __typename
+    ...ProfileMediaValues
+  }
+  weight {
+    id
+    IMPERIAL_LBS
+    METRIC_KG
+    kgRounded
+    __typename
+  }
+  waist {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  inseam {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  gloveSize {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  hatSize {
+    id
+    inch
+    cm
+    __typename
+  }
+  profileTshirtSizes {
+    id
+    name
+    category {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+  profileShoeSizes {
+    id
+    shoeSizeUS
+    shoeSizeUK
+    shoeSizeEU
+    shoeSizeAU
+    category {
+      id
+      name
+      __typename
+    }
+    shoeModifier {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+  dressSize {
+    id
+    sizeUS
+    sizeUK
+    sizeEU
+    sizeAU
+    __typename
+  }
+  bust {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  underbust {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  hipSize {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  cupSize {
+    id
+    name
+    __typename
+  }
+  profilePants {
+    id
+    sizeUS
+    sizeUK
+    sizeEU
+    sizeAU
+    gender {
       id
       code
       name
       __typename
     }
-    mediaType {
-      id
-      code
-      __typename
-    }
-    mediaStatus {
-      id
-      code
-      __typename
-    }
-    isLocked
     __typename
   }
-  
-  fragment MediaAsset on Media {
-    ...BaseMedia
-    created
+  chestSize {
+    id
+    inch
+    cm
+    inchRounded
     __typename
   }
-  
-  fragment BillingItems on BillingItemModel {
+  sleeve {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  neck {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  coat {
+    id
+    name
+    __typename
+  }
+  profileSizes {
+    id
+    name
+    category {
+      id
+      name
+      __typename
+    }
+    sizeModifier {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+  playableAgeMin
+  playableAgeMax
+  playableAge
+  profileGenderIdentities {
+    genderIdentity {
+      id
+      code
+      name
+      __typename
+    }
+    genderOtherIdentityNote
+    __typename
+  }
+  genderAppearances {
+    id
     code
-    availableCredit
+    name
     __typename
   }
-  
+  ethnicAppearances {
+    id
+    name
+    order
+    __typename
+  }
+  hairColor {
+    id
+    name
+    __typename
+  }
+  willingness {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+  hairStyle {
+    id
+    name
+    __typename
+  }
+  facialHair {
+    id
+    name
+    __typename
+  }
+  eyeColor {
+    id
+    name
+    __typename
+  }
+  tattoo {
+    id
+    name
+    __typename
+  }
+  tattooNote
+  profilePiercings {
+    id
+    name
+    __typename
+  }
+  piercingNote
+  pursuing {
+    id
+    name
+    __typename
+  }
+  uniqueAttributes {
+    id
+    name
+    __typename
+  }
+  workingLocations {
+    id
+    name
+    sortOrder
+    __typename
+  }
+  seekingRepresentations {
+    id
+    name
+    __typename
+  }
+  hasRepresentation
+  profession
+  pregnancy
+  profileMedia {
+    media {
+      ...MediaAsset
+      __typename
+    }
+    __typename
+  }
+  talentUnions {
+    id
+    name
+    code
+    sortOrder
+    parentObject {
+      id
+      code
+      name
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+  skills {
+    id
+    code
+    name
+    profileMediaId
+    parentObject {
+      id
+      name
+      parentObject {
+        id
+        name
+        __typename
+      }
+      __typename
+    }
+    level {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+  profileVehicles {
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      make {
+        id
+        name
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+  profilePets {
+    id
+    name
+    __typename
+  }
+  props {
+    id
+    name
+    __typename
+  }
+  sportEquipments {
+    id
+    name
+    __typename
+  }
+  profileWardrobes {
+    id
+    name
+    __typename
+  }
+  documentTypes {
+    id
+    name
+    __typename
+  }
+  resume {
+    media {
+      ...MediaAsset
+      __typename
+    }
+    __typename
+  }
+  dateOfBirth
+  credits {
+    id
+    year
+    title
+    role
+    director
+    highlighted
+    sortOrder
+    creditOrder
+    profileCreditTypeId
+    creditType {
+      id
+      name
+      __typename
+    }
+    creditMedia {
+      ...MediaAsset
+      __typename
+    }
+    __typename
+  }
+  __typename
+}
+
+fragment ProfileMediaValues on ProfileMedia {
+  profileMediaId
+  isPrimary
+  hidden
+  order
+  created
+  media {
+    ...BaseMediaWithThumbnail
+    __typename
+  }
+  __typename
+}
+
+fragment BaseMediaWithThumbnail on Media {
+  ...BaseMedia
+  thumbnail {
+    ...BaseMedia
+    __typename
+  }
+  __typename
+}
+
+fragment BaseMedia on Media {
+  id
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  transformation {
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+    __typename
+  }
+  mediaStorageStatus {
+    id
+    code
+    __typename
+  }
+  fileType {
+    id
+    code
+    name
+    __typename
+  }
+  mediaType {
+    id
+    code
+    __typename
+  }
+  mediaStatus {
+    id
+    code
+    __typename
+  }
+  isLocked
+  __typename
+}
+
+fragment MediaAsset on Media {
+  ...BaseMedia
+  created
+  __typename
+}
+
+fragment BillingItems on BillingItemModel {
+  code
+  availableCredit
+  __typename
+}
