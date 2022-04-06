@@ -1,0 +1,515 @@
+query TALENT_PROFILE_DETAIL($ids: ID!) {
+  profiles(ids: [$ids]) {
+    __typename
+    ...ProfileDetails
+  }
+}
+
+fragment MediaAsset on Media {
+  __typename
+  ...BaseMedia
+  created
+}
+
+fragment BaseMedia on Media {
+  __typename
+  id
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  transformation {
+    __typename
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+  }
+  mediaStorageStatus {
+    __typename
+    id
+    code
+  }
+  fileType {
+    __typename
+    id
+    code
+    name
+  }
+  mediaType {
+    __typename
+    id
+    code
+  }
+  mediaStatus {
+    __typename
+    id
+    code
+  }
+  isLocked
+}
+
+fragment BaseMediaWithThumbnail on Media {
+  __typename
+  ...BaseMedia
+  thumbnail {
+    __typename
+    ...BaseMedia
+  }
+}
+
+fragment ProfileDetails on Profile {
+  __typename
+  profileId
+  stageName
+  talentEmail
+  phone
+  blurb
+  otherExperiences
+  hideCreditYear
+  artistId
+  managerEmail
+  contactInfo {
+    __typename
+    phone
+    email
+  }
+  photos {
+    __typename
+    ...ProfileMediaValues
+  }
+  videos {
+    __typename
+    ...ProfileMediaValues
+  }
+  audios {
+    __typename
+    ...ProfileMediaValues
+  }
+  profileVisiblities {
+    __typename
+    id
+    code
+    name
+  }
+  isOverscaled
+  overscaleNote
+  defaultSubmissionNote
+  ageInYears
+  guid
+  workPermitExp
+  profileMainDivision {
+    __typename
+    id
+    name
+    parentName
+    logo {
+      __typename
+      id
+      fileKey
+    }
+  }
+  profileBookOuts {
+    __typename
+    profileBookoutId
+    startDate
+    endDate
+  }
+  multipleBirth {
+    __typename
+    id
+    name
+  }
+  mediaAssets {
+    __typename
+    ...ProfileMediaValues
+  }
+  billingItems {
+    __typename
+    ...BillingItems
+  }
+  height {
+    __typename
+    id
+    IMPERIAL_FEET_INCHES
+    METRIC_CENTIMETERS
+  }
+  weight {
+    __typename
+    id
+    IMPERIAL_LBS
+    METRIC_KG
+    kgRounded
+  }
+  waist {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  inseam {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  gloveSize {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  hatSize {
+    __typename
+    id
+    inch
+    cm
+  }
+  profileTshirtSizes {
+    __typename
+    id
+    name
+    category {
+      __typename
+      code
+      id
+      name
+    }
+  }
+  profileShoeSizes {
+    __typename
+    id
+    shoeSizeUS
+    shoeSizeUK
+    shoeSizeEU
+    shoeSizeAU
+    category {
+      __typename
+      id
+      code
+      name
+    }
+    shoeModifier {
+      __typename
+      id
+      name
+    }
+  }
+  dressSize {
+    __typename
+    id
+    sizeUS
+    sizeUK
+    sizeEU
+    sizeAU
+  }
+  bust {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  underbust {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  hipSize {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  cupSize {
+    __typename
+    id
+    name
+  }
+  profilePants {
+    __typename
+    id
+    sizeUS
+    sizeUK
+    sizeEU
+    sizeAU
+    gender {
+      __typename
+      id
+      code
+      name
+    }
+  }
+  chestSize {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  sleeve {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  neck {
+    __typename
+    id
+    inch
+    cm
+    inchRounded
+  }
+  coat {
+    __typename
+    id
+    name
+  }
+  profileSizes {
+    __typename
+    id
+    name
+    category {
+      __typename
+      id
+      name
+    }
+    sizeModifier {
+      __typename
+      id
+      name
+    }
+  }
+  playableAgeMin
+  playableAgeMax
+  playableAge
+  profileGenderIdentities {
+    __typename
+    genderIdentity {
+      __typename
+      id
+      code
+      name
+    }
+    genderOtherIdentityNote
+  }
+  genderAppearances {
+    __typename
+    id
+    code
+    name
+  }
+  ethnicAppearances {
+    __typename
+    id
+    name
+    order
+  }
+  hairColor {
+    __typename
+    id
+    name
+  }
+  willingness {
+    __typename
+    id
+    code
+    name
+    childObjects {
+      __typename
+      id
+      name
+      code
+    }
+  }
+  hairStyle {
+    __typename
+    id
+    name
+  }
+  facialHair {
+    __typename
+    id
+    name
+  }
+  eyeColor {
+    __typename
+    id
+    name
+  }
+  tattoo {
+    __typename
+    id
+    name
+  }
+  tattooNote
+  profilePiercings {
+    __typename
+    id
+    name
+  }
+  piercingNote
+  pursuing {
+    __typename
+    id
+    name
+  }
+  uniqueAttributes {
+    __typename
+    id
+    name
+  }
+  workingLocations {
+    __typename
+    id
+    name
+    sortOrder
+  }
+  seekingRepresentations {
+    __typename
+    id
+    name
+  }
+  hasRepresentation
+  profession
+  pregnancy
+  profileMedia {
+    __typename
+    media {
+      __typename
+      ...MediaAsset
+    }
+  }
+  talentUnions {
+    __typename
+    id
+    name
+    code
+    sortOrder
+    parentObject {
+      __typename
+      id
+      code
+      name
+      sortOrder
+    }
+  }
+  skills {
+    __typename
+    id
+    code
+    name
+    profileMediaId
+    parentObject {
+      __typename
+      id
+      name
+      parentObject {
+        __typename
+        id
+        name
+      }
+    }
+    level {
+      __typename
+      id
+      name
+    }
+  }
+  profileVehicles {
+    __typename
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      __typename
+      make {
+        __typename
+        id
+        name
+      }
+    }
+  }
+  profilePets {
+    __typename
+    id
+    name
+  }
+  props {
+    __typename
+    id
+    name
+  }
+  sportEquipments {
+    __typename
+    id
+    name
+  }
+  profileWardrobes {
+    __typename
+    id
+    name
+  }
+  documentTypes {
+    __typename
+    id
+    name
+  }
+  resume {
+    __typename
+    media {
+      __typename
+      ...MediaAsset
+    }
+  }
+  dateOfBirth
+  credits {
+    __typename
+    id
+    year
+    title
+    role
+    director
+    highlighted
+    sortOrder
+    creditOrder
+    profileCreditTypeId
+    creditType {
+      __typename
+      id
+      name
+    }
+    creditMedia {
+      __typename
+      ...MediaAsset
+    }
+  }
+}
+
+fragment ProfileMediaValues on ProfileMedia {
+  __typename
+  profileMediaId
+  isPrimary
+  hidden
+  order
+  created
+  media {
+    __typename
+    ...BaseMediaWithThumbnail
+  }
+}
+
+fragment BillingItems on BillingItemModel {
+  __typename
+  code
+  availableCredit
+}

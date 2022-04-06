@@ -1,0 +1,442 @@
+mutation markNotifications($ids: [ID!]!, $viewed: Boolean!) {
+  markNotifications(ids: $ids, viewed: $viewed)
+}
+
+query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
+  scheduleInviteSubRequestDetails(id: $id) {
+    __typename
+    id
+    noteForTalents
+    forwardNote
+    status
+    responseNote
+    cancellationNote
+    slotDate
+    schedule {
+      __typename
+      id
+      name
+      type
+      address {
+        __typename
+        id
+        countryCode
+        postalCode
+        state
+        city
+        line1
+        line2
+        line3
+      }
+      date
+      timeZone {
+        __typename
+        abbreviation
+      }
+      note
+      isLocationHidden
+    }
+    profile {
+      __typename
+      id
+      name
+      profileAccessToken
+      accessGranted
+    }
+    role {
+      __typename
+      id
+      name
+      wardrobe
+      roleType {
+        __typename
+        id
+        name
+      }
+      locationDates {
+        __typename
+        id
+        roleDateType {
+          __typename
+          id
+          code
+          name
+        }
+        startDate
+        endDate
+        cityName
+      }
+      ageInYears
+      ageMin
+      ageMax
+      rateSummary
+      description
+      sidesVisibility {
+        __typename
+        id
+        code
+      }
+      sides {
+        __typename
+        roleMediaId
+        mediaObject {
+          __typename
+          ...WorkflowMedia
+        }
+      }
+    }
+    project {
+      __typename
+      id
+      name
+      displayedProjectUnionShort
+      projectType {
+        __typename
+        id
+        name
+      }
+      projectUnions {
+        __typename
+        contractId
+        contractStatus {
+          __typename
+          id
+          code
+          name
+        }
+        union {
+          __typename
+          parentObject {
+            __typename
+            id
+            code
+            name
+          }
+          id
+          code
+          name
+        }
+      }
+      castingCompany
+      synopsis
+      createdByPC
+    }
+  }
+}
+
+query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
+  mediaSubRequestDetails(id: $id) {
+    __typename
+    id
+    includeSides
+    submissionId
+    talentInstructions
+    talentInstructionsUpdatedAt
+    messageForRepresentatives
+    cancellationNote
+    maxNumberOfMediaFiles
+    mediaTypes
+    repliedAt
+    note
+    status
+    forwardNote
+    requestedChangesMedia
+    requestedChangesNote
+    dueDate
+    dueDateTimeZone {
+      __typename
+      id
+      abbreviation
+      standardName
+    }
+    medias {
+      __typename
+      ...WorkflowMedia
+    }
+    profile {
+      __typename
+      id
+      isPersonal
+      name
+      profileAccessToken
+      accessGranted
+    }
+    project {
+      __typename
+      id
+      name
+      projectType {
+        __typename
+        id
+        name
+      }
+      projectUnions {
+        __typename
+        contractId
+        union {
+          __typename
+          id
+          name
+        }
+      }
+      castingCompany
+      synopsis
+      createdByPC
+    }
+    role {
+      __typename
+      id
+      name
+      ageMin
+      ageMax
+      rateSummary
+      rate
+      rateMax
+      description
+      locationDates {
+        __typename
+        id
+        roleDateType {
+          __typename
+          id
+          code
+          name
+        }
+        startDate
+        endDate
+        cityName
+      }
+      ratePerType {
+        __typename
+        id
+        name
+      }
+      roleType {
+        __typename
+        id
+        name
+      }
+      sides {
+        __typename
+        name
+        roleMediaId
+        isSides
+        mediaObject {
+          __typename
+          ...WorkflowMedia
+        }
+      }
+      synopsis
+    }
+  }
+  profiles(ids: [$profileId]) {
+    __typename
+    stageName
+    isPersonal
+    mediaAssets {
+      __typename
+      profileMediaId
+      media {
+        __typename
+        ...MediaAsset
+      }
+      isPrimary
+      hidden
+    }
+  }
+}
+
+mutation REPLY_TO_MEDIA_REQUEST($input: MediaResponseInput!) {
+  replyToMediaRequest(input: $input) {
+    __typename
+    id
+    status
+  }
+}
+
+query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
+  askQuestionSubRequestDetails(id: $id) {
+    __typename
+    id
+    question
+    status
+    response
+    cancellationNote
+    messageForRepresentatives
+    forwardNote
+    sentAt
+    repliedAt
+    dueDate
+    dueDateTimeZone {
+      __typename
+      id
+      abbreviation
+      standardName
+    }
+    profile {
+      __typename
+      id
+      name
+      phone
+      email
+      coverUrl
+      profileAccessToken
+      accessGranted
+    }
+    role {
+      __typename
+      id
+      name
+      sides {
+        __typename
+        name
+        roleMediaId
+        mediaObject {
+          __typename
+          ...WorkflowMedia
+        }
+      }
+    }
+    project {
+      __typename
+      id
+      name
+      castingCompany
+      synopsis
+      createdByPC
+    }
+  }
+}
+
+mutation replyToAskQuestionRequest($input: AskQuestionResponseInput!) {
+  replyToAskQuestionRequest(input: $input) {
+    __typename
+    id
+    response
+  }
+}
+
+query getSubmissionByRoleProfile($input: GetSubmissionByRoleProfileInput!) {
+  getSubmissionByRoleProfile(input: $input) {
+    __typename
+    id
+    workingLocation {
+      __typename
+      id
+      name
+      sortOrder
+    }
+    media {
+      __typename
+      ...SubmissionMedia
+    }
+  }
+}
+
+mutation replyToScheduleInviteRequest($input: ScheduleInviteResponseInput!) {
+  replyToScheduleInviteRequest(input: $input) {
+    __typename
+    id
+    status
+    responseNote
+  }
+}
+
+fragment WorkflowMedia on WfMedia {
+  __typename
+  ...BaseWorkflowMedia
+  thumbnail {
+    __typename
+    ...BaseWorkflowMedia
+  }
+}
+
+fragment BaseWorkflowMedia on WfMedia {
+  __typename
+  id: mediaId
+  guid
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  tag
+  mediaStorageStatus {
+    __typename
+    id
+    code
+  }
+  fileType {
+    __typename
+    id
+    code
+    name
+  }
+  mediaType {
+    __typename
+    id
+    code
+  }
+  mediaStatus {
+    __typename
+    id
+    code
+  }
+  transformation {
+    __typename
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+  }
+}
+
+fragment SubmissionMedia on SubmissionMedia {
+  __typename
+  id
+  guid
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  created
+  isPrimary
+  orderOfAppearance
+  thumbnail {
+    __typename
+    ...BaseMedia
+  }
+  transformation {
+    __typename
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+  }
+  mediaStorageStatus {
+    __typename
+    id
+    code
+  }
+  fileType {
+    __typename
+    id
+    code
+  }
+  mediaType {
+    __typename
+    id
+    code
+  }
+  mediaStatus {
+    __typename
+    id
+    code
+  }
+}
+
+
+

@@ -1,0 +1,81 @@
+query GET_ARTIST_MEDIA_LIST($id: Float!, $mediaTypeCode: String!) {
+  getMediaByArtist(artistId: $id, mediaTypeCode: $mediaTypeCode) {
+    __typename
+    mediaId
+    media {
+      __typename
+      ...MediaAssetWithThumbnail
+      accountId
+    }
+    artistMediaProfile {
+      __typename
+      profileId
+      isPrimary
+      order
+      isPersonal
+      profileStatus {
+        __typename
+        id
+        code
+      }
+      organizations {
+        __typename
+        id
+        name
+        parentOrganization {
+          __typename
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation initMediaUpload($MediaInitUploadInput: MediaInitUploadInput!) {
+  initMediaUpload(input: $MediaInitUploadInput) {
+    __typename
+    guid
+    mediaId
+  }
+}
+
+mutation finalizeMediaUpload($MediaMetadataInput: [MediaMetadataInput!]!) {
+  finalizeMediaUpload(input: $MediaMetadataInput) {
+    __typename
+    ...BaseMediaWithThumbnail
+    length
+  }
+}
+
+mutation attachMediaToArtist($artistId: Int, $mediaId: Int!) {
+  attachMediaToArtist(artistId: $artistId, mediaId: $mediaId) {
+    __typename
+    ...BaseMediaWithThumbnail
+  }
+}
+
+mutation UPDATE_MEDIA_ASSET($mediaId: Int!, $name: String!) {
+  updateMediaAsset(input: { mediaId: $mediaId, name: $name }) {
+    __typename
+    mediaId
+    name
+  }
+}
+
+mutation archiveMediaAsset($mediaId: Float, $mediaIds: [Int!]) {
+  archiveMediaAsset(mediaId: $mediaId, mediaIds: $mediaIds)
+}
+
+mutation updateProfileMediaVisibility($mediaId: Int!, $profileIds: [Int!]!) {
+  updateProfileMediaVisibility(mediaId: $mediaId, profileIds: $profileIds)
+}
+
+fragment MediaAssetWithThumbnail on Media {
+  __typename
+  ...MediaAsset
+  thumbnail {
+    __typename
+    ...BaseMedia
+  }
+}

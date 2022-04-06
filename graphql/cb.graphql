@@ -1,0 +1,185 @@
+query GET_FIT_FOR_YOU_DEFAULT_VALUES {
+  getFitForYouValuesForArtist {
+    __typename
+    workingLocations {
+      __typename
+      id
+      name
+      code
+    }
+    genderAppearances {
+      __typename
+      id
+      name
+      code
+    }
+    ethnicAppearances {
+      __typename
+      id
+      name
+      code
+    }
+    talentUnions {
+      __typename
+      id
+      name
+      code
+      parentObject {
+        __typename
+        id
+        name
+        code
+      }
+    }
+    projectTypes {
+      __typename
+      id
+      name
+      code
+    }
+    roleTargets {
+      __typename
+      id
+      name
+      code
+    }
+    playableAgeMax
+    playableAgeMin
+    payPreferences {
+      __typename
+      id
+      name
+      code
+    }
+    ageInYears
+  }
+}
+
+query ROLES_LIST(
+  $paginationConfig: PageInput!
+  $castingBillBoardFilters: CastingBillboardSearchInput!
+  $sortInput: SortConditionInput
+) {
+  castingBillboardRoles(
+    castingBillBoardFilters: $castingBillBoardFilters
+    paginationConfig: $paginationConfig
+    sortInput: $sortInput
+  ) {
+    __typename
+    totalCount
+    roles {
+      __typename
+      ...CastingRoleList
+      rolePublishedAt
+      locationDates {
+        __typename
+        id
+        startDate
+        roleDateType {
+          __typename
+          id
+          code
+        }
+        cityName
+      }
+    }
+  }
+}
+
+query SEARCH_ALERTS_QUERY(
+  $startDate: DateTime
+  $endDate: DateTime
+  $page: PageInput!
+  $orderBy: NotificationOrderByInput
+) {
+  searchNotifications(
+    startDate: $startDate
+    endDate: $endDate
+    page: $page
+    orderBy: $orderBy
+  ) {
+    __typename
+    page
+    totalCount
+    totalPages
+    data {
+      __typename
+      id
+      timestamp
+      toArtistId
+      toAccountId
+      toProfileId
+      type
+      from
+      subject
+      message
+      context {
+        __typename
+        requestId
+        requestType
+      }
+      viewed
+    }
+  }
+}
+
+fragment CastingRoleList on Role {
+  __typename
+  id
+  projectId
+  projectName
+  name
+  description
+  submissionDueDate
+  displayedRoleUnion
+  rateNote
+  rateSummary
+  paidType {
+    __typename
+    id
+    code
+    name
+  }
+  ageInYears
+  ageMinMonth
+  ageMaxMonth
+  genderAppearance {
+    __typename
+    id
+    name
+  }
+  ethnicAppearance {
+    __typename
+    id
+    name
+  }
+  roleType {
+    __typename
+    id
+    name
+  }
+  sexualSituations {
+    __typename
+    id
+    name
+  }
+  roleStatus {
+    __typename
+    id
+    code
+  }
+  projectType {
+    __typename
+    id
+    name
+  }
+  projectUnion {
+    __typename
+    id: contractId
+    union {
+      __typename
+      id
+      name
+    }
+  }
+}

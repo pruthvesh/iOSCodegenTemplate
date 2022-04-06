@@ -1,0 +1,298 @@
+query verifyAccount($input: VerifyAccountInput!) {
+  verifyAccount(input: $input)
+}
+
+mutation resetPasswordBauB21($legacyInstance: String, $login: String!) {
+  resetPasswordBauB21(legacyInstance: $legacyInstance, login: $login)
+}
+
+mutation switchAuthContext(
+  $refreshToken: String!
+  $role: SystemRoleCode
+  $artistId: Int
+  $organizationId: Int
+) {
+  switchAuthContext(
+    refreshToken: $refreshToken
+    role: $role
+    artistId: $artistId
+    organizationId: $organizationId
+  ) {
+    __typename
+    access
+    refresh
+  }
+}
+
+query ARTISTS_INFO {
+  myAccount {
+    __typename
+    id
+    firstName
+    lastName
+    countryId
+    email
+    phone
+    lastArtistId
+    rosterInvitationToken
+    emailResetToken
+    language {
+      __typename
+      id
+      code
+      name
+      enabled
+    }
+    subscription {
+      __typename
+      id
+      plans {
+        __typename
+        id
+        isBasePlan
+        price
+        code
+        billingCode
+        currency {
+          __typename
+          id
+          code
+        }
+      }
+    }
+    country {
+      __typename
+      id
+      code
+      name
+      continent {
+        __typename
+        id
+        code
+      }
+      supportingCountry {
+        __typename
+        id
+        code
+      }
+    }
+    isIPC
+    artists {
+      __typename
+      minor
+      artistId
+      firstName
+      lastName
+      created
+      artistSubscriptions {
+        __typename
+        id
+        expirationDate
+        plan {
+          __typename
+          id
+          code
+          isBasePlan
+        }
+      }
+      profiles {
+        __typename
+        profileId
+        artistId
+        stageName
+        dateOfBirth
+        created
+        isPersonal
+        deactivatedBy
+        profileStatus {
+          __typename
+          id
+          code
+          name
+        }
+        isPersonal
+        profileVisiblities {
+          __typename
+          id
+          code
+          name
+        }
+        profileMainOrganization {
+          __typename
+          id
+          name
+        }
+        organizations {
+          __typename
+          id
+          name
+          logo {
+            __typename
+            ...LogoAsset
+          }
+          parentOrganization {
+            __typename
+            id
+            name
+            logo {
+              __typename
+              ...LogoAsset
+            }
+          }
+        }
+        photos(isPrimary: true) {
+          __typename
+          profileMediaId
+          isPrimary
+          media {
+            __typename
+            ...MediaAssetWithThumbnail
+          }
+        }
+        profileBookOuts {
+          __typename
+          profileBookoutId
+          profileId
+          startDate
+          endDate
+        }
+        billingItems {
+          __typename
+          code
+          name
+          price
+          qty
+          id
+          priceInCents
+          availableCredit
+        }
+      }
+    }
+    timeZone {
+      __typename
+      id
+      code
+      gmtOffset
+      name
+      abbreviation
+      standardName
+    }
+  }
+}
+
+mutation refreshToken($refreshToken: String!) {
+  refreshToken(refreshToken: $refreshToken) {
+    __typename
+    access
+    refresh
+  }
+}
+
+mutation logout($refreshToken: String!) {
+  logout(refreshToken: $refreshToken)
+}
+
+mutation updateAccountFirstName($updateAccountInput: UpdateAccountInput!) {
+  updateAccountName(updateInfo: $updateAccountInput) {
+    __typename
+    firstName
+    lastName
+  }
+}
+
+mutation resetEmail($audience: String!, $updateInfo: UpdateAccountInput!) {
+  resetEmail(audience: $audience, updateInfo: $updateInfo)
+}
+
+mutation checkEmailOtp($otp: String!, $verificationId: String!) {
+  isValid: checkEmailOtp(otp: $otp, verificationId: $verificationId)
+}
+
+mutation verifyAccountEmail {
+  verifyAccountEmail {
+    __typename
+    access
+    refresh
+  }
+}
+
+mutation updateAccountPhone($updateAccountInput: UpdateAccountInput!) {
+  updateAccountPhone(updateInfo: $updateAccountInput) {
+    __typename
+    phone
+  }
+}
+
+query timeZones {
+  timeZones {
+    __typename
+    id
+    code
+    name
+    gmtOffset
+    dstOffset
+    enabled
+    sortOrder
+  }
+}
+
+mutation updateAccountTimeZone(
+  $input: UpdateAccountInput!
+  $accountId: Float!
+) {
+  updateAccount(input: $input, accountId: $accountId) {
+    __typename
+    timeZone {
+      __typename
+      id
+      name
+      code
+      standardName
+      abbreviation
+    }
+  }
+}
+
+mutation updatePassword($oldPassword: String!, $newPassword: String!) {
+  updatePassword(oldPassword: $oldPassword, newPassword: $newPassword)
+}
+
+mutation sendAccountEmailVerificationCode {
+  verificationId: sendAccountEmailVerificationCode
+}
+
+query getLanguageLocales {
+  getLanguageLocales {
+    __typename
+    id
+    name
+    locale
+    code
+  }
+}
+
+mutation updateAccountLanguage(
+  $input: UpdateAccountInput!
+  $accountId: Float!
+) {
+  updateAccount(input: $input, accountId: $accountId) {
+    __typename
+    language {
+      __typename
+      id
+      name
+      code
+      locale
+    }
+  }
+}
+
+fragment LogoAsset on Media {
+  __typename
+  id
+  url
+  guid
+  name
+  fileKey
+  mediaId
+}
