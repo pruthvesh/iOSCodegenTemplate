@@ -505,3 +505,12 @@ fragment BillingItems on BillingItemModel {
   availableCredit
   __typename
 }
+
+
+mutation updateProfileMediaList($profileMediaList: [ProfileMediaInput!]!) {
+  updateProfileMediaList(profileMediaList: $profileMediaList)
+}
+
+mutation deleteProfileMedia($mediaId: Float!, $profileId: Float!) {
+  deleteProfileMedia(mediaId: $mediaId, profileId: $profileId)
+}
