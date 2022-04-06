@@ -18,15 +18,14 @@ mutation switchAuthContext(
     artistId: $artistId
     organizationId: $organizationId
   ) {
-    __typename
     access
     refresh
+    __typename
   }
 }
 
 query ARTISTS_INFO {
   myAccount {
-    __typename
     id
     firstName
     lastName
@@ -37,66 +36,55 @@ query ARTISTS_INFO {
     rosterInvitationToken
     emailResetToken
     language {
-      __typename
       id
       code
       name
       enabled
     }
     subscription {
-      __typename
       id
       plans {
-        __typename
         id
         isBasePlan
         price
         code
         billingCode
         currency {
-          __typename
           id
           code
         }
       }
     }
     country {
-      __typename
       id
       code
       name
       continent {
-        __typename
         id
         code
       }
       supportingCountry {
-        __typename
         id
         code
       }
     }
     isIPC
     artists {
-      __typename
       minor
       artistId
       firstName
       lastName
       created
       artistSubscriptions {
-        __typename
         id
         expirationDate
         plan {
-          __typename
           id
           code
           isBasePlan
         }
       }
       profiles {
-        __typename
         profileId
         artistId
         stageName
@@ -105,59 +93,58 @@ query ARTISTS_INFO {
         isPersonal
         deactivatedBy
         profileStatus {
-          __typename
           id
           code
           name
+          __typename
         }
         isPersonal
         profileVisiblities {
-          __typename
           id
           code
           name
+          __typename
         }
         profileMainOrganization {
-          __typename
           id
           name
+          __typename
         }
         organizations {
-          __typename
           id
           name
           logo {
-            __typename
             ...LogoAsset
+            __typename
           }
           parentOrganization {
-            __typename
             id
             name
             logo {
-              __typename
               ...LogoAsset
+              __typename
             }
+            __typename
           }
+          __typename
         }
         photos(isPrimary: true) {
-          __typename
           profileMediaId
           isPrimary
           media {
-            __typename
             ...MediaAssetWithThumbnail
+            __typename
           }
+          __typename
         }
         profileBookOuts {
-          __typename
           profileBookoutId
           profileId
           startDate
           endDate
+          __typename
         }
         billingItems {
-          __typename
           code
           name
           price
@@ -165,11 +152,13 @@ query ARTISTS_INFO {
           id
           priceInCents
           availableCredit
+          __typename
         }
+        __typename
       }
+      __typename
     }
     timeZone {
-      __typename
       id
       code
       gmtOffset
@@ -180,9 +169,64 @@ query ARTISTS_INFO {
   }
 }
 
+fragment LogoAsset on Media {
+  id
+  url
+  guid
+  name
+  fileKey
+  mediaId
+}
+
+fragment MediaAssetWithThumbnail on Media {
+  ...MediaAsset
+  thumbnail {
+    ...BaseMedia
+  }
+}
+
+fragment MediaAsset on Media {
+  ...BaseMedia
+  created
+}
+
+fragment BaseMedia on Media {
+  id
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  transformation {
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+  }
+  mediaStorageStatus {
+    id
+    code
+  }
+  fileType {
+    id
+    code
+    name
+  }
+  mediaType {
+    id
+    code
+  }
+  mediaStatus {
+    id
+    code
+  }
+  isLocked
+}
+
 mutation refreshToken($refreshToken: String!) {
   refreshToken(refreshToken: $refreshToken) {
-    __typename
     access
     refresh
   }
@@ -194,9 +238,9 @@ mutation logout($refreshToken: String!) {
 
 mutation updateAccountFirstName($updateAccountInput: UpdateAccountInput!) {
   updateAccountName(updateInfo: $updateAccountInput) {
-    __typename
     firstName
     lastName
+    __typename
   }
 }
 
@@ -210,22 +254,21 @@ mutation checkEmailOtp($otp: String!, $verificationId: String!) {
 
 mutation verifyAccountEmail {
   verifyAccountEmail {
-    __typename
     access
     refresh
+    __typename
   }
 }
 
 mutation updateAccountPhone($updateAccountInput: UpdateAccountInput!) {
   updateAccountPhone(updateInfo: $updateAccountInput) {
-    __typename
     phone
+    __typename
   }
 }
 
 query timeZones {
   timeZones {
-    __typename
     id
     code
     name
@@ -233,6 +276,7 @@ query timeZones {
     dstOffset
     enabled
     sortOrder
+    __typename
   }
 }
 
@@ -241,15 +285,15 @@ mutation updateAccountTimeZone(
   $accountId: Float!
 ) {
   updateAccount(input: $input, accountId: $accountId) {
-    __typename
     timeZone {
-      __typename
       id
       name
       code
       standardName
       abbreviation
+      __typename
     }
+    __typename
   }
 }
 
@@ -263,11 +307,11 @@ mutation sendAccountEmailVerificationCode {
 
 query getLanguageLocales {
   getLanguageLocales {
-    __typename
     id
     name
     locale
     code
+    __typename
   }
 }
 
@@ -276,23 +320,13 @@ mutation updateAccountLanguage(
   $accountId: Float!
 ) {
   updateAccount(input: $input, accountId: $accountId) {
-    __typename
     language {
-      __typename
       id
       name
       code
       locale
+      __typename
     }
+    __typename
   }
-}
-
-fragment LogoAsset on Media {
-  __typename
-  id
-  url
-  guid
-  name
-  fileKey
-  mediaId
 }

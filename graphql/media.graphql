@@ -1,63 +1,127 @@
 query GET_ARTIST_MEDIA_LIST($id: Float!, $mediaTypeCode: String!) {
   getMediaByArtist(artistId: $id, mediaTypeCode: $mediaTypeCode) {
-    __typename
     mediaId
     media {
-      __typename
       ...MediaAssetWithThumbnail
       accountId
+      __typename
     }
     artistMediaProfile {
-      __typename
       profileId
       isPrimary
       order
       isPersonal
       profileStatus {
-        __typename
         id
         code
+        __typename
       }
       organizations {
-        __typename
         id
         name
         parentOrganization {
-          __typename
           id
           name
+          __typename
         }
+        __typename
       }
+      __typename
     }
+    __typename
   }
 }
 
 mutation initMediaUpload($MediaInitUploadInput: MediaInitUploadInput!) {
   initMediaUpload(input: $MediaInitUploadInput) {
-    __typename
     guid
     mediaId
+    __typename
   }
 }
 
 mutation finalizeMediaUpload($MediaMetadataInput: [MediaMetadataInput!]!) {
   finalizeMediaUpload(input: $MediaMetadataInput) {
-    __typename
     ...BaseMediaWithThumbnail
     length
+    __typename
   }
 }
 
 mutation attachMediaToArtist($artistId: Int, $mediaId: Int!) {
   attachMediaToArtist(artistId: $artistId, mediaId: $mediaId) {
-    __typename
     ...BaseMediaWithThumbnail
+    __typename
   }
+}
+
+fragment BaseMediaWithThumbnail on Media {
+  ...BaseMedia
+  thumbnail {
+    ...BaseMedia
+    __typename
+  }
+  __typename
+}
+
+fragment MediaAssetWithThumbnail on Media {
+  ...MediaAsset
+  thumbnail {
+    ...BaseMedia
+    __typename
+  }
+  __typename
+}
+
+fragment MediaAsset on Media {
+  ...BaseMedia
+  created
+  __typename
+}
+
+fragment BaseMedia on Media {
+  id
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  transformation {
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+    __typename
+  }
+  mediaStorageStatus {
+    id
+    code
+    __typename
+  }
+  fileType {
+    id
+    code
+    name
+    __typename
+  }
+  mediaType {
+    id
+    code
+    __typename
+  }
+  mediaStatus {
+    id
+    code
+    __typename
+  }
+  isLocked
+  __typename
 }
 
 mutation UPDATE_MEDIA_ASSET($mediaId: Int!, $name: String!) {
   updateMediaAsset(input: { mediaId: $mediaId, name: $name }) {
-    __typename
     mediaId
     name
   }
@@ -69,13 +133,4 @@ mutation archiveMediaAsset($mediaId: Float, $mediaIds: [Int!]) {
 
 mutation updateProfileMediaVisibility($mediaId: Int!, $profileIds: [Int!]!) {
   updateProfileMediaVisibility(mediaId: $mediaId, profileIds: $profileIds)
-}
-
-fragment MediaAssetWithThumbnail on Media {
-  __typename
-  ...MediaAsset
-  thumbnail {
-    __typename
-    ...BaseMedia
-  }
 }

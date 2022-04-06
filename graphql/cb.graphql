@@ -1,44 +1,37 @@
 query GET_FIT_FOR_YOU_DEFAULT_VALUES {
   getFitForYouValuesForArtist {
-    __typename
     workingLocations {
-      __typename
       id
       name
       code
     }
     genderAppearances {
-      __typename
       id
       name
       code
     }
     ethnicAppearances {
-      __typename
       id
       name
       code
     }
     talentUnions {
-      __typename
       id
       name
       code
       parentObject {
-        __typename
         id
         name
         code
       }
+      
     }
     projectTypes {
-      __typename
       id
       name
       code
     }
     roleTargets {
-      __typename
       id
       name
       code
@@ -46,45 +39,102 @@ query GET_FIT_FOR_YOU_DEFAULT_VALUES {
     playableAgeMax
     playableAgeMin
     payPreferences {
-      __typename
       id
       name
       code
+      
     }
     ageInYears
+    
   }
 }
 
-query ROLES_LIST(
-  $paginationConfig: PageInput!
-  $castingBillBoardFilters: CastingBillboardSearchInput!
-  $sortInput: SortConditionInput
-) {
-  castingBillboardRoles(
-    castingBillBoardFilters: $castingBillBoardFilters
-    paginationConfig: $paginationConfig
-    sortInput: $sortInput
-  ) {
-    __typename
+
+
+query ROLES_LIST($paginationConfig: PageInput!, $castingBillBoardFilters: CastingBillboardSearchInput!, $sortInput: SortConditionInput) {
+  castingBillboardRoles(castingBillBoardFilters: $castingBillBoardFilters, paginationConfig: $paginationConfig, sortInput: $sortInput) {
     totalCount
     roles {
-      __typename
       ...CastingRoleList
       rolePublishedAt
       locationDates {
-        __typename
         id
         startDate
         roleDateType {
-          __typename
           id
           code
+          
         }
         cityName
+        
       }
+      
     }
+    
   }
 }
+
+fragment CastingRoleList on Role {
+  id
+  projectId
+  projectName
+  name
+  description
+  submissionDueDate
+  displayedRoleUnion
+  rateNote
+  rateSummary
+  paidType {
+    id
+    code
+    name
+    
+  }
+  ageInYears
+  ageMinMonth
+  ageMaxMonth
+  genderAppearance {
+    id
+    name
+    
+  }
+  ethnicAppearance {
+    id
+    name
+    
+  }
+  roleType {
+    id
+    name
+    
+  }
+  sexualSituations {
+    id
+    name
+    
+  }
+  roleStatus {
+    id
+    code
+    
+  }
+  projectType {
+    id
+    name
+    
+  }
+  projectUnion {
+    id: contractId
+    union {
+      id
+      name
+      
+    }
+    
+  }
+  
+}
+
 
 query SEARCH_ALERTS_QUERY(
   $startDate: DateTime
@@ -123,63 +173,3 @@ query SEARCH_ALERTS_QUERY(
   }
 }
 
-fragment CastingRoleList on Role {
-  __typename
-  id
-  projectId
-  projectName
-  name
-  description
-  submissionDueDate
-  displayedRoleUnion
-  rateNote
-  rateSummary
-  paidType {
-    __typename
-    id
-    code
-    name
-  }
-  ageInYears
-  ageMinMonth
-  ageMaxMonth
-  genderAppearance {
-    __typename
-    id
-    name
-  }
-  ethnicAppearance {
-    __typename
-    id
-    name
-  }
-  roleType {
-    __typename
-    id
-    name
-  }
-  sexualSituations {
-    __typename
-    id
-    name
-  }
-  roleStatus {
-    __typename
-    id
-    code
-  }
-  projectType {
-    __typename
-    id
-    name
-  }
-  projectUnion {
-    __typename
-    id: contractId
-    union {
-      __typename
-      id
-      name
-    }
-  }
-}

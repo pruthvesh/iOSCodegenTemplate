@@ -4,7 +4,6 @@ mutation markNotifications($ids: [ID!]!, $viewed: Boolean!) {
 
 query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
   scheduleInviteSubRequestDetails(id: $id) {
-    __typename
     id
     noteForTalents
     forwardNote
@@ -13,12 +12,10 @@ query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
     cancellationNote
     slotDate
     schedule {
-      __typename
       id
       name
       type
       address {
-        __typename
         id
         countryCode
         postalCode
@@ -27,44 +24,45 @@ query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
         line1
         line2
         line3
+        __typename
       }
       date
       timeZone {
-        __typename
         abbreviation
+        __typename
       }
       note
       isLocationHidden
+      __typename
     }
     profile {
-      __typename
       id
       name
       profileAccessToken
       accessGranted
+      __typename
     }
     role {
-      __typename
       id
       name
       wardrobe
       roleType {
-        __typename
         id
         name
+        __typename
       }
       locationDates {
-        __typename
         id
         roleDateType {
-          __typename
           id
           code
           name
+          __typename
         }
         startDate
         endDate
         cityName
+        __typename
       }
       ageInYears
       ageMin
@@ -72,61 +70,62 @@ query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
       rateSummary
       description
       sidesVisibility {
-        __typename
         id
         code
+        __typename
       }
       sides {
-        __typename
         roleMediaId
         mediaObject {
-          __typename
           ...WorkflowMedia
+          __typename
         }
+        __typename
       }
+      __typename
     }
     project {
-      __typename
       id
       name
       displayedProjectUnionShort
       projectType {
-        __typename
         id
         name
+        __typename
       }
       projectUnions {
-        __typename
         contractId
         contractStatus {
-          __typename
           id
           code
           name
+          __typename
         }
         union {
-          __typename
           parentObject {
-            __typename
             id
             code
             name
+            __typename
           }
           id
           code
           name
+          __typename
         }
+        __typename
       }
       castingCompany
       synopsis
       createdByPC
+      __typename
     }
+    __typename
   }
 }
 
 query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
   mediaSubRequestDetails(id: $id) {
-    __typename
     id
     includeSides
     submissionId
@@ -144,47 +143,46 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
     requestedChangesNote
     dueDate
     dueDateTimeZone {
-      __typename
       id
       abbreviation
       standardName
+      __typename
     }
     medias {
-      __typename
       ...WorkflowMedia
+      __typename
     }
     profile {
-      __typename
       id
       isPersonal
       name
       profileAccessToken
       accessGranted
+      __typename
     }
     project {
-      __typename
       id
       name
       projectType {
-        __typename
         id
         name
+        __typename
       }
       projectUnions {
-        __typename
         contractId
         union {
-          __typename
           id
           name
+          __typename
         }
+        __typename
       }
       castingCompany
       synopsis
       createdByPC
+      __typename
     }
     role {
-      __typename
       id
       name
       ageMin
@@ -194,69 +192,168 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
       rateMax
       description
       locationDates {
-        __typename
         id
         roleDateType {
-          __typename
           id
           code
           name
+          __typename
         }
         startDate
         endDate
         cityName
+        __typename
       }
       ratePerType {
-        __typename
         id
         name
+        __typename
       }
       roleType {
-        __typename
         id
         name
+        __typename
       }
       sides {
-        __typename
         name
         roleMediaId
         isSides
         mediaObject {
-          __typename
           ...WorkflowMedia
+          __typename
         }
+        __typename
       }
       synopsis
+      __typename
     }
+    __typename
   }
   profiles(ids: [$profileId]) {
-    __typename
     stageName
     isPersonal
     mediaAssets {
-      __typename
       profileMediaId
       media {
-        __typename
         ...MediaAsset
+        __typename
       }
       isPrimary
       hidden
+      __typename
     }
+    __typename
   }
+}
+
+fragment WorkflowMedia on WfMedia {
+  ...BaseWorkflowMedia
+  thumbnail {
+    ...BaseWorkflowMedia
+    __typename
+  }
+  __typename
+}
+
+fragment BaseWorkflowMedia on WfMedia {
+  id: mediaId
+  guid
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  tag
+  mediaStorageStatus {
+    id
+    code
+    __typename
+  }
+  fileType {
+    id
+    code
+    name
+    __typename
+  }
+  mediaType {
+    id
+    code
+    __typename
+  }
+  mediaStatus {
+    id
+    code
+    __typename
+  }
+  transformation {
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    __typename
+  }
+  __typename
+}
+
+fragment MediaAsset on Media {
+  ...BaseMedia
+  created
+  __typename
+}
+
+fragment BaseMedia on Media {
+  id
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  transformation {
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+    __typename
+  }
+  mediaStorageStatus {
+    id
+    code
+    __typename
+  }
+  fileType {
+    id
+    code
+    name
+    __typename
+  }
+  mediaType {
+    id
+    code
+    __typename
+  }
+  mediaStatus {
+    id
+    code
+    __typename
+  }
+  isLocked
+  __typename
 }
 
 mutation REPLY_TO_MEDIA_REQUEST($input: MediaResponseInput!) {
   replyToMediaRequest(input: $input) {
-    __typename
     id
     status
+    __typename
   }
 }
 
+
 query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
   askQuestionSubRequestDetails(id: $id) {
-    __typename
     id
     question
     status
@@ -268,13 +365,12 @@ query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
     repliedAt
     dueDate
     dueDateTimeZone {
-      __typename
       id
       abbreviation
       standardName
+      __typename
     }
     profile {
-      __typename
       id
       name
       phone
@@ -282,118 +378,62 @@ query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
       coverUrl
       profileAccessToken
       accessGranted
+      __typename
     }
     role {
-      __typename
       id
       name
       sides {
-        __typename
         name
         roleMediaId
         mediaObject {
-          __typename
           ...WorkflowMedia
+          __typename
         }
+        __typename
       }
+      __typename
     }
     project {
-      __typename
       id
       name
       castingCompany
       synopsis
       createdByPC
+      __typename
     }
+    __typename
   }
 }
+
 
 mutation replyToAskQuestionRequest($input: AskQuestionResponseInput!) {
   replyToAskQuestionRequest(input: $input) {
-    __typename
     id
     response
+    __typename
   }
 }
+
 
 query getSubmissionByRoleProfile($input: GetSubmissionByRoleProfileInput!) {
   getSubmissionByRoleProfile(input: $input) {
-    __typename
     id
     workingLocation {
-      __typename
       id
       name
       sortOrder
+      __typename
     }
     media {
-      __typename
       ...SubmissionMedia
+      __typename
     }
-  }
-}
-
-mutation replyToScheduleInviteRequest($input: ScheduleInviteResponseInput!) {
-  replyToScheduleInviteRequest(input: $input) {
     __typename
-    id
-    status
-    responseNote
-  }
-}
-
-fragment WorkflowMedia on WfMedia {
-  __typename
-  ...BaseWorkflowMedia
-  thumbnail {
-    __typename
-    ...BaseWorkflowMedia
-  }
-}
-
-fragment BaseWorkflowMedia on WfMedia {
-  __typename
-  id: mediaId
-  guid
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  tag
-  mediaStorageStatus {
-    __typename
-    id
-    code
-  }
-  fileType {
-    __typename
-    id
-    code
-    name
-  }
-  mediaType {
-    __typename
-    id
-    code
-  }
-  mediaStatus {
-    __typename
-    id
-    code
-  }
-  transformation {
-    __typename
-    xAxis
-    yAxis
-    width
-    height
-    rotate
   }
 }
 
 fragment SubmissionMedia on SubmissionMedia {
-  __typename
   id
   guid
   mediaId
@@ -405,38 +445,45 @@ fragment SubmissionMedia on SubmissionMedia {
   isPrimary
   orderOfAppearance
   thumbnail {
-    __typename
     ...BaseMedia
+    __typename
   }
   transformation {
-    __typename
     xAxis
     yAxis
     width
     height
     rotate
+    __typename
   }
   mediaStorageStatus {
-    __typename
     id
     code
+    __typename
   }
   fileType {
-    __typename
     id
     code
+    __typename
   }
   mediaType {
-    __typename
     id
     code
+    __typename
   }
   mediaStatus {
-    __typename
     id
     code
+    __typename
   }
+  __typename
 }
 
-
-
+mutation replyToScheduleInviteRequest($input: ScheduleInviteResponseInput!) {
+  replyToScheduleInviteRequest(input: $input) {
+    id
+    status
+    responseNote
+    __typename
+  }
+}

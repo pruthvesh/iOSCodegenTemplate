@@ -1,18 +1,18 @@
 query dmas {
   dmas {
-    __typename
     id
     name
     region {
-      __typename
       id
       name
       country {
-        __typename
         id
         code
         name
+        __typename
       }
+      __typename
     }
+    __typename
   }
 }
