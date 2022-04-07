@@ -5165,6 +5165,9 @@ type Project {
   """Created By Account Id"""
   createdBy: Float
 
+  """"""
+  roleDefaults: RoleDefaults
+
   """Project audition address"""
   auditionAddress: AuditionAddress
 
@@ -5230,6 +5233,96 @@ type ProjectType {
 
   """child objects"""
   childObjects: [ProjectType!]!
+}
+
+"""Role Default Options"""
+type RoleDefaults {
+  """"""
+  locationDates: [RoleDefaultDateWithLocation!]
+
+  """"""
+  publicationSettings: [RoleDefaultPublicationSetting!]
+
+  """"""
+  wardrobe: String
+
+  """"""
+  workRequirements: String
+
+  """"""
+  fieldRestrictions: [RoleFieldRestriction!]
+}
+
+""""""
+type RoleDefaultDateWithLocation {
+  """Name of City"""
+  locationName: String
+
+  """CODE of DateType enum"""
+  dateTypeCode: String!
+
+  """Start date"""
+  startDate: DateTime
+
+  """End date"""
+  endDate: DateTime
+}
+
+""""""
+type RoleDefaultPublicationSetting {
+  """Publication Setting CODE"""
+  publicationSetting: String!
+
+  """List of DMAs CODEs for talents"""
+  dmas: [String!]
+
+  """List of Representation Age Categories CODEs"""
+  repAgeCategories: [String!]
+
+  """List of Representation Categories CODEs"""
+  repCategories: [String!]
+
+  """List of Representation Type CODEs"""
+  repTypes: [String!]
+
+  """Representative List ID Selected"""
+  representativeListId: Int
+
+  """Representative IDs"""
+  representativeIds: [Int!]
+}
+
+""""""
+type RoleFieldRestriction {
+  """"""
+  fields: [RoleFieldsRestrictionsFieldOption!]!
+
+  """"""
+  restrictedFor: ProjectFieldRestrictionOption!
+}
+
+""""""
+enum RoleFieldsRestrictionsFieldOption {
+  """"""
+  auditionCity
+
+  """"""
+  callbackCity
+
+  """"""
+  fittingCity
+
+  """"""
+  workingCity
+}
+
+""""""
+enum ProjectFieldRestrictionOption {
+  """"""
+  AGENT
+
+  """"""
+  CastingBillboard
 }
 
 """Audition address"""
@@ -5392,15 +5485,6 @@ enum ProjectFieldRestrictionFieldOption {
 
   """"""
   photographer
-}
-
-""""""
-enum ProjectFieldRestrictionOption {
-  """"""
-  AGENT
-
-  """"""
-  CastingBillboard
 }
 
 """Role Date with Location object"""
@@ -5812,30 +5896,6 @@ type SubmissionStatus {
 
   """Sort order"""
   sortOrder: Int
-}
-
-""""""
-type RoleFieldRestriction {
-  """"""
-  fields: [RoleFieldsRestrictionsFieldOption!]!
-
-  """"""
-  restrictedFor: ProjectFieldRestrictionOption!
-}
-
-""""""
-enum RoleFieldsRestrictionsFieldOption {
-  """"""
-  auditionCity
-
-  """"""
-  callbackCity
-
-  """"""
-  fittingCity
-
-  """"""
-  workingCity
 }
 
 """"""
@@ -20072,6 +20132,9 @@ input CreateProjectInput {
 
   """"""
   fieldRestrictionSettings: [ProjectFieldRestrictionInput!]
+
+  """"""
+  roleDefaults: RoleDefaultsInput
 }
 
 """Add organization as project attribute"""
@@ -20087,6 +20150,75 @@ input ProjectOrganizationInput {
 input ProjectFieldRestrictionInput {
   """"""
   fields: [ProjectFieldRestrictionFieldOption!]!
+
+  """"""
+  restrictedFor: ProjectFieldRestrictionOption!
+}
+
+"""Role Default Options"""
+input RoleDefaultsInput {
+  """"""
+  locationDates: [RoleDateWithLocationInput!]
+
+  """List of Publication Setting Input"""
+  publicationSettings: [RolePublicationSettingInput!]
+
+  """"""
+  fieldRestrictions: [RoleFieldRestrictionInput!]
+
+  """"""
+  wardrobe: String
+
+  """"""
+  workRequirements: String
+}
+
+"""Role's Date with Location input type"""
+input RoleDateWithLocationInput {
+  """Name of City"""
+  locationName: String
+
+  """CODE of DateType enum"""
+  dateTypeCode: String!
+
+  """Start date"""
+  startDate: DateTime
+
+  """End date"""
+  endDate: DateTime
+
+  """ID of RoleDate object. Used for update existing date."""
+  dateId: ID
+}
+
+"""Publication Role setting"""
+input RolePublicationSettingInput {
+  """Publication Setting CODE"""
+  publicationSetting: String!
+
+  """List of DMAs CODEs for talents"""
+  dmas: [String!]
+
+  """List of Representation Age Categories CODEs"""
+  repAgeCategories: [String!]
+
+  """List of Representation Categories CODEs"""
+  repCategories: [String!]
+
+  """List of Representation Type CODEs"""
+  repTypes: [String!]
+
+  """Representative List ID Selected"""
+  representativeListId: Int
+
+  """Representative IDs"""
+  representativeIds: [Int!]
+}
+
+""""""
+input RoleFieldRestrictionInput {
+  """"""
+  fields: [RoleFieldsRestrictionsFieldOption!]!
 
   """"""
   restrictedFor: ProjectFieldRestrictionOption!
@@ -20225,6 +20357,9 @@ input UpdateProjectInput {
 
   """"""
   fieldRestrictionSettings: [ProjectFieldRestrictionInput!]
+
+  """"""
+  roleDefaults: RoleDefaultsInput
 }
 
 """Adds a Profile to Project."""
@@ -20396,6 +20531,9 @@ input CreatePCProjectInput {
 
   """"""
   fieldRestrictionSettings: [ProjectFieldRestrictionInput!]
+
+  """"""
+  roleDefaults: RoleDefaultsInput
 
   """"""
   canTalentSubmitSelfTape: Boolean
@@ -20592,6 +20730,9 @@ input UpdatePCProjectInput {
 
   """"""
   fieldRestrictionSettings: [ProjectFieldRestrictionInput!]
+
+  """"""
+  roleDefaults: RoleDefaultsInput
 
   """"""
   canTalentSubmitSelfTape: Boolean
@@ -20803,30 +20944,6 @@ input RoleTypeInput {
   projectTypeCode: String!
 }
 
-"""Publication Role setting"""
-input RolePublicationSettingInput {
-  """Publication Setting CODE"""
-  publicationSetting: String!
-
-  """List of DMAs CODEs for talents"""
-  dmas: [String!]
-
-  """List of Representation Age Categories CODEs"""
-  repAgeCategories: [String!]
-
-  """List of Representation Categories CODEs"""
-  repCategories: [String!]
-
-  """List of Representation Type CODEs"""
-  repTypes: [String!]
-
-  """Representative List ID Selected"""
-  representativeListId: Int
-
-  """Representative IDs"""
-  representativeIds: [Int!]
-}
-
 """Input type for skill"""
 input RoleSkillInput {
   """Skill CODE"""
@@ -20852,33 +20969,6 @@ input RoleCompensationInput {
 
   """Role other compensation description"""
   otherCompensation: String
-}
-
-"""Role's Date with Location input type"""
-input RoleDateWithLocationInput {
-  """Name of City"""
-  locationName: String
-
-  """CODE of DateType enum"""
-  dateTypeCode: String!
-
-  """Start date"""
-  startDate: DateTime
-
-  """End date"""
-  endDate: DateTime
-
-  """ID of RoleDate object. Used for update existing date."""
-  dateId: ID
-}
-
-""""""
-input RoleFieldRestrictionInput {
-  """"""
-  fields: [RoleFieldsRestrictionsFieldOption!]!
-
-  """"""
-  restrictedFor: ProjectFieldRestrictionOption!
 }
 
 """Input type for Role update"""

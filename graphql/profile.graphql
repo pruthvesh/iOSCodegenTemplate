@@ -514,3 +514,7 @@ mutation updateProfileMediaList($profileMediaList: [ProfileMediaInput!]!) {
 mutation deleteProfileMedia($mediaId: Float!, $profileId: Float!) {
   deleteProfileMedia(mediaId: $mediaId, profileId: $profileId)
 }
+
+mutation updateProfileMedia($profileMedia: ProfileMediaInput!) {
+  updateProfileMedia(profileMedia: $profileMedia)
+}
