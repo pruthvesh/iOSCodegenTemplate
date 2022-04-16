@@ -1910,6 +1910,12 @@ type Profile {
   """Work permit expiration date"""
   workPermitExp: DateTime
 
+  """Roster hidden"""
+  rosterHidden: Boolean
+
+  """Search hidden"""
+  searchHidden: Boolean
+
   """Job Persuing Type(s)"""
   pursuing: [Pursuing!]
 
@@ -6730,6 +6736,12 @@ type ArtistMediaProfile {
   """Work permit expiration date"""
   workPermitExp: DateTime
 
+  """Roster hidden"""
+  rosterHidden: Boolean
+
+  """Search hidden"""
+  searchHidden: Boolean
+
   """Job Persuing Type(s)"""
   pursuing: [Pursuing!]
 
@@ -8942,6 +8954,12 @@ type PublicProfile {
   """Work permit expiration date"""
   workPermitExp: DateTime
 
+  """Roster hidden"""
+  rosterHidden: Boolean
+
+  """Search hidden"""
+  searchHidden: Boolean
+
   """Job Persuing Type(s)"""
   pursuing: [Pursuing!]
 
@@ -10152,6 +10170,12 @@ enum ProfileStatusSearchEnum {
 
   """"""
   FORMER_AND_CURRENT
+
+  """"""
+  ROSTER_HIDDEN
+
+  """"""
+  ROSTER_AND_SEARCH_HIDDEN
 }
 
 """Input type for DateRangeInput"""
@@ -14253,6 +14277,12 @@ enum RepWorksheetFieldOrder {
 
   """"""
   type
+
+  """"""
+  talentName
+
+  """"""
+  projectName
 }
 
 """"""
@@ -17338,7 +17368,7 @@ type Mutation {
   setProfileResume(mediaId: Int!, profileId: Int!): Media!
 
   """"""
-  removeProfileResume(accountId: Float, profileId: Int!): Boolean!
+  removeProfileResume(profileId: Int!): Boolean!
 
   """Update single profile media"""
   updateProfileMedia(profileMedia: ProfileMediaInput!): Boolean!
@@ -17505,6 +17535,18 @@ type Mutation {
 
   """Submits all selected submissions by REPS for the role"""
   submitSelectedSubmissionForRole(roleId: Int!): Boolean!
+
+  """"""
+  hideProfileInRoster(id: ID!): Profile!
+
+  """"""
+  hideProfileInRosterAndSearch(id: ID!): Profile!
+
+  """"""
+  unHideProfileInRosterAndSearch(id: ID!): Profile!
+
+  """"""
+  setProfileActive(id: ID!): Profile!
 
   """"""
   approvePCProject(input: ApprovePCProjectInput!): Boolean!
