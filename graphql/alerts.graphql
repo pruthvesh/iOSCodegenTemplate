@@ -40,6 +40,9 @@ query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
       name
       profileAccessToken
       accessGranted
+      cover {
+        ...WorkflowMedia
+      }
       __typename
     }
     role {
@@ -158,6 +161,9 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
       name
       profileAccessToken
       accessGranted
+      cover {
+        ...WorkflowMedia
+      }
       __typename
     }
     project {
@@ -376,6 +382,9 @@ query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
       phone
       email
       coverUrl
+      cover {
+        ...WorkflowMedia
+      }
       profileAccessToken
       accessGranted
       __typename
