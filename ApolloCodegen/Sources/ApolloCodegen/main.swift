@@ -59,7 +59,13 @@ struct SwiftScript: ParsableCommand {
                 .apollo.childFolderURL(folderName: "graphql")
             
             let schema = targetRootURL.appendingPathComponent("schema.graphqls")
-            let outputFolderURL = targetRootURL.appendingPathComponent("swiftcodegen", isDirectory: true)
+//            let outputFolderURL = targetRootURL.appendingPathComponent("swiftcodegen", isDirectory: true)
+            let outputFolderURL = fileStructure.sourceRootURL
+                .apollo.parentFolderURL()
+                .apollo.parentFolderURL()
+                .apollo.childFolderURL(folderName: "CNGraphQL")
+                .apollo.childFolderURL(folderName: "Sources")
+                .apollo.childFolderURL(folderName: "GeneratedCode")
             
             // Make sure the folder exists before trying to generate code.
             try FileManager.default.apollo.createFolderIfNeeded(at: targetRootURL)
