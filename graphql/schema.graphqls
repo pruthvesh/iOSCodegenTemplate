@@ -945,6 +945,9 @@ type Query {
   mediaRequestDetails(id: ID!): MediaRequest!
 
   """"""
+  mediaRequestResponseCount(id: ID!): [MediaResponseCounts!]!
+
+  """"""
   mediaSubRequestDetails(id: ID!): MediaSubRequest!
 
   """"""
@@ -14777,7 +14780,7 @@ type MediaRequest {
   dueDate: DateTime
 
   """"""
-  responses(page: PageInput!): MediaResponsePagedList!
+  responses(statuses: [String!], page: PageInput!): MediaResponsePagedList!
 
   """"""
   submissionIds: [Int!]!
@@ -15841,6 +15844,15 @@ type WfTimeZone {
   codeBrowser: String!
 }
 
+""""""
+type MediaResponseCounts {
+  """"""
+  status: MediaRequestStatus!
+
+  """"""
+  count: Float!
+}
+
 """'Media Sub-Request' Type for (Reps|Talent)"""
 type MediaSubRequest {
   """"""
@@ -16768,7 +16780,7 @@ type Mutation {
   updatePCOrganizations(input: BauPCAccountUpdateInput!): UpdateLegacyResult!
 
   """"""
-  sendVerificationCode(phoneNumber: String!): String!
+  sendVerificationCode(language: String, phoneNumber: String!): String!
 
   """"""
   checkOtpCode(otpCode: String!, verificationId: String!): Boolean!
@@ -22167,6 +22179,9 @@ input ScheduleInviteRequestInput {
 
   """A message to Talent of the talents that are connected to submissions."""
   noteForTalents: String = null
+
+  """Filter Requests by role"""
+  roleIds: [Int!]
 }
 
 """"""
