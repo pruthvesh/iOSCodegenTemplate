@@ -642,8 +642,31 @@ fragment ProjectDetails on Project {
   contactPhone
   castingAssistant
   castingAssociate
+  displayedProjectUnion
   contactInfoPermissions
   createdByPC
+  roleDefaults {
+      wardrobe
+      workRequirements
+      publicationSettings {
+        publicationSetting
+        dmas
+        repAgeCategories
+        repCategories
+        repTypes
+        representativeListId
+        representativeIds
+        __typename
+      }
+      locationDates {
+        locationName
+        dateTypeCode
+        startDate
+        endDate
+        __typename
+      }
+      __typename
+    }
   __typename
 }
 
