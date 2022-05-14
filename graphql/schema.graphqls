@@ -1661,6 +1661,9 @@ type Account {
 
   """"""
   legacyProfileStatus: ProfileStatus
+
+  """"""
+  preferences: AccountPreferences!
 }
 
 """"""
@@ -6373,6 +6376,39 @@ type NotificationNature {
 }
 
 """"""
+type AccountPreferences {
+  """"""
+  schedule: AccountSchedulePreferences
+
+  """"""
+  projectFilters: AccountProjectFiltersPreferences
+}
+
+""""""
+type AccountSchedulePreferences {
+  """"""
+  thumbnailType: ThumbnailType!
+
+  """"""
+  showUnionStatus: Boolean!
+}
+
+""""""
+enum ThumbnailType {
+  """"""
+  headshot
+
+  """"""
+  snapshot
+}
+
+""""""
+type AccountProjectFiltersPreferences {
+  """"""
+  kidsOnly: Boolean!
+}
+
+""""""
 type RepresentationSystemRole {
   """Primary ID"""
   id: ID!
@@ -6574,6 +6610,9 @@ type UnclaimedAccount {
 
   """"""
   legacyProfileStatus: ProfileStatus
+
+  """"""
+  preferences: AccountPreferences!
 
   """"""
   profileId: Float
@@ -16875,6 +16914,12 @@ type Mutation {
   resetEmail(audience: String!, updateInfo: UpdateAccountInput!): String!
 
   """"""
+  setAccountSchedulePreferences(preferences: AccountSchedulePreferencesInput!): Boolean!
+
+  """"""
+  setAccountProjectListFilterPreferences(preferences: AccountProjectFiltersPreferencesInput!): Boolean!
+
+  """"""
   addAddress(addToOrganization: Boolean, input: AddressInput!): Float!
 
   """Mutation for updating address"""
@@ -18482,6 +18527,21 @@ input EndUserAccountInput {
 
   """"""
   timeZoneId: Float!
+}
+
+""""""
+input AccountSchedulePreferencesInput {
+  """"""
+  thumbnailType: ThumbnailType!
+
+  """"""
+  showUnionStatus: Boolean!
+}
+
+""""""
+input AccountProjectFiltersPreferencesInput {
+  """"""
+  kidsOnly: Boolean!
 }
 
 """Address Input Type"""

@@ -725,6 +725,8 @@ fragment CastingRoleDetails on Role {
   roleParentId
   scale
   displayedRoleUnion
+  displayedRoleEthnicAppearance
+  displayedRoleGenderAppearance
   rateNote
   rateSummary
   roleEthnicityNationality

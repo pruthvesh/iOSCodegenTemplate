@@ -88,40 +88,7 @@ query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
       __typename
     }
     project {
-      id
-      name
-      displayedProjectUnionShort
-      projectType {
-        id
-        name
-        __typename
-      }
-      projectUnions {
-        contractId
-        contractStatus {
-          id
-          code
-          name
-          __typename
-        }
-        union {
-          parentObject {
-            id
-            code
-            name
-            __typename
-          }
-          id
-          code
-          name
-          __typename
-        }
-        __typename
-      }
-      castingCompany
-      synopsis
-      createdByPC
-      __typename
+      ...WorkFlowProject
     }
     __typename
   }
@@ -167,26 +134,7 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
       __typename
     }
     project {
-      id
-      name
-      projectType {
-        id
-        name
-        __typename
-      }
-      projectUnions {
-        contractId
-        union {
-          id
-          name
-          __typename
-        }
-        __typename
-      }
-      castingCompany
-      synopsis
-      createdByPC
-      __typename
+      ...WorkFlowProject
     }
     role {
       id
@@ -250,6 +198,44 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
     }
     __typename
   }
+}
+
+fragment WorkFlowProject on WfProject {
+  id
+  name
+  displayedProjectUnionShort
+  displayedProjectUnion
+  projectType {
+    id
+    name
+    __typename
+  }
+  projectUnions {
+    contractId
+    contractStatus {
+      id
+      code
+      name
+      __typename
+    }
+    union {
+      parentObject {
+        id
+        code
+        name
+        __typename
+      }
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  castingCompany
+  synopsis
+  createdByPC
+  __typename
 }
 
 fragment WorkflowMedia on WfMedia {
@@ -357,7 +343,6 @@ mutation REPLY_TO_MEDIA_REQUEST($input: MediaResponseInput!) {
   }
 }
 
-
 query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
   askQuestionSubRequestDetails(id: $id) {
     id
@@ -404,17 +389,11 @@ query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
       __typename
     }
     project {
-      id
-      name
-      castingCompany
-      synopsis
-      createdByPC
-      __typename
+      ...WorkFlowProject
     }
     __typename
   }
 }
-
 
 mutation replyToAskQuestionRequest($input: AskQuestionResponseInput!) {
   replyToAskQuestionRequest(input: $input) {
@@ -423,7 +402,6 @@ mutation replyToAskQuestionRequest($input: AskQuestionResponseInput!) {
     __typename
   }
 }
-
 
 query getSubmissionByRoleProfile($input: GetSubmissionByRoleProfileInput!) {
   getSubmissionByRoleProfile(input: $input) {
