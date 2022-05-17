@@ -313,7 +313,6 @@ query getLanguageLocales {
     name
     locale
     code
-    baseLocale
     __typename
   }
 }
@@ -327,7 +326,6 @@ mutation updateAccountLanguage(
       id
       name
       code
-      baseLocale
       locale
       __typename
     }
