@@ -332,3 +332,7 @@ mutation updateAccountLanguage(
     __typename
   }
 }
+
+mutation registerAccountDevice($input:RegisterDeviceInput!) {
+  registerAccountDevice(input: $input)
+}

@@ -4761,6 +4761,9 @@ type Submission {
   """"""
   contactInfo: ProfileContactInfo
 
+  """"""
+  isCreatedByCD: Boolean
+
   """SSubmissions with responses details"""
   submissionResponses: SubmissionResponses
 }
@@ -6381,7 +6384,7 @@ type AccountPreferences {
   schedule: AccountSchedulePreferences
 
   """"""
-  projectFilters: AccountProjectFiltersPreferences
+  projectListFilters: AccountProjectFiltersPreferences
 }
 
 """"""
@@ -10371,6 +10374,9 @@ type SubmissionWorkflow {
 
   """"""
   creatorAccountId: Int!
+
+  """"""
+  isCreatedByCD: Boolean
 }
 
 """Project for Workflow"""
@@ -16503,6 +16509,9 @@ enum ActivityLogType {
   SUBMISSION_STATUS_UPDATED
 
   """"""
+  SUBMISSION_MOVED_TO_ROLE
+
+  """"""
   REQUEST_ASKQUESTION
 
   """"""
@@ -16642,6 +16651,33 @@ type ActivityLogSubmission {
 
   """"""
   requestMediaByType: MediaByType
+
+  """"""
+  oldRole: WfRoleShort
+
+  """"""
+  newRole: WfRoleShort
+}
+
+""""""
+type WfRoleShort {
+  """"""
+  id: Int!
+
+  """"""
+  parentId: Int
+
+  """"""
+  projectId: Int!
+
+  """"""
+  statusId: Int!
+
+  """"""
+  name: String!
+
+  """"""
+  internalName: String
 }
 
 """"""
@@ -16918,6 +16954,9 @@ type Mutation {
 
   """"""
   setAccountProjectListFilterPreferences(preferences: AccountProjectFiltersPreferencesInput!): Boolean!
+
+  """"""
+  registerAccountDevice(input: RegisterDeviceInput!): Boolean!
 
   """"""
   addAddress(addToOrganization: Boolean, input: AddressInput!): Float!
@@ -17383,7 +17422,7 @@ type Mutation {
   deletePickFromPresentationProfilePublic(input: DeletePresentationProfilePickPublickInput!): Boolean!
 
   """Initiates presentation's media downloading"""
-  initPresentationMediaToDownloadPublic(presentationGroupId: Int, presentationFolderId: Int!, guid: String!): String!
+  initPresentationMediaToDownloadPublic(input: PresentationMediaDownloadInput!): String!
 
   """"""
   addProfileBookout(artistId: Float, input: ProfileBookOutInput!): Boolean!
@@ -18544,6 +18583,21 @@ input AccountProjectFiltersPreferencesInput {
   kidsOnly: Boolean!
 }
 
+""""""
+input RegisterDeviceInput {
+  """"""
+  token: String!
+
+  """"""
+  deviceType: DeviceType!
+}
+
+""""""
+enum DeviceType {
+  """"""
+  APN
+}
+
 """Address Input Type"""
 input AddressInput {
   """"""
@@ -19332,6 +19386,21 @@ input DeletePresentationProfilePickPublickInput {
 
   """"""
   userName: String!
+}
+
+"""Presentation Download Archive Input Type"""
+input PresentationMediaDownloadInput {
+  """GUID of Presentation"""
+  guid: String!
+
+  """Presenatation Folder Id"""
+  presentationFolderId: Int!
+
+  """Group Id of Presentation"""
+  presentationGroupId: Int
+
+  """Email Id of Unauthenticated User"""
+  unauthenticatedUserEmail: String
 }
 
 """Input type for Profile Book Out dates"""
