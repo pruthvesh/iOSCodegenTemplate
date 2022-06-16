@@ -112,6 +112,12 @@ query ARTISTS_INFO {
           name
           __typename
         }
+        profileMainDivision {
+          __typename
+          id
+          name
+          parentName
+        }
         organizations {
           id
           name
