@@ -141,19 +141,19 @@ query SEARCH_ALERTS_QUERY(
   $endDate: DateTime
   $page: PageInput!
   $orderBy: NotificationOrderByInput
+  $filters: SearchNotificationFiltersArgs
 ) {
   searchNotifications(
     startDate: $startDate
     endDate: $endDate
     page: $page
     orderBy: $orderBy
+    filters: $filters
   ) {
-    __typename
     page
     totalCount
     totalPages
     data {
-      __typename
       id
       timestamp
       toArtistId
@@ -164,12 +164,18 @@ query SEARCH_ALERTS_QUERY(
       subject
       message
       context {
-        __typename
         requestId
         requestType
       }
       viewed
+      archivedAt
     }
   }
 }
+
+mutation archiveNotifications($ids: [String!]!) {
+  archiveNotifications(ids: $ids)
+}
+
+
 

@@ -32,6 +32,21 @@ type Query {
   getPhone(entityType: EntityTypeEnum!, phoneNumber: String!): [Phone!]!
 
   """"""
+  getPlans: [PlanModel!]!
+
+  """"""
+  getPlanFeatures(planId: ID!): [PlanFeatureModel!]!
+
+  """"""
+  previewPurchase(input: PurchaseInput!): PurchaseModel!
+
+  """"""
+  artistSubscriptions(input: ArtistSubscriptionInput!): [SubscriptionModel!]!
+
+  """"""
+  getFreeCreditItems(artistId: Float!): [FreeCreditItemModel!]!
+
+  """"""
   myAccount: Account!
 
   """"""
@@ -212,21 +227,6 @@ type Query {
 
   """"""
   getScheduleReminderContext(input: ScheduleReminderInput!): ScheduleReminder!
-
-  """"""
-  getPlans: [PlanModel!]!
-
-  """"""
-  getPlanFeatures(planId: ID!): [PlanFeatureModel!]!
-
-  """"""
-  previewPurchase(input: PurchaseInput!): PurchaseModel!
-
-  """"""
-  artistSubscriptions(input: ArtistSubscriptionInput!): [SubscriptionModel!]!
-
-  """"""
-  getFreeCreditItems(artistId: Float!): [FreeCreditItemModel!]!
 
   """"""
   getCommentsForSubmission(submissionId: BigInt!): [PresentationSubmissionComment!]!
@@ -906,7 +906,7 @@ type Query {
   searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
 
   """"""
-  searchNotifications(startDate: DateTime, endDate: DateTime, page: PageInput!, orderBy: NotificationOrderByInput = {timestamp: DESC}): NotificationPagedList!
+  searchNotifications(startDate: DateTime, endDate: DateTime, page: PageInput!, orderBy: NotificationOrderByInput = {timestamp: DESC}, filters: SearchNotificationFiltersArgs): NotificationPagedList!
 
   """"""
   searchCompanies(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
@@ -919,6 +919,9 @@ type Query {
 
   """"""
   repsWorksheet(page: PageInput!, filters: RepsWorksheetFiltersArgs, sortBy: RepWorksheetFieldOrder, sortOptions: [RepWorksheetOrderOption!]): RepsWorksheetItemPagedList!
+
+  """"""
+  repsWorksheetGroups(limit: Int!, groupType: RepsWorksheetGroupType!, groupId: ID, filters: RepsWorksheetFiltersArgs, sortOrder: SortOrder = ASC): RepsWorksheetGroups!
 
   """"""
   repsWorksheetFilters: RepsWorksheetFilters!
@@ -991,6 +994,9 @@ type Query {
 
   """"""
   getLastActivityLogBySubmissionIds(ids: [Int!]!): [ActivityLog!]!
+
+  """"""
+  voiceOverMediaRequests(roleId: Int!, submissionIds: [Int!]): [MediaSubRequest!]!
 }
 
 """BAU Account Object"""
@@ -1495,6 +1501,297 @@ type Phone {
 """BigInt scalar type"""
 scalar BigInt
 
+"""Subscription Plan"""
+type PlanModel {
+  """"""
+  id: ID!
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+
+  """"""
+  isBasePlan: Boolean
+
+  """"""
+  enabled: Boolean
+
+  """"""
+  billingCode: String
+
+  """"""
+  planCurrencyCode: String
+
+  """"""
+  price: Float
+
+  """"""
+  created: DateTime
+
+  """"""
+  updated: DateTime
+
+  """"""
+  sortOrder: Int
+
+  """"""
+  planStatusId: ID
+
+  """"""
+  billingProviderId: ID
+
+  """"""
+  currency: Currency
+
+  """"""
+  planTerm: PlanTermModel
+}
+
+"""Currency object"""
+type Currency {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  symbol: String!
+}
+
+""""""
+type PlanTermModel {
+  """"""
+  id: ID!
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+type PlanFeatureModel {
+  """"""
+  itemId: ID!
+
+  """"""
+  itemCode: String!
+
+  """"""
+  planId: ID!
+
+  """"""
+  code: String!
+
+  """"""
+  name: String!
+
+  """"""
+  currency: Currency
+
+  """"""
+  price: Float
+
+  """"""
+  isPermanent: Boolean!
+
+  """"""
+  credit: Int!
+}
+
+"""Generate purchase based on items or subscription"""
+input PurchaseInput {
+  """Billing Token"""
+  token: String
+
+  """Billing items"""
+  items: [BillingItemInput!] = []
+
+  """Billing subscriptions"""
+  subscriptions: [BillingSubscriptionInput!] = []
+
+  """"""
+  artistId: Int
+
+  """"""
+  threeDSecureActionResultTokenId: String
+
+  """"""
+  providerCouponCodes: [String!]
+}
+
+"""Billing Item Input"""
+input BillingItemInput {
+  """Media Id"""
+  mediaId: Int!
+}
+
+"""Billing Subscription Input"""
+input BillingSubscriptionInput {
+  """Billing Subscription code"""
+  code: String!
+}
+
+""""""
+type PurchaseModel {
+  """"""
+  items: [BillingItemModel!]!
+
+  """"""
+  subscriptions: [BillingItemModel!]!
+
+  """"""
+  total: Float!
+
+  """"""
+  currency: Currency!
+
+  """"""
+  invoiceId: String
+
+  """"""
+  email: String!
+
+  """"""
+  cardType: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  creditsApplied: Float!
+
+  """"""
+  discount: Float
+
+  """"""
+  couponCodes: [String!]
+
+  """"""
+  coupons: [CouponModel!]
+}
+
+""""""
+type BillingItemModel {
+  """"""
+  code: String!
+
+  """"""
+  name: String
+
+  """"""
+  price: Float
+
+  """"""
+  qty: Int
+
+  """"""
+  id: ID
+
+  """"""
+  priceInCents: Int
+
+  """"""
+  availableCredit: Int
+}
+
+""""""
+type CouponModel {
+  """"""
+  code: String!
+
+  """"""
+  description: String
+}
+
+"""Subscription Input"""
+input ArtistSubscriptionInput {
+  """Artist id"""
+  artistId: Int!
+}
+
+"""Subscription"""
+type SubscriptionModel {
+  """"""
+  id: ID!
+
+  """"""
+  plan: PlanModel
+
+  """"""
+  nextBillingDate: DateTime
+
+  """"""
+  status: String!
+
+  """"""
+  expirationDate: DateTime
+
+  """"""
+  transaction: String
+}
+
+""""""
+type FreeCreditItemModel {
+  """"""
+  itemId: Float!
+
+  """"""
+  itemCode: BillingItemCode!
+
+  """"""
+  artistId: Float!
+
+  """"""
+  credits: Float!
+
+  """"""
+  createdBy: Float!
+
+  """"""
+  created: DateTime!
+
+  """"""
+  updated: DateTime
+}
+
+""""""
+enum BillingItemCode {
+  """"""
+  registration
+
+  """"""
+  SYSTEM_ACCESS
+
+  """"""
+  PHOTO_UPLOAD
+
+  """"""
+  MEDIA_UPLOAD
+
+  """"""
+  AUDIO_UPLOAD
+
+  """"""
+  VIDEO_UPLOAD
+
+  """"""
+  SUBMISSION
+}
+
 """Account info"""
 type Account {
   """Primary ID"""
@@ -1682,87 +1979,6 @@ type ActiveSubscriptionModel {
 
   """"""
   plans: [PlanModel!]
-}
-
-"""Subscription Plan"""
-type PlanModel {
-  """"""
-  id: ID!
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-
-  """"""
-  isBasePlan: Boolean
-
-  """"""
-  enabled: Boolean
-
-  """"""
-  billingCode: String
-
-  """"""
-  planCurrencyCode: String
-
-  """"""
-  price: Float
-
-  """"""
-  created: DateTime
-
-  """"""
-  updated: DateTime
-
-  """"""
-  sortOrder: Int
-
-  """"""
-  planStatusId: ID
-
-  """"""
-  billingProviderId: ID
-
-  """"""
-  currency: Currency
-
-  """"""
-  planTerm: PlanTermModel
-}
-
-"""Currency object"""
-type Currency {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  symbol: String!
-}
-
-""""""
-type PlanTermModel {
-  """"""
-  id: ID!
-
-  """"""
-  code: String
-
-  """"""
-  name: String
 }
 
 """Artist info"""
@@ -6112,30 +6328,6 @@ type ProfileType {
 }
 
 """"""
-type BillingItemModel {
-  """"""
-  code: String!
-
-  """"""
-  name: String
-
-  """"""
-  price: Float
-
-  """"""
-  qty: Int
-
-  """"""
-  id: ID
-
-  """"""
-  priceInCents: Int
-
-  """"""
-  availableCredit: Int
-}
-
-""""""
 enum ProfileSelectionType {
   """"""
   NONE
@@ -6160,27 +6352,6 @@ type PresentationFolderTalentPresence {
 
   """Presentation Folder Name"""
   folderName: String!
-}
-
-"""Subscription"""
-type SubscriptionModel {
-  """"""
-  id: ID!
-
-  """"""
-  plan: PlanModel
-
-  """"""
-  nextBillingDate: DateTime
-
-  """"""
-  status: String!
-
-  """"""
-  expirationDate: DateTime
-
-  """"""
-  transaction: String
 }
 
 """"""
@@ -7995,171 +8166,6 @@ type ScheduleReminderRoleContext {
 }
 
 """"""
-type PlanFeatureModel {
-  """"""
-  itemId: ID!
-
-  """"""
-  itemCode: String!
-
-  """"""
-  planId: ID!
-
-  """"""
-  code: String!
-
-  """"""
-  name: String!
-
-  """"""
-  currency: Currency
-
-  """"""
-  price: Float
-
-  """"""
-  isPermanent: Boolean!
-
-  """"""
-  credit: Int!
-}
-
-"""Generate purchase based on items or subscription"""
-input PurchaseInput {
-  """Billing Token"""
-  token: String
-
-  """Billing items"""
-  items: [BillingItemInput!] = []
-
-  """Billing subscriptions"""
-  subscriptions: [BillingSubscriptionInput!] = []
-
-  """"""
-  artistId: Int
-
-  """"""
-  threeDSecureActionResultTokenId: String
-
-  """"""
-  providerCouponCodes: [String!]
-}
-
-"""Billing Item Input"""
-input BillingItemInput {
-  """Media Id"""
-  mediaId: Int!
-}
-
-"""Billing Subscription Input"""
-input BillingSubscriptionInput {
-  """Billing Subscription code"""
-  code: String!
-}
-
-""""""
-type PurchaseModel {
-  """"""
-  items: [BillingItemModel!]!
-
-  """"""
-  subscriptions: [BillingItemModel!]!
-
-  """"""
-  total: Float!
-
-  """"""
-  currency: Currency!
-
-  """"""
-  invoiceId: String
-
-  """"""
-  email: String!
-
-  """"""
-  cardType: String
-
-  """"""
-  lastFour: String
-
-  """"""
-  creditsApplied: Float!
-
-  """"""
-  discount: Float
-
-  """"""
-  couponCodes: [String!]
-
-  """"""
-  coupons: [CouponModel!]
-}
-
-""""""
-type CouponModel {
-  """"""
-  code: String!
-
-  """"""
-  description: String
-}
-
-"""Subscription Input"""
-input ArtistSubscriptionInput {
-  """Artist id"""
-  artistId: Int!
-}
-
-""""""
-type FreeCreditItemModel {
-  """"""
-  itemId: Float!
-
-  """"""
-  itemCode: BillingItemCode!
-
-  """"""
-  artistId: Float!
-
-  """"""
-  credits: Float!
-
-  """"""
-  createdBy: Float!
-
-  """"""
-  created: DateTime!
-
-  """"""
-  updated: DateTime
-}
-
-""""""
-enum BillingItemCode {
-  """"""
-  registration
-
-  """"""
-  SYSTEM_ACCESS
-
-  """"""
-  PHOTO_UPLOAD
-
-  """"""
-  MEDIA_UPLOAD
-
-  """"""
-  AUDIO_UPLOAD
-
-  """"""
-  VIDEO_UPLOAD
-
-  """"""
-  SUBMISSION
-}
-
-""""""
 type PresentationSubmissionComment {
   """Presentation Group Talent Comment ID"""
   id: Int!
@@ -9831,6 +9837,9 @@ input ProfileSearchInput {
   """Search by skill ids and their level ids"""
   skills: [SkillSearchInput!]
 
+  """"""
+  skillOperator: FilterOperator
+
   """Profession"""
   profession: String
 
@@ -10239,6 +10248,15 @@ input SkillSearchInput {
 
   """"""
   levelId: ID
+}
+
+""""""
+enum FilterOperator {
+  """"""
+  OR
+
+  """"""
+  AND
 }
 
 """Input type for vehicle search"""
@@ -10971,6 +10989,9 @@ type ScheduleReportModel {
   submissionNotes: Boolean
 
   """"""
+  includeTimeframes: Boolean
+
+  """"""
   displayTalentInfoOptions: [DisplayTalentInfoOptionsEnum!]
 
   """"""
@@ -11065,6 +11086,9 @@ enum DisplayTalentPhotoOptionsEnum {
 
   """"""
   AuditionSnapshots
+
+  """"""
+  NoPhoto
 }
 
 """Schedule Report Payload"""
@@ -11475,6 +11499,12 @@ type PresentationLogReportModel {
   presentationFolderIds: [Int!]
 
   """"""
+  displayTalentPhotoOptions: [DisplayTalentPhotoOptionsEnum!]
+
+  """"""
+  displayTalentInfoOptions: [DisplayTalentInfoOptionsEnum!]
+
+  """"""
   payload: PresentationLogReportPayloadModel
 }
 
@@ -11545,6 +11575,9 @@ type PresentationReportTalentModel {
 
   """"""
   isPersonal: Boolean
+
+  """"""
+  isRepresented: Boolean
 
   """"""
   dateOfBirth: DateTime
@@ -13613,6 +13646,9 @@ enum RequestStatusUnion {
   MEDIA_ADDED
 
   """"""
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
   DECLINED
 
   """"""
@@ -13944,6 +13980,12 @@ enum SortOrder {
 }
 
 """"""
+input SearchNotificationFiltersArgs {
+  """"""
+  archived: Boolean
+}
+
+""""""
 type NotificationPagedList {
   """"""
   page: Int!
@@ -13992,6 +14034,9 @@ type Notification {
 
   """"""
   viewed: Boolean
+
+  """"""
+  archivedAt: DateTime
 }
 
 """"""
@@ -14303,6 +14348,9 @@ enum ResponseStatus {
   MEDIA_ADDED
 
   """"""
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
   CHANGE_REQUESTED
 
   """"""
@@ -14415,6 +14463,9 @@ type RepWorksheetSubmission {
 
   """Submission's note"""
   note: String
+
+  """"""
+  isCreatedByCD: Boolean
 }
 
 """Talent info"""
@@ -14492,13 +14543,16 @@ type RepWorksheetResponse {
   status: ResponseStatus!
 
   """"""
-  repliedAt: DateTime!
+  repliedAt: DateTime
 
   """Response note"""
   note: String
 
   """The media files sent in response"""
-  medias: [WfMedia!]
+  medias: [WfMedia!] @deprecated(reason: "please use mediaList")
+
+  """"""
+  mediaList: [MediaResponseItem!]
 }
 
 """"""
@@ -14607,6 +14661,30 @@ type WfMediaTransformation {
 }
 
 """"""
+type MediaResponseItem {
+  """"""
+  id: Int!
+
+  """"""
+  alias: String
+
+  """"""
+  timestamp: DateTime!
+
+  """"""
+  isAdditional: Boolean
+
+  """"""
+  isForwardedToCD: Boolean
+
+  """"""
+  type: String!
+
+  """"""
+  media: WfMedia!
+}
+
+""""""
 type RepWorksheetScheduleDetail {
   """"""
   id: ID
@@ -14686,6 +14764,39 @@ type RepWorksheetScheduleAddressCountry {
   """"""
   name: String
 }
+
+""""""
+enum RepsWorksheetGroupType {
+  """"""
+  PROJECT
+
+  """"""
+  PROFILE
+}
+
+""""""
+type RepsWorksheetGroups {
+  """"""
+  nextGroupId: ID
+
+  """"""
+  groups: [RepsWorksheetGroup!]!
+}
+
+""""""
+type RepsWorksheetGroup {
+  """"""
+  id: ID!
+
+  """"""
+  itemCount: Int!
+
+  """"""
+  details: RepsWorksheetGroupDetails
+}
+
+""""""
+union RepsWorksheetGroupDetails = RepWorksheetProfile | RepWorksheetProject
 
 """"""
 type RepsWorksheetFilters {
@@ -14825,6 +14936,9 @@ type MediaRequest {
   dueDate: DateTime
 
   """"""
+  allowAdditionalMedia: Boolean
+
+  """"""
   responses(statuses: [String!], page: PageInput!): MediaResponsePagedList!
 
   """"""
@@ -14888,7 +15002,10 @@ type MediaResponse {
   note: String
 
   """"""
-  medias: [WfMedia!]
+  medias: [WfMedia!] @deprecated(reason: "please use mediaList")
+
+  """"""
+  mediaList: [MediaResponseItem!]
 
   """"""
   status: MediaRequestStatus!
@@ -14943,6 +15060,9 @@ type WfSubmission {
 
   """"""
   contactInfo: WfProfileContactInfo
+
+  """"""
+  isCreatedByCD: Boolean
 
   """"""
   mediaCount(requested: Boolean): [WfMediaCount!]
@@ -15793,6 +15913,9 @@ enum MediaRequestStatus {
   MEDIA_ADDED
 
   """"""
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
   CHANGE_REQUESTED
 
   """"""
@@ -15943,7 +16066,10 @@ type MediaSubRequest {
   project: WfProject!
 
   """The media files sent in response"""
-  medias: [WfMedia!]
+  medias: [WfMedia!] @deprecated(reason: "please use mediaList")
+
+  """"""
+  mediaList: [MediaResponseItem!]
 
   """The note sent in response"""
   note: String
@@ -15980,6 +16106,9 @@ type MediaSubRequest {
 
   """"""
   chatTopicKey: String!
+
+  """"""
+  allowAdditionalMedia: Boolean
 
   """"""
   dueDateTimeZone: WfTimeZone
@@ -16579,6 +16708,9 @@ type ActivityLogRequest {
 
   """"""
   mediaByType: MediaByType
+
+  """"""
+  additionalMedia: [WfMedia!]
 }
 
 """"""
@@ -16859,6 +16991,21 @@ type Mutation {
 
   """"""
   checkOtpCode(otpCode: String!, verificationId: String!): Boolean!
+
+  """"""
+  completePurchase(input: PurchaseInput!): CompletePurchaseBillingDetailsModel!
+
+  """"""
+  createSubscription(input: CreateSubscriptionInput!): Boolean!
+
+  """"""
+  cancelSubscription(subscriptionId: Int!): Boolean!
+
+  """"""
+  deleteSubscription(transaction: String!): Boolean!
+
+  """"""
+  addArtistFreeCredits(input: AddArtistFreeCreditsInput!): Boolean!
 
   """"""
   updateAccount(
@@ -17145,6 +17292,12 @@ type Mutation {
   ): Int!
 
   """"""
+  createSessionAndAddSubmissions(submissionIds: [BigInt!]!, sessionName: String!): Int!
+
+  """"""
+  addSubmissionsToExistingSession(submissionIds: [BigInt!]!, sessionId: Int!): Int!
+
+  """"""
   addNote(input: AddNoteInput!): Note!
 
   """"""
@@ -17159,20 +17312,14 @@ type Mutation {
   """"""
   updateNotificationEntityTypeSubscription(input: NotificationSubscriptionInput!): Boolean!
 
-  """"""
-  completePurchase(input: PurchaseInput!): CompletePurchaseBillingDetailsModel!
+  """Marks notifications as viewed"""
+  markNotifications(ids: [ID!]!, viewed: Boolean!): Boolean!
 
-  """"""
-  createSubscription(input: CreateSubscriptionInput!): Boolean!
+  """Archive notification"""
+  archiveNotifications(ids: [String!]!): Boolean!
 
-  """"""
-  cancelSubscription(subscriptionId: Int!): Boolean!
-
-  """"""
-  deleteSubscription(transaction: String!): Boolean!
-
-  """"""
-  addArtistFreeCredits(input: AddArtistFreeCreditsInput!): Boolean!
+  """Restore notification"""
+  restoreNotifications(ids: [String!]!): Boolean!
 
   """Adds comment for the submission"""
   addCommentToSubmission(
@@ -17627,7 +17774,10 @@ type Mutation {
   addSubmissionSnapshot(startOffset: String, snapshotId: Int!, submissionsId: BigInt!): Int!
 
   """Copies submission data to another role"""
-  copySubmissionToRole(submissionStatusCode: SubmissionStatusCodeEnum!, tileSchemaValueCode: String!, roleId: Int!, submissionId: BigInt!): Submission!
+  copySubmissionToRole(submissionId: BigInt!, submissionStatusCode: SubmissionStatusCodeEnum!, tileSchemaValueCode: String!, roleId: Int!): Submission! @deprecated(reason: "Use moveSubmissionsToRole")
+
+  """Move submissions to another role"""
+  moveSubmissionsToRole(submissionStatusCode: SubmissionStatusCodeEnum, submissionIds: [BigInt!]!, tileSchemaValueCode: String!, roleId: Int!): [Submission!]!
 
   """Submits all selected submissions by REPS for the role"""
   submitSelectedSubmissionForRole(roleId: Int!): Boolean!
@@ -17990,15 +18140,6 @@ type Mutation {
   """Reply to 'Media' request"""
   replyToMediaRequest(input: MediaResponseInput!): MediaSubRequest!
 
-  """Reply to 'Media' request by Agent"""
-  replyToMediaRequestByAgent(input: MediaResponseInput!): MediaSubRequest! @deprecated(reason: "Use \"replyToMediaRequest\"")
-
-  """Decline 'Media' request by Agent"""
-  declineMediaRequestByAgent(input: MediaDeclineInput!): MediaSubRequest! @deprecated(reason: "Use \"replyToMediaRequest\"")
-
-  """Decline 'Media' request by Talent"""
-  declineMediaRequestByTalent(input: MediaDeclineInput!): MediaSubRequest! @deprecated(reason: "Use \"replyToMediaRequest\"")
-
   """Request changes on 'Media' request"""
   requestMediaChanges(input: MediaChangeInput!): MediaSubRequest!
 
@@ -18026,9 +18167,6 @@ type Mutation {
   """Creates 'Roster Invitation Request' type"""
   createRosterInvitationRequest(input: RosterInvitationRequestInput!): RosterInvitationRequest!
 
-  """Marks notifications as viewed"""
-  markNotifications(ids: [ID!]!, viewed: Boolean!): Boolean!
-
   """Send 'Schedule Invite' request"""
   sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
 
@@ -18037,6 +18175,9 @@ type Mutation {
 
   """Casting Director can set reply status"""
   setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
+
+  """Sends Voice Over 'Media' request"""
+  sendVoiceOverMediaRequest(input: SendVoiceOverMediaRequestInput!): [MediaSubRequest!]!
 }
 
 """Creates a user account based on given input values"""
@@ -18349,6 +18490,186 @@ input BauPCAccountUpdateInput {
   facebookLink: String
 }
 
+""""""
+type CompletePurchaseBillingDetailsModel {
+  """"""
+  email: String
+
+  """"""
+  cardType: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  invoiceId: String
+
+  """"""
+  total: Float
+
+  """"""
+  creditsApplied: Float
+
+  """"""
+  items: [BillingItemModel!]
+}
+
+"""Create Subscription Input"""
+input CreateSubscriptionInput {
+  """Account code"""
+  accountCode: String!
+
+  """Artist id"""
+  artistId: Float!
+
+  """Billing code"""
+  billingCode: BillingCode!
+
+  """Country id"""
+  countryId: Float!
+
+  """Next billing date"""
+  nextBillDate: DateTime!
+
+  """Coupon code"""
+  coupon: String = null
+}
+
+""""""
+enum BillingCode {
+  """"""
+  premium_m2m
+
+  """"""
+  premium_annual
+
+  """"""
+  registration
+
+  """"""
+  premium_comped
+
+  """"""
+  cb_m2m
+
+  """"""
+  cb_semiannual
+
+  """"""
+  cb_annual
+
+  """"""
+  la_cb_m2m
+
+  """"""
+  la_cb_semiannual
+
+  """"""
+  la_cb_annual
+
+  """"""
+  la_cbmh_annual
+
+  """"""
+  la_cbmh_semiannual
+
+  """"""
+  la_cbmh_m2m
+
+  """"""
+  mh_m2m
+
+  """"""
+  mh_semiannual
+
+  """"""
+  mh_annual
+
+  """"""
+  la_mh_m2m
+
+  """"""
+  la_mh_semiannual
+
+  """"""
+  la_mh_annual
+
+  """"""
+  pu_m2m
+
+  """"""
+  pu_semiannual
+
+  """"""
+  pu_annual
+
+  """"""
+  cbmh_m2m
+
+  """"""
+  cbmh_semiannual
+
+  """"""
+  cbmh_annual
+
+  """"""
+  la_cbmu_m2m
+
+  """"""
+  la_cbmu_semiannual
+
+  """"""
+  la_cbmu_annual
+
+  """"""
+  mhpu_m2m
+
+  """"""
+  mhpu_semiannual
+
+  """"""
+  mhpu_annual
+
+  """"""
+  cbpu_m2m
+
+  """"""
+  cbpu_semiannual
+
+  """"""
+  cbpu_annual
+
+  """"""
+  concierge_m2m
+
+  """"""
+  concierge_semiannual
+
+  """"""
+  concierge_annual
+
+  """"""
+  cbmhpu_m2m
+
+  """"""
+  cbmhpu_semiannual
+
+  """"""
+  cbmhpu_annual
+}
+
+""""""
+input AddArtistFreeCreditsInput {
+  """"""
+  artistId: Int!
+
+  """"""
+  itemCode: BillingItemCode!
+
+  """"""
+  credits: Int!
+}
+
 """Updates a user account based on given input values"""
 input UpdateAccountInput {
   """"""
@@ -18409,7 +18730,7 @@ input AccountCreateInput {
   email: String!
 
   """"""
-  phoneNumber: String!
+  phoneNumber: String
 
   """"""
   firstName: String!
@@ -18589,11 +18910,11 @@ input RegisterDeviceInput {
   token: String!
 
   """"""
-  deviceType: DeviceType!
+  deviceType: DeviceTokenType!
 }
 
 """"""
-enum DeviceType {
+enum DeviceTokenType {
   """"""
   APN
 }
@@ -19035,186 +19356,6 @@ input NotificationTypeSubscriptionInput {
 
   """Notification Nature CODE"""
   notificationNatureCode: String!
-}
-
-""""""
-type CompletePurchaseBillingDetailsModel {
-  """"""
-  email: String
-
-  """"""
-  cardType: String
-
-  """"""
-  lastFour: String
-
-  """"""
-  invoiceId: String
-
-  """"""
-  total: Float
-
-  """"""
-  creditsApplied: Float
-
-  """"""
-  items: [BillingItemModel!]
-}
-
-"""Create Subscription Input"""
-input CreateSubscriptionInput {
-  """Account code"""
-  accountCode: String!
-
-  """Artist id"""
-  artistId: Float!
-
-  """Billing code"""
-  billingCode: BillingCode!
-
-  """Country id"""
-  countryId: Float!
-
-  """Next billing date"""
-  nextBillDate: DateTime!
-
-  """Coupon code"""
-  coupon: String = null
-}
-
-""""""
-enum BillingCode {
-  """"""
-  premium_m2m
-
-  """"""
-  premium_annual
-
-  """"""
-  registration
-
-  """"""
-  premium_comped
-
-  """"""
-  cb_m2m
-
-  """"""
-  cb_semiannual
-
-  """"""
-  cb_annual
-
-  """"""
-  la_cb_m2m
-
-  """"""
-  la_cb_semiannual
-
-  """"""
-  la_cb_annual
-
-  """"""
-  la_cbmh_annual
-
-  """"""
-  la_cbmh_semiannual
-
-  """"""
-  la_cbmh_m2m
-
-  """"""
-  mh_m2m
-
-  """"""
-  mh_semiannual
-
-  """"""
-  mh_annual
-
-  """"""
-  la_mh_m2m
-
-  """"""
-  la_mh_semiannual
-
-  """"""
-  la_mh_annual
-
-  """"""
-  pu_m2m
-
-  """"""
-  pu_semiannual
-
-  """"""
-  pu_annual
-
-  """"""
-  cbmh_m2m
-
-  """"""
-  cbmh_semiannual
-
-  """"""
-  cbmh_annual
-
-  """"""
-  la_cbmu_m2m
-
-  """"""
-  la_cbmu_semiannual
-
-  """"""
-  la_cbmu_annual
-
-  """"""
-  mhpu_m2m
-
-  """"""
-  mhpu_semiannual
-
-  """"""
-  mhpu_annual
-
-  """"""
-  cbpu_m2m
-
-  """"""
-  cbpu_semiannual
-
-  """"""
-  cbpu_annual
-
-  """"""
-  concierge_m2m
-
-  """"""
-  concierge_semiannual
-
-  """"""
-  concierge_annual
-
-  """"""
-  cbmhpu_m2m
-
-  """"""
-  cbmhpu_semiannual
-
-  """"""
-  cbmhpu_annual
-}
-
-""""""
-input AddArtistFreeCreditsInput {
-  """"""
-  artistId: Int!
-
-  """"""
-  itemCode: BillingItemCode!
-
-  """"""
-  credits: Int!
 }
 
 """Audition Presentation input type"""
@@ -21567,6 +21708,9 @@ input ScheduleReportCreateInput {
   submissionNotes: Boolean
 
   """"""
+  includeTimeframes: Boolean
+
+  """"""
   displayTalentPhotoOptions: [DisplayTalentPhotoOptionsEnum!]
 
   """"""
@@ -22120,6 +22264,9 @@ input MediaRequestInput {
 
   """"""
   dueDateTimeZoneId: Int = null
+
+  """"""
+  allowAdditionalMedia: Boolean
 }
 
 """"""
@@ -22159,6 +22306,9 @@ enum MediaResponseStatus {
 
   """"""
   MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
 }
 
 """Media Input Object"""
@@ -22168,15 +22318,6 @@ input MediaInput {
 
   """"""
   name: String!
-}
-
-""""""
-input MediaDeclineInput {
-  """"""
-  id: ID!
-
-  """"""
-  note: String
 }
 
 """Media files to change"""
@@ -22350,6 +22491,18 @@ input ScheduleInviteSetStatusInput {
   A response: a user can confirm, decline or request rescheduling the Schedule.
   """
   response: ScheduleInviteResponseStatus!
+}
+
+""""""
+input SendVoiceOverMediaRequestInput {
+  """"""
+  roleId: Int!
+
+  """"""
+  talentInstructions: String!
+
+  """"""
+  submissionIds: [Int!]!
 }
 
 """Account status object"""
