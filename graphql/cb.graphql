@@ -177,5 +177,7 @@ mutation archiveNotifications($ids: [String!]!) {
   archiveNotifications(ids: $ids)
 }
 
-
+mutation restoreNotifications($ids: [String!]!) {
+  restoreNotifications(ids: $ids)
+}
 
