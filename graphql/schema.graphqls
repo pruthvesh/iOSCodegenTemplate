@@ -18730,7 +18730,7 @@ input AccountCreateInput {
   email: String!
 
   """"""
-  phoneNumber: String
+  phoneNumber: String!
 
   """"""
   firstName: String!

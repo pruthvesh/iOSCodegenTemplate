@@ -342,3 +342,74 @@ mutation updateAccountLanguage(
 mutation registerAccountDevice($input:RegisterDeviceInput!) {
   registerAccountDevice(input: $input)
 }
+
+query ARTIST_SUBSCRIPTION($input: ArtistSubscriptionInput!) {
+  artistSubscriptions(input: $input) {
+    id
+    status
+    nextBillingDate
+    expirationDate
+    transaction
+    plan {
+      id
+      code
+      name
+      isBasePlan
+      billingCode
+      enabled     
+    }
+  }
+}
+
+query PREVIEW_PURCHASE($input: PurchaseInput!) {
+  previewPurchase(input: $input) {
+    items {
+      name
+      code
+      price
+      qty
+      id
+      __typename
+    }
+    subscriptions {
+      code
+      name
+      price
+      qty
+      __typename
+    }
+    currency {
+      symbol
+      code
+      __typename
+    }
+    creditsApplied
+    couponCodes
+    coupons {
+      code
+      description
+      __typename
+    }
+    total
+    discount
+    __typename
+  }
+}
+
+
+mutation completePurchase($input: PurchaseInput!) {
+  completePurchase(input: $input) {
+    email
+    cardType
+    lastFour
+    invoiceId
+    creditsApplied
+    total
+    items {
+      availableCredit
+      __typename
+    }
+    __typename
+  }
+}
+
