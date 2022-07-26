@@ -79,6 +79,7 @@ query ARTISTS_INFO {
       created
       artistSubscriptions {
         id
+        status
         expirationDate
         plan {
           id
