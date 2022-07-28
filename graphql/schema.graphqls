@@ -232,7 +232,7 @@ type Query {
   getCommentsForSubmission(submissionId: BigInt!): [PresentationSubmissionComment!]!
 
   """"""
-  getCommentsForSubmissions(page: PageInput, submissionIds: [BigInt!]!): PresentationSubmissionCommentPaginatedResult!
+  getCommentsForSubmissions(userName: [String!], page: PageInput, submissionIds: [BigInt!]!): PresentationSubmissionCommentPaginatedResult!
 
   """"""
   getSubmissionFeedback(submissionId: BigInt!): PresentationSubmissionFeedback!
@@ -284,6 +284,9 @@ type Query {
 
   """"""
   getPresentationGroupsSubmissions(
+    """"""
+    clientNames: [String!]
+
     """"""
     hasPicks: Boolean
 
@@ -426,6 +429,9 @@ type Query {
   ): SubmissionPaginatedResult!
 
   """"""
+  countSubmissionsPerRole(input: SubmissionCountPerRoleInput!): [SubmissionCountPerRole!]!
+
+  """"""
   getSubmissionsByRole(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, tileSchemeCodes: [String!], submissionStatusCodes: [String!]!, roleIds: [Int!]!): SubmissionPaginatedResult!
 
   """"""
@@ -494,7 +500,7 @@ type Query {
   getProjectBacklot(page: PageInput, input: ProjectBacklotSearchInput!): ProjectBacklotSearchResultPaginatedResult!
 
   """"""
-  searchProjectsByOrg(page: PageInput = {pageSize: 100, pageNumber: 1}, partialProjectName: String = ""): ProjectSearchResultsByOrgIdPaginatedResult!
+  searchProjectsByOrg(page: PageInput = {pageSize: 100, pageNumber: 1}, partialProjectName: String = ""): ProjectPaginatedResult!
 
   """Get the roles by id's"""
   roles(ids: [ID!]!): [Role!]!
@@ -4972,7 +4978,7 @@ type Submission {
   scheduleInfo: ScheduleInfo
 
   """"""
-  pickedBy: [SubmissionPick!]!
+  pickedBy(clientNames: [String!]): [SubmissionPick!]!
 
   """"""
   contactInfo: ProfileContactInfo
@@ -6579,7 +6585,55 @@ enum ThumbnailType {
 """"""
 type AccountProjectFiltersPreferences {
   """"""
-  kidsOnly: Boolean!
+  isKidsRolesOnly: Boolean
+
+  """"""
+  hasRequests: Boolean
+
+  """"""
+  hasSelects: Boolean
+
+  """"""
+  hasSubmissions: Boolean
+
+  """"""
+  projectViewStatus: ProjectViewFilterType
+
+  """"""
+  projectName: String
+
+  """"""
+  submissionDueDate: String
+
+  """"""
+  roleName: String
+
+  """Role Types Search Settings"""
+  roleTypes: [RoleType!]
+
+  """Project Types Search Settings"""
+  projectTypes: [ProjectType!]
+
+  """Project Union Search Settings"""
+  projectUnion: [TalentUnion!]
+
+  """Region Search Settings"""
+  projectRegion: [Dma!]
+
+  """Casting Organisation Search Settings"""
+  castingOrganizations: [Organization!]
+}
+
+"""Project Viewed Filter"""
+enum ProjectViewFilterType {
+  """"""
+  Viewed
+
+  """"""
+  Unviewed
+
+  """"""
+  All
 }
 
 """"""
@@ -10370,6 +10424,36 @@ type FacetBucket {
   facets: [Facet!]
 }
 
+"""Submission Search input"""
+input SubmissionCountPerRoleInput {
+  """List of Submission Status Codes"""
+  submissionStatusCodes: [String!]
+
+  """List of Submission Tile Schema Codes"""
+  tileSchemeValueCodes: [String!]
+
+  """List of Role IDs"""
+  roleIds: [Int!]
+
+  """Profile Type Id"""
+  profileTypeId: Int
+
+  """"""
+  stageName: String
+
+  """"""
+  excludeRequestMasterId: String
+}
+
+"""Submission Count By Role object"""
+type SubmissionCountPerRole {
+  """Submission Role Id"""
+  roleId: Int
+
+  """Total count of rows"""
+  totalCount: Int
+}
+
 """Submission data for Workflow"""
 type SubmissionWorkflow {
   """"""
@@ -10688,13 +10772,13 @@ type ProjectBacklotSearchResult {
   updated: DateTime
 }
 
-"""Paginated result with [ProjectSearchResultsByOrgId] objects"""
-type ProjectSearchResultsByOrgIdPaginatedResult {
+"""Paginated result with [Project] objects"""
+type ProjectPaginatedResult {
   """Total count of rows"""
   totalCount: Int!
 
-  """List of ProjectSearchResultsByOrgId objects"""
-  objects: [ProjectSearchResultsByOrgId!]!
+  """List of Project objects"""
+  objects: [Project!]!
 
   """Current page"""
   page: Int!
@@ -10704,15 +10788,6 @@ type ProjectSearchResultsByOrgIdPaginatedResult {
 
   """Last key """
   lastKey: String
-}
-
-"""Project by org id search result"""
-type ProjectSearchResultsByOrgId {
-  """Project Id"""
-  id: Int
-
-  """Project name"""
-  projectName: String
 }
 
 """Role status codes options"""
@@ -13913,7 +13988,7 @@ type AccountItem {
   email: String!
 
   """"""
-  phone: String!
+  phone: String
 
   """"""
   accountStatus: AccountStatus
@@ -17100,7 +17175,7 @@ type Mutation {
   setAccountSchedulePreferences(preferences: AccountSchedulePreferencesInput!): Boolean!
 
   """"""
-  setAccountProjectListFilterPreferences(preferences: AccountProjectFiltersPreferencesInput!): Boolean!
+  setAccountProjectListFilterPreferences(preferences: AccountProjectFiltersInput!): Boolean!
 
   """"""
   registerAccountDevice(input: RegisterDeviceInput!): Boolean!
@@ -17780,7 +17855,10 @@ type Mutation {
   moveSubmissionsToRole(submissionStatusCode: SubmissionStatusCodeEnum, submissionIds: [BigInt!]!, tileSchemaValueCode: String!, roleId: Int!): [Submission!]!
 
   """Submits all selected submissions by REPS for the role"""
-  submitSelectedSubmissionForRole(roleId: Int!): Boolean!
+  submitSelectedSubmissionForRole(roleId: Int!, mediaRequestStatuses: [MediaRequestStatus!]): Boolean!
+
+  """Submits all selected submissions by REPS for the role"""
+  submitSelectedSubmissionForRoleV1(roleId: Int!, mediaRequestStatuses: [MediaRequestStatus!]): Int!
 
   """"""
   hideProfileInRoster(id: ID!): Profile!
@@ -18730,7 +18808,7 @@ input AccountCreateInput {
   email: String!
 
   """"""
-  phoneNumber: String!
+  phoneNumber: String
 
   """"""
   firstName: String!
@@ -18899,9 +18977,45 @@ input AccountSchedulePreferencesInput {
 }
 
 """"""
-input AccountProjectFiltersPreferencesInput {
+input AccountProjectFiltersInput {
   """"""
-  kidsOnly: Boolean!
+  isKidsRolesOnly: Boolean
+
+  """"""
+  projectTypeIds: [Float!]
+
+  """"""
+  roleTypes: [String!]
+
+  """"""
+  castingOrganizationIds: [Float!]
+
+  """"""
+  dmaIds: [Float!]
+
+  """"""
+  hasRequests: Boolean
+
+  """"""
+  hasSelects: Boolean
+
+  """"""
+  hasSubmissions: Boolean
+
+  """"""
+  projectViewStatus: ProjectViewFilterType
+
+  """"""
+  projectName: String
+
+  """"""
+  roleName: String
+
+  """"""
+  projectUnionIds: [Float!]
+
+  """"""
+  submissionDueDate: String
 }
 
 """"""
@@ -21742,6 +21856,9 @@ input PresentationReportCreateInput {
 
   """"""
   presentationId: Int!
+
+  """"""
+  clientNamesFilter: [String!]
 }
 
 """Presentation Report Display Options Model"""
