@@ -895,3 +895,32 @@ fragment BaseMedia on Media {
   __typename
 }
 
+query talentUnions {
+  talentUnions {
+    id
+    name
+    code
+    sortOrder
+    parentObject {
+      id
+      code
+      name
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfile($input: ProfileUpdateInput!) {
+  updateProfile(input: $input) {
+    profileId
+    profileStatus {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}

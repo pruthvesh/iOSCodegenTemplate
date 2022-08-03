@@ -16,3 +16,29 @@ query dmas {
     __typename
   }
 }
+
+query getLocations {
+  dmas(isLimitedOnly: true) {
+    id
+    name
+    code
+    region {
+      id
+      name
+      code
+      country {
+        id
+        code
+        name
+        continent {
+          id
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
