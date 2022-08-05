@@ -8922,6 +8922,9 @@ type PresentationSubmissionPublic {
   """"""
   contactInfo: ProfileContactInfo
 
+  """Audition Snapshot Media Assets"""
+  auditionSnapshot: Media
+
   """"""
   roleId: Int
 
@@ -9416,6 +9419,9 @@ type PublicSubmission {
 
   """"""
   contactInfo: ProfileContactInfo
+
+  """Audition Snapshot Media Assets"""
+  auditionSnapshot: Media
 }
 
 """"""
@@ -10368,6 +10374,9 @@ enum SubmissionSearchSortColumn {
 
   """"""
   ROLE
+
+  """"""
+  RANDOMIZE
 }
 
 """"""

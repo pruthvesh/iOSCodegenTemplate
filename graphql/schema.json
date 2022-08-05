@@ -49870,6 +49870,18 @@
             "deprecationReason": null
           },
           {
+            "name": "auditionSnapshot",
+            "description": "Audition Snapshot Media Assets",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Media",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "roleId",
             "description": "",
             "args": [],
@@ -52422,6 +52434,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "ProfileContactInfo",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "auditionSnapshot",
+            "description": "Audition Snapshot Media Assets",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Media",
               "ofType": null
             },
             "isDeprecated": false,
@@ -55938,6 +55962,12 @@
           },
           {
             "name": "ROLE",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "RANDOMIZE",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null

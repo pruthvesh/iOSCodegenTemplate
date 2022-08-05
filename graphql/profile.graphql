@@ -330,6 +330,7 @@ fragment ProfileDetails on Profile {
     name
     code
     sortOrder
+    talentMembershipId
     parentObject {
       id
       code
