@@ -42,3 +42,21 @@ query getLocations {
   }
 }
 
+query countryWithDma {
+  countryWithDma(isLimitedOnly: true) {
+    id
+    name
+    code
+    regions {
+      id
+      code
+      name
+      dmas {
+        id
+        code
+        name
+      }
+    }
+  }
+}
+
