@@ -207,19 +207,23 @@ fragment ProfileDetails on Profile {
   }
   coat {
     id
+    code
     name
     __typename
   }
   profileSizes {
     id
+    code
     name
     category {
       id
+      code
       name
       __typename
     }
     sizeModifier {
       id
+      code
       name
       __typename
     }
@@ -247,11 +251,13 @@ fragment ProfileDetails on Profile {
   ethnicAppearances {
     id
     name
+    code
     order
     __typename
   }
   hairColor {
     id
+    code
     name
     __typename
   }
@@ -269,44 +275,52 @@ fragment ProfileDetails on Profile {
   }
   hairStyle {
     id
+    code
     name
     __typename
   }
   facialHair {
     id
+    code
     name
     __typename
   }
   eyeColor {
     id
+    code
     name
     __typename
   }
   tattoo {
     id
+    code
     name
     __typename
   }
   tattooNote
   profilePiercings {
     id
+    code
     name
     __typename
   }
   piercingNote
   pursuing {
     id
+    code
     name
     __typename
   }
   uniqueAttributes {
     id
+    code
     name
     __typename
   }
   workingLocations {
     id
     name
+    code
     sortOrder
     __typename
   }

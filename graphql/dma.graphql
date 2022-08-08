@@ -47,14 +47,20 @@ query countryWithDma {
     id
     name
     code
+    enabled
+    sortOrder
     regions {
       id
       code
       name
+      enabled
+      sortOrder
       dmas {
         id
         code
         name
+        enabled
+        sortOrder
       }
     }
   }
