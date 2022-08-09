@@ -939,3 +939,24 @@ mutation updateProfile($input: ProfileUpdateInput!) {
     __typename
   }
 }
+
+query heights {
+  heights {
+    id
+    IMPERIAL_FEET_INCHES
+    METRIC_CENTIMETERS
+    showInImperialUI
+    __typename
+  }
+}
+
+query weights {
+  weights {
+    id
+    IMPERIAL_LBS
+    showInMetricUI
+    kgRounded
+    METRIC_KG
+    __typename
+  }
+}

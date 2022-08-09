@@ -61,6 +61,11 @@ query ARTISTS_INFO {
       id
       code
       name
+      unitSystem {
+        id
+        code
+        name
+      }
       continent {
         id
         code
