@@ -13768,6 +13768,12 @@
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "TALENT_UNION",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -38148,8 +38154,8 @@
               "name": "RoleTarget",
               "ofType": null
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Use \"entity\" field instead"
           },
           {
             "name": "rolePaidType",
@@ -38160,8 +38166,8 @@
               "name": "PaidType",
               "ofType": null
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Use \"entity\" field instead"
           },
           {
             "name": "projectType",
@@ -38170,6 +38176,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "ProjectType",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use \"entity\" field instead"
+          },
+          {
+            "name": "entity",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "UNION",
+              "name": "NotificationEntityDetails",
               "ofType": null
             },
             "isDeprecated": false,
@@ -38240,6 +38258,37 @@
         "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
+      },
+      {
+        "kind": "UNION",
+        "name": "NotificationEntityDetails",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "TalentUnion",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProjectType",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "RoleTarget",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "PaidType",
+            "ofType": null
+          }
+        ]
       },
       {
         "kind": "OBJECT",
@@ -43628,8 +43677,8 @@
               "name": "RoleTarget",
               "ofType": null
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Use \"entity\" field instead"
           },
           {
             "name": "rolePaidType",
@@ -43640,8 +43689,8 @@
               "name": "PaidType",
               "ofType": null
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Use \"entity\" field instead"
           },
           {
             "name": "projectType",
@@ -43650,6 +43699,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "ProjectType",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use \"entity\" field instead"
+          },
+          {
+            "name": "entity",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "UNION",
+              "name": "NotificationEntityDetails",
               "ofType": null
             },
             "isDeprecated": false,
@@ -44729,6 +44790,46 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "projectTypeId",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "projectUnionIds",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -44982,6 +45083,38 @@
         "name": "RolesPublishedRoleDetailsContext",
         "description": "",
         "fields": [
+          {
+            "name": "id",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "roleTargetId",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "type",
             "description": "",

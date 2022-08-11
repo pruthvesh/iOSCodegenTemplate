@@ -1481,6 +1481,9 @@ enum EntityTypeEnum {
 
   """"""
   SUBMISSION
+
+  """"""
+  TALENT_UNION
 }
 
 """"""
@@ -6495,13 +6498,16 @@ type NotificationTypeNotificationSubscription {
   entityType: EntityType
 
   """"""
-  roleTarget: RoleTarget
+  roleTarget: RoleTarget @deprecated(reason: "Use \"entity\" field instead")
 
   """"""
-  rolePaidType: PaidType
+  rolePaidType: PaidType @deprecated(reason: "Use \"entity\" field instead")
 
   """"""
-  projectType: ProjectType
+  projectType: ProjectType @deprecated(reason: "Use \"entity\" field instead")
+
+  """"""
+  entity: NotificationEntityDetails
 
   """"""
   notificationType: NotificationType
@@ -6518,6 +6524,9 @@ type NotificationTypeNotificationSubscription {
   """Notification Id"""
   notificationId: Int
 }
+
+""""""
+union NotificationEntityDetails = TalentUnion | ProjectType | RoleTarget | PaidType
 
 """Notification Type object"""
 type NotificationType {
@@ -7625,13 +7634,16 @@ type NotificationEntitySubscription {
   entityType: EntityType
 
   """"""
-  roleTarget: RoleTarget
+  roleTarget: RoleTarget @deprecated(reason: "Use \"entity\" field instead")
 
   """"""
-  rolePaidType: PaidType
+  rolePaidType: PaidType @deprecated(reason: "Use \"entity\" field instead")
 
   """"""
-  projectType: ProjectType
+  projectType: ProjectType @deprecated(reason: "Use \"entity\" field instead")
+
+  """"""
+  entity: NotificationEntityDetails
 
   """"""
   notificationType: NotificationType
@@ -7845,6 +7857,12 @@ type RolesPublishedProjectContext {
 
   """"""
   projectNotesMessage: String!
+
+  """"""
+  projectTypeId: Int!
+
+  """"""
+  projectUnionIds: [Int!]!
 }
 
 """"""
@@ -7897,6 +7915,12 @@ type RolesPublishedRoleContext {
 
 """"""
 type RolesPublishedRoleDetailsContext {
+  """"""
+  id: Int!
+
+  """"""
+  roleTargetId: Int!
+
   """"""
   type: String!
 

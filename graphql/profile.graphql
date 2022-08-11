@@ -960,3 +960,11 @@ query weights {
     __typename
   }
 }
+
+mutation attachMediaToProfile($input: AttachMediaToProfileInput!) {
+  attachMediaToProfile(input: $input) {
+    ...BaseMediaWithThumbnail
+    __typename
+  }
+}
+
