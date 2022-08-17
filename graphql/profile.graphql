@@ -968,3 +968,42 @@ mutation attachMediaToProfile($input: AttachMediaToProfileInput!) {
   }
 }
 
+
+query CREDIT_DETAIL($profileId: Float!) {
+  credits(profileId: $profileId) {
+    id
+    year
+    title
+    role
+    director
+    highlighted
+    sortOrder
+    creditOrder
+    profileCreditTypeId
+    creditType {
+      id
+      name
+      code
+      __typename
+    }
+    creditMedia {
+      ...MediaAsset
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateCreditOrder($input: [CreditOrderInput!]!) {
+  updateCreditOrder(input: $input)
+}
+
+mutation updateProfileCreditTypeSortOrder(
+  $firstProfileCreditTypeId: Float!
+  $secondProfileCreditTypeId: Float!
+) {
+  updateProfileCreditTypeSortOrder(
+    firstProfileCreditTypeId: $firstProfileCreditTypeId
+    secondProfileCreditTypeId: $secondProfileCreditTypeId
+  )
+}
