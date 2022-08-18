@@ -1007,3 +1007,36 @@ mutation updateProfileCreditTypeSortOrder(
     secondProfileCreditTypeId: $secondProfileCreditTypeId
   )
 }
+
+mutation attachCreditVideo($mediaIds: [Float!]!, $creditId: Float!) {
+  attachCreditVideo(mediaIds: $mediaIds, creditId: $creditId) {
+    mediaId
+    isLocked
+    __typename
+  }
+}
+
+mutation deleteCreditMedia($mediaId: Float!, $creditId: Float!) {
+  deleteCreditMedia(mediaId: $mediaId, creditId: $creditId)
+}
+
+mutation deleteCredit($creditId: Float!) {
+  deleteCredit(creditId: $creditId)
+}
+
+mutation updateCredit($creditUpdateInput: CreditUpdateInput!) {
+  updateCredit(credit: $creditUpdateInput) {
+    id
+    highlighted
+    __typename
+  }
+}
+
+query creditTypes {
+  creditTypes {
+    id
+    name
+    code
+    __typename
+  }
+}
