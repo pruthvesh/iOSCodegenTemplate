@@ -361,9 +361,11 @@ fragment ProfileDetails on Profile {
     profileMediaId
     parentObject {
       id
+      code
       name
       parentObject {
         id
+        code
         name
         __typename
       }
@@ -371,6 +373,7 @@ fragment ProfileDetails on Profile {
     }
     level {
       id
+      code
       name
       __typename
     }
