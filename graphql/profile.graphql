@@ -1040,3 +1040,10 @@ query creditTypes {
     __typename
   }
 }
+
+mutation createCredit($creditInput: CreditInput!) {
+  createCredit(credit: $creditInput) {
+    id
+    __typename
+  }
+}
