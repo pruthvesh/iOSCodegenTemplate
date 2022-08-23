@@ -17800,6 +17800,9 @@ type Mutation {
   deleteProfile(profileId: Int!): Boolean!
 
   """"""
+  copyProfileData(toProfileId: Float!, fromProfileId: Float!): Float!
+
+  """"""
   createCredit(credit: CreditInput!): Credit!
 
   """"""

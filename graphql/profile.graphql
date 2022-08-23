@@ -381,10 +381,12 @@ fragment ProfileDetails on Profile {
   }
   profileVehicles {
     vehicleName
+    profileVehicleId
     vehicleYear
     vehicleTypeMake {
       make {
         id
+        code
         name
         __typename
       }
@@ -394,26 +396,31 @@ fragment ProfileDetails on Profile {
   }
   profilePets {
     id
+    code
     name
     __typename
   }
   props {
     id
+    code
     name
     __typename
   }
   sportEquipments {
     id
+    code
     name
     __typename
   }
   profileWardrobes {
     id
+    code
     name
     __typename
   }
   documentTypes {
     id
+    code
     name
     __typename
   }
@@ -1050,3 +1057,84 @@ mutation createCredit($creditInput: CreditInput!) {
     __typename
   }
 }
+
+query assets {
+  vehicleTypes {
+    id
+    code
+    name
+    __typename
+  }
+  vehicleTypeMakes {
+    id
+    code
+    type {
+      id
+      code
+      name
+      __typename
+    }
+    make {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  pets {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  petSizes {
+    id
+    code
+    name
+    __typename
+  }
+  props {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  wardrobes {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  sportEquipments {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
