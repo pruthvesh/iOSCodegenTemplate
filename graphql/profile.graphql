@@ -1067,7 +1067,6 @@ query assets {
   }
   vehicleTypeMakes {
     id
-    code
     type {
       id
       code
@@ -1138,3 +1137,7 @@ query assets {
   }
 }
 
+
+mutation updateProfileSkill($input: ProfileSkillInput!) {
+  updateProfileSkill(input: $input)
+}
