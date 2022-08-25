@@ -1141,3 +1141,13 @@ query assets {
 mutation updateProfileSkill($input: ProfileSkillInput!) {
   updateProfileSkill(input: $input)
 }
+
+
+query skillLevels {
+  skillLevels {
+    id
+    code
+    name
+    __typename
+  }
+}
