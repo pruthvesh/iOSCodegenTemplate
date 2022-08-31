@@ -359,6 +359,7 @@ fragment ProfileDetails on Profile {
     code
     name
     profileMediaId
+    profileSkillId
     parentObject {
       id
       code
