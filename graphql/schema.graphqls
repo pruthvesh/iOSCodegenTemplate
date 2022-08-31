@@ -14154,6 +14154,9 @@ type NotificationContext {
 
   """"""
   requestType: RequestType
+
+  """"""
+  auditionDateUTC: DateTime
 }
 
 """"""
@@ -14997,6 +15000,27 @@ enum RequestStatus {
 
   """"""
   CANCELLED
+
+  """"""
+  NEW_REQUEST
+
+  """"""
+  RESCHEDULED
+
+  """"""
+  REVIEW_RESPONSE
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  ON_HOLD
+
+  """"""
+  COMPLETED
+
+  """"""
+  CANCELLED_RESCHEDULED
 }
 
 """'Media Request' Type"""
