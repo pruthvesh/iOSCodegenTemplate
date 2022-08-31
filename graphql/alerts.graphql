@@ -349,6 +349,7 @@ query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
     question
     status
     response
+    includeSides
     cancellationNote
     messageForRepresentatives
     forwardNote
