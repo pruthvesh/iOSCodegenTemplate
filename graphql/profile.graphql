@@ -1152,3 +1152,53 @@ query skillLevels {
     __typename
   }
 }
+
+mutation deleteProfileSkill($profileSkillId: BigInt!) {
+  deleteProfileSkill(profileSkillId: $profileSkillId)
+}
+
+mutation attachMediaToProfileSkill(
+  $mediaId: Int!
+  $profileSkillId: BigInt!
+  $profileId: Int!
+) {
+  attachMediaToProfileSkill(
+    mediaId: $mediaId
+    profileSkillId: $profileSkillId
+    profileId: $profileId
+  ) {
+    mediaId
+    isLocked
+    __typename
+  }
+}
+
+query skillsDictionary {
+  skills {
+    id
+    name
+    code
+    childObjects {
+      id
+      name
+      code
+      childObjects {
+        id
+        name
+        __typename
+      }
+      __typename
+    }
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation addProfileSkill($skillIds: [Float!]!, $profileId: Float!) {
+  addProfileSkill(skillIds: $skillIds, profileId: $profileId)
+}
