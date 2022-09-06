@@ -894,6 +894,12 @@ type Query {
   getMessageAfterId(direction: SearchDirection!, afterMessageId: String!, pageSize: Int!, topicKey: String!): GetChatMessagesByTopicModel!
 
   """"""
+  getDefaultSavedSearch: SavedSearch
+
+  """"""
+  getSavedSearchList(limit: Int!, keyOffset: String): SavedSearchList
+
+  """"""
   authHealth: String!
 
   """List of sessions"""
@@ -13887,6 +13893,81 @@ enum SearchDirection {
 }
 
 """"""
+type SavedSearch {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  isDefault: Boolean!
+
+  """"""
+  attributes: SavedSearchAttributes!
+}
+
+""""""
+type SavedSearchAttributes {
+  """"""
+  workingLocations: [Dma!]
+
+  """"""
+  ethnicAppearances: [EthnicAppearance!]
+
+  """"""
+  genderAppearances: [GenderAppearance!]
+
+  """"""
+  paidTypes: [PaidType!]
+
+  """"""
+  roleTargets: [RoleTarget!]
+
+  """"""
+  projectTypes: [ProjectType!]
+
+  """"""
+  talentUnions: [TalentUnion!]
+
+  """"""
+  playableAge: AgeRange
+
+  """"""
+  showRolesNoLongerAcceptingSubmissions: Boolean
+
+  """"""
+  roleProjectKeywordSearch: RoleProjectKeywordSearchEnum
+
+  """"""
+  keywords: String
+
+  """"""
+  excludeSexualSituations: Boolean
+}
+
+""""""
+type AgeRange {
+  """"""
+  ageMax: Int
+
+  """"""
+  ageMin: Int
+
+  """"""
+  inMonths: Boolean
+}
+
+""""""
+type SavedSearchList {
+  """"""
+  items: [SavedSearch!]!
+
+  """"""
+  nextKeyOffset: String
+}
+
+""""""
 type Session {
   """"""
   accessToken: String
@@ -18227,6 +18308,15 @@ type Mutation {
   """"""
   restoreProjects(projectIds: [Float!]!): String!
 
+  """"""
+  createSavedSearch(input: CreateSavedSearchInput!): SavedSearch!
+
+  """"""
+  updateSavedSearch(input: UpdateSavedSearchInput!): SavedSearch!
+
+  """"""
+  deleteSavedSearch(ids: [ID!]!): Int!
+
   """Returns a session bearer token."""
   login(email: String!, password: String!): AuthToken!
 
@@ -22300,6 +22390,30 @@ input ChatMessageCreateInput {
 
   """"""
   messageBody: String!
+}
+
+""""""
+input CreateSavedSearchInput {
+  """"""
+  name: String!
+
+  """"""
+  isDefault: Boolean = false
+
+  """"""
+  searchArgs: CastingBillboardSearchInput!
+}
+
+""""""
+input UpdateSavedSearchInput {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  isDefault: Boolean = false
 }
 
 """"""

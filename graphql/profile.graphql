@@ -1184,6 +1184,7 @@ query skillsDictionary {
       code
       childObjects {
         id
+        code
         name
         __typename
       }
