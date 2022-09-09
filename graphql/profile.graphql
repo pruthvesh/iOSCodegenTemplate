@@ -381,44 +381,86 @@ fragment ProfileDetails on Profile {
     __typename
   }
   profileVehicles {
-    vehicleName
-    profileVehicleId
-    vehicleYear
-    vehicleTypeMake {
-      make {
+      profileVehicleId
+      vehicleName
+      vehicleYear
+      vehicleTypeMake {
+        id
+        type {
+          id
+          code
+          name
+          __typename
+        }
+        make {
+          id
+          code
+          name
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+  profilePets {
+      profilePetId
+      id
+      code
+      name
+      petSize {
         id
         code
         name
         __typename
       }
+      parentObject {
+        id
+        name
+        code
+        __typename
+      }
       __typename
     }
-    __typename
-  }
-  profilePets {
-    id
-    code
-    name
-    __typename
-  }
   props {
-    id
-    code
-    name
-    __typename
-  }
-  sportEquipments {
-    id
-    code
-    name
-    __typename
-  }
+      profilePropId
+      id
+      code
+      name
+      parentObject {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
+ sportEquipments {
+      profileSportEquipmentId
+      id
+      code
+      name
+      parentObject {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
   profileWardrobes {
-    id
-    code
-    name
-    __typename
-  }
+      profileWardrobeId
+      id
+      code
+      name
+      sortOrder
+      parentObject {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
   documentTypes {
     id
     code
