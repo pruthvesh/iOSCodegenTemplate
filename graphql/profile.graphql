@@ -1101,7 +1101,7 @@ mutation createCredit($creditInput: CreditInput!) {
   }
 }
 
-query assets {
+query vehicleTypes {
   vehicleTypes {
     id
     code
@@ -1124,6 +1124,9 @@ query assets {
     }
     __typename
   }
+}
+
+query pets {
   pets {
     id
     code
@@ -1142,6 +1145,9 @@ query assets {
     name
     __typename
   }
+}
+
+query props {
   props {
     id
     code
@@ -1154,6 +1160,9 @@ query assets {
     }
     __typename
   }
+}
+
+query wardrobes {
   wardrobes {
     id
     code
@@ -1166,6 +1175,9 @@ query assets {
     }
     __typename
   }
+}
+
+query sportEquipments {
   sportEquipments {
     id
     code
