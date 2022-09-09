@@ -1245,3 +1245,250 @@ query skillsDictionary {
 mutation addProfileSkill($skillIds: [Float!]!, $profileId: Float!) {
   addProfileSkill(skillIds: $skillIds, profileId: $profileId)
 }
+
+mutation deleteProfilePet($profileId: Float!, $profilePetId: Float!) {
+  deleteProfilePet(profileId: $profileId, profilePetId: $profilePetId)
+}
+
+mutation addProfileVehicle($profileId: Float!, $input: ProfileVehicleInput!) {
+  addProfileVehicle(profileId: $profileId, input: $input) {
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      id
+      type {
+        id
+        name
+        code
+        __typename
+      }
+      make {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileVehicle(
+  $profileId: Float!
+  $profileVehicleId: Float!
+  $input: UpdateProfileVehicleInput!
+) {
+  updateProfileVehicle(
+    profileId: $profileId
+    profileVehicleId: $profileVehicleId
+    input: $input
+  ) {
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      type {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileVehicle($profileId: Float!, $profileVehicleId: Float!) {
+  deleteProfileVehicle(
+    profileId: $profileId
+    profileVehicleId: $profileVehicleId
+  )
+}
+
+mutation addProfilePet($profileId: Float!, $input: ProfilePetInput!) {
+  addProfilePet(profileId: $profileId, input: $input) {
+    id
+    petSize {
+      id
+      code
+      name
+      __typename
+    }
+    code
+    count
+    __typename
+  }
+}
+
+mutation updateProfilePet(
+  $profileId: Float!
+  $profilePetId: Float!
+  $input: ProfilePetInput!
+) {
+  updateProfilePet(
+    profileId: $profileId
+    profilePetId: $profilePetId
+    input: $input
+  ) {
+    id
+    petSize {
+      id
+      code
+      name
+      __typename
+    }
+    code
+    count
+    __typename
+  }
+}
+
+mutation addProfileProp($profileId: Float!, $propId: Float!) {
+  addProfileProp(profileId: $profileId, propId: $propId) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileProp(
+  $profileId: Float!
+  $profilePropId: Float!
+  $propId: Float!
+) {
+  updateProfileProp(
+    profileId: $profileId
+    profilePropId: $profilePropId
+    propId: $propId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileProp($profileId: Float!, $profilePropId: Float!) {
+  deleteProfileProp(profileId: $profileId, profilePropId: $profilePropId)
+}
+
+mutation addProfileWardrobe($profileId: Float!, $wardrobeId: Float!) {
+  addProfileWardrobe(profileId: $profileId, wardrobeId: $wardrobeId) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileWardrobe(
+  $profileId: Float!
+  $profileWardrobeId: Float!
+  $wardrobeId: Float!
+) {
+  updateProfileWardrobe(
+    profileId: $profileId
+    profileWardrobeId: $profileWardrobeId
+    wardrobeId: $wardrobeId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileWardrobe($profileId: Float!, $profileWardrobeId: Float!) {
+  deleteProfileWardrobe(
+    profileId: $profileId
+    profileWardrobeId: $profileWardrobeId
+  )
+}
+
+
+mutation addProfileSportsEquipment(
+  $profileId: Float!
+  $sportEquipmentId: Float!
+) {
+  addProfileSportsEquipment(
+    profileId: $profileId
+    sportEquipmentId: $sportEquipmentId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileSportsEquipment(
+  $profileId: Float!
+  $profileSportEquipmentId: Float!
+  $sportEquipmentId: Float!
+) {
+  updateProfileSportsEquipment(
+    profileId: $profileId
+    profileSportEquipmentId: $profileSportEquipmentId
+    sportEquipmentId: $sportEquipmentId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileSportsEquipment(
+  $profileId: Float!
+  $profileSportEquipmentId: Float!
+) {
+  deleteProfileSportsEquipment(
+    profileId: $profileId
+    profileSportEquipmentId: $profileSportEquipmentId
+  )
+}
+
+
+
+
+
+
+
