@@ -1498,6 +1498,159 @@ mutation deleteProfileSportsEquipment(
   )
 }
 
+query ethnicAppearances {
+  ethnicAppearances {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query hairColors {
+  hairColors {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query hairStyles {
+  hairStyles {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query facialHairs {
+  facialHairs {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query eyeColors {
+  eyeColors {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query tattoos {
+  tattoos {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query piercings {
+  piercings {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query multipleBirths {
+  multipleBirths {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query uniqueAttributes {
+  uniqueAttributes {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+
+query workTypes {
+  pursuings {
+    id
+    code
+    name
+    sortOrder
+    __typename
+  }
+  willingnesses {
+    id
+    code
+    name
+    sortOrder
+    parentObject {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    childObjects {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+}
+
+query seekingRepresentations {
+  seekingRepresentations {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query documentTypes($onlySelectable: Boolean) {
+  documentTypes(onlySelectable: $onlySelectable) {
+    id
+    code
+    name
+    sortOrder
+    country {
+      name
+      code
+      id
+      __typename
+    }
+    childObjects {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
 
 
 
