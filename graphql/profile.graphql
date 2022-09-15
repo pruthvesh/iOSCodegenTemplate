@@ -1653,7 +1653,171 @@ query documentTypes($onlySelectable: Boolean) {
 }
 
 
-
+query profileSizes{
+  waists {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  inseams {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  gloves {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  hatSizes {
+    id
+    size
+    inch
+    cm
+    enabled
+    __typename
+  }
+  chestSizes {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  necks {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  sleeves {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  coats {
+    id
+    name
+    __typename
+  }
+  tshirtSizes {
+    id
+    code
+    name
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  pants {
+    id
+    sizeUS
+    sizeEU
+    sizeUK
+    sizeAU
+    gender {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  shoeSizes {
+    id
+    shoeSizeUS
+    shoeSizeEU
+    shoeSizeUK
+    shoeSizeAU
+    sortOrder
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  shoeModifier {
+    id
+    code
+    name
+    __typename
+  }
+  dresses {
+    id
+    sizeUS
+    sizeEU
+    sizeUK
+    sizeAU
+    __typename
+  }
+  busts {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  underBusts {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  hips {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  cupSizes {
+    id
+    name
+    __typename
+  }
+  generalSizes {
+    id
+    code
+    name
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  sizeModifiers {
+    id
+    code
+    name
+    __typename
+  }
+}
 
 
 
