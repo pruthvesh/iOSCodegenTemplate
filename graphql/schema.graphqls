@@ -900,6 +900,9 @@ type Query {
   getSavedSearchList(limit: Int!, keyOffset: String): SavedSearchList
 
   """"""
+  submissionTrends(input: SubmissionTrendsInput!): SubmissionTrendsResult!
+
+  """"""
   authHealth: String!
 
   """List of sessions"""
@@ -8536,13 +8539,7 @@ type MediaToArchive {
 """"""
 enum MediaTypeEnum {
   """"""
-  AUDIO
-
-  """"""
-  DOCUMENT
-
-  """"""
-  PHOTO
+  IMAGE
 
   """"""
   VIDEO
@@ -13971,6 +13968,84 @@ type SavedSearchList {
 
   """"""
   nextKeyOffset: String
+}
+
+""""""
+input SubmissionTrendsInput {
+  """"""
+  timeFrame: TimeFrameEnum = NinetyDays
+
+  """"""
+  interval: IntervalEnum = Week
+}
+
+"""Time frame"""
+enum TimeFrameEnum {
+  """"""
+  ThirtyDays
+
+  """"""
+  NinetyDays
+
+  """"""
+  SixMonths
+
+  """"""
+  Year
+
+  """"""
+  All
+}
+
+"""Date interval"""
+enum IntervalEnum {
+  """"""
+  Week
+
+  """"""
+  Month
+
+  """"""
+  Quarter
+}
+
+""""""
+union SubmissionTrendsResult = SubmissionTrendsSuccess | SubmissionTrendsNoAccessError
+
+""""""
+type SubmissionTrendsSuccess {
+  """"""
+  data: [SubmissionTrend!]!
+}
+
+""""""
+type SubmissionTrend {
+  """"""
+  submissionCount: Int!
+
+  """"""
+  selectionCount: Int!
+
+  """"""
+  date: DateTime
+}
+
+""""""
+type SubmissionTrendsNoAccessError implements IError {
+  """"""
+  code: Int!
+
+  """"""
+  message: String!
+}
+
+""""""
+interface IError {
+  """"""
+  code: Int!
+
+  """"""
+  message: String!
 }
 
 """"""
@@ -25845,6 +25920,21 @@ enum MediaStorageEnum {
 
   """"""
   READY
+}
+
+""""""
+enum MediaTypeCodeEnum {
+  """"""
+  AUDIO
+
+  """"""
+  DOCUMENT
+
+  """"""
+  PHOTO
+
+  """"""
+  VIDEO
 }
 
 """"""

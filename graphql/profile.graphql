@@ -126,11 +126,13 @@ fragment ProfileDetails on Profile {
     shoeSizeAU
     category {
       id
+      code
       name
       __typename
     }
     shoeModifier {
       id
+      code
       name
       __typename
     }
