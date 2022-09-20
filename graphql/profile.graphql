@@ -1824,3 +1824,19 @@ query profileSizes{
 
 
 
+query genderAppearances {
+  genderAppearances {
+    id
+    code
+    name
+    __typename
+  }
+  genderIdentities {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
