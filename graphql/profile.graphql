@@ -1511,7 +1511,7 @@ query ethnicAppearances {
   }
 }
 
-query hairColors {
+query hairColorsStyles {
   hairColors {
     id
     name
@@ -1519,9 +1519,6 @@ query hairColors {
     sortOrder
     __typename
   }
-}
-
-query hairStyles {
   hairStyles {
     id
     name
@@ -1529,14 +1526,32 @@ query hairStyles {
     sortOrder
     __typename
   }
-}
-
-query facialHairs {
   facialHairs {
     id
     name
     code
     sortOrder
+    __typename
+  }
+  willingnesses {
+    id
+    code
+    name
+    sortOrder
+    parentObject {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    childObjects {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
     __typename
   }
 }
