@@ -96648,6 +96648,33 @@
             "deprecationReason": null
           },
           {
+            "name": "closeDivision",
+            "description": "",
+            "args": [
+              {
+                "name": "divisionId",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Float",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createScheduleReport",
             "description": "",
             "args": [
@@ -123818,6 +123845,12 @@
           },
           {
             "name": "SUBMISSION",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SUBMISSION_TRENDS",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null

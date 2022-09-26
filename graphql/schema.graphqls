@@ -18231,6 +18231,9 @@ type Mutation {
   reassociateChildOrgtoParent(parentOrgId: Float!, childOrgId: Float!): Boolean
 
   """"""
+  closeDivision(divisionId: Float!): Float
+
+  """"""
   createScheduleReport(input: ScheduleReportCreateInput!): String!
 
   """"""
@@ -25866,6 +25869,9 @@ enum ItemEnum {
 
   """"""
   SUBMISSION
+
+  """"""
+  SUBMISSION_TRENDS
 
   """"""
   SYSTEM_ACCESS

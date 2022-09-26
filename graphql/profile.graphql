@@ -329,6 +329,7 @@ fragment ProfileDetails on Profile {
   }
   seekingRepresentations {
     id
+    code
     name
     __typename
   }
