@@ -900,6 +900,9 @@ type Query {
   getSavedSearchList(limit: Int!, keyOffset: String): SavedSearchList
 
   """"""
+  getSavedSearchTypes: [String!]!
+
+  """"""
   submissionTrends(input: SubmissionTrendsInput!): SubmissionTrendsResult!
 
   """"""
@@ -940,6 +943,9 @@ type Query {
 
   """"""
   repsWorksheetFilters: RepsWorksheetFilters!
+
+  """"""
+  getBillingInfo(input: GetBillingInfoInput!): [BillingInfo!]!
 
   """"""
   wfApiHealth: String!
@@ -1649,6 +1655,9 @@ input PurchaseInput {
 
   """"""
   providerCouponCodes: [String!]
+
+  """"""
+  billingInfoId: String
 }
 
 """Billing Item Input"""
@@ -1760,6 +1769,9 @@ type SubscriptionModel {
 
   """"""
   transaction: String
+
+  """"""
+  billingInfoId: String
 }
 
 """"""
@@ -13907,6 +13919,9 @@ type SavedSearch {
   isDefault: Boolean!
 
   """"""
+  notificationType: String
+
+  """"""
   attributes: SavedSearchAttributes!
 }
 
@@ -15108,6 +15123,45 @@ type OrganizationFilter {
 
   """"""
   name: String!
+}
+
+""""""
+input GetBillingInfoInput {
+  """"""
+  ids: [String!]
+}
+
+"""Billing information"""
+type BillingInfo {
+  """"""
+  id: ID
+
+  """"""
+  firstName: String
+
+  """"""
+  lastName: String
+
+  """"""
+  isPrimaryPaymentMethod: Boolean
+
+  """"""
+  isBackupPaymentMethod: Boolean
+
+  """"""
+  cardType: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  month: Int
+
+  """"""
+  year: Int
+
+  """"""
+  postalCode: String
 }
 
 """"""
@@ -18424,6 +18478,18 @@ type Mutation {
 
   """Returns a session bearer token for internal user."""
   googleLoginInternal(googleAuthToken: String!): AuthToken!
+
+  """"""
+  addBillingInfo(input: AddBillingInfoInput!): BillingInfo!
+
+  """"""
+  updateBillingInfo(input: UpdateBillingInfoInput!): BillingInfo!
+
+  """"""
+  removeBillingInfo(input: RemoveBillingInfoInput!): Boolean!
+
+  """"""
+  setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
 
   """Either sends 'Not Yet Sent' request or re-sends it"""
   sendRequest(id: ID!, sendTo: RequestSendTo!, note: String = null): Boolean!
@@ -22486,6 +22552,9 @@ input CreateSavedSearchInput {
 
   """"""
   searchArgs: CastingBillboardSearchInput!
+
+  """"""
+  notificationType: String = "NONE"
 }
 
 """"""
@@ -22498,6 +22567,9 @@ input UpdateSavedSearchInput {
 
   """"""
   isDefault: Boolean = false
+
+  """"""
+  notificationType: String = "NONE"
 }
 
 """"""
@@ -22507,6 +22579,54 @@ enum MicroServices {
 
   """"""
   BACKLOT
+}
+
+""""""
+input AddBillingInfoInput {
+  """"""
+  tokenId: String!
+
+  """"""
+  primaryPaymentMethod: Boolean
+
+  """"""
+  backupPaymentMethod: Boolean
+
+  """"""
+  threeDSecureActionResultTokenId: String
+}
+
+""""""
+input UpdateBillingInfoInput {
+  """"""
+  tokenId: String
+
+  """"""
+  billingInfoId: String!
+
+  """"""
+  primaryPaymentMethod: Boolean
+
+  """"""
+  backupPaymentMethod: Boolean
+
+  """"""
+  threeDSecureActionResultTokenId: String
+}
+
+""""""
+input RemoveBillingInfoInput {
+  """"""
+  billingInfoId: String!
+}
+
+""""""
+input SetSubscriptionPaymentMethodInput {
+  """"""
+  subscriptionId: Int!
+
+  """"""
+  billingInfoId: String!
 }
 
 """"""

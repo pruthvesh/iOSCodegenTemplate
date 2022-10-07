@@ -1856,3 +1856,13 @@ query genderAppearances {
   }
 }
 
+mutation removeProfileResume($profileId: Int!) {
+  removeProfileResume(profileId: $profileId)
+}
+
+mutation setProfileResume($mediaId: Int!, $profileId: Int!) {
+  setProfileResume(mediaId: $mediaId, profileId: $profileId) {
+    mediaId
+    __typename
+  }
+}
