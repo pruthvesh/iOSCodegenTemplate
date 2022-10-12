@@ -181,3 +181,143 @@ mutation restoreNotifications($ids: [String!]!) {
   restoreNotifications(ids: $ids)
 }
 
+mutation createSavedSearch($input: CreateSavedSearchInput!) {
+  createSavedSearch(input: $input) {
+    id
+    name
+    isDefault
+    notificationType
+    attributes {
+      workingLocations {
+        id
+        name
+        __typename
+      }
+      ethnicAppearances {
+        id
+        code
+        name
+        __typename
+      }
+      genderAppearances {
+        id
+        code
+        name
+        __typename
+      }
+      payPreferences: paidTypes {
+        id
+        code
+        name
+        __typename
+      }
+      roleTargets {
+        id
+        code
+        name
+        __typename
+      }
+      projectTypes {
+        id
+        name
+        __typename
+      }
+      talentUnions {
+        id
+        code
+        name
+        parentObject {
+          id
+          code
+          name
+          __typename
+        }
+        __typename
+      }
+      playableAge {
+        ageMax
+        ageMin
+        inMonths
+        __typename
+      }
+      showRolesNoLongerAcceptingSubmissions
+      roleProjectKeywordSearch
+      keywords
+      __typename
+    }
+    __typename
+  }
+}
+
+query getSavedSearchList($limit: Int!, $keyOffset: String) {
+  savedSearchList: getSavedSearchList(limit: $limit, keyOffset: $keyOffset) {
+    nextKeyOffset
+    items {
+      id
+      name
+      isDefault
+      notificationType
+      attributes {
+        workingLocations {
+          id
+          name
+          __typename
+        }
+        ethnicAppearances {
+          id
+          code
+          name
+          __typename
+        }
+        genderAppearances {
+          id
+          code
+          name
+          __typename
+        }
+        payPreferences: paidTypes {
+          id
+          code
+          name
+          __typename
+        }
+        roleTargets {
+          id
+          code
+          name
+          __typename
+        }
+        projectTypes {
+          id
+          name
+          __typename
+        }
+        talentUnions {
+          id
+          code
+          name
+          parentObject {
+            id
+            code
+            name
+            __typename
+          }
+          __typename
+        }
+        playableAge {
+          ageMax
+          ageMin
+          inMonths
+          __typename
+        }
+        showRolesNoLongerAcceptingSubmissions
+        roleProjectKeywordSearch
+        keywords
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
