@@ -900,6 +900,9 @@ type Query {
   getSavedSearchList(limit: Int!, keyOffset: String): SavedSearchList
 
   """"""
+  getSavedSearchByIds(ids: [ID!]!): [SavedSearch!]
+
+  """"""
   getSavedSearchTypes: [String!]!
 
   """"""
