@@ -321,3 +321,6 @@ query getSavedSearchList($limit: Int!, $keyOffset: String) {
   }
 }
 
+query getSavedSearchTypes {
+  savedSearchTypes: getSavedSearchTypes
+}
