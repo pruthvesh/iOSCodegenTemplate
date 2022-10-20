@@ -1702,7 +1702,7 @@ type PurchaseModel {
   lastFour: String
 
   """"""
-  creditsApplied: Float!
+  creditsApplied: Float
 
   """"""
   discount: Float
@@ -1712,6 +1712,9 @@ type PurchaseModel {
 
   """"""
   coupons: [CouponModel!]
+
+  """"""
+  activeCouponRedemption: [CouponModel!]
 }
 
 """"""
@@ -1984,7 +1987,7 @@ type Account {
   country: Country
 
   """Account billing info"""
-  billingInfo: AccountBillingInfo!
+  billingInfo: AccountBillingInfo
 
   """"""
   notificationSubscriptions: [NotificationTypeNotificationSubscription!]!
@@ -6864,7 +6867,7 @@ type UnclaimedAccount {
   country: Country
 
   """Account billing info"""
-  billingInfo: AccountBillingInfo!
+  billingInfo: AccountBillingInfo
 
   """"""
   notificationSubscriptions: [NotificationTypeNotificationSubscription!]!
@@ -18494,6 +18497,12 @@ type Mutation {
   """"""
   setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
 
+  """"""
+  createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
+
+  """"""
+  removeActiveCouponRedemption: Boolean!
+
   """Either sends 'Not Yet Sent' request or re-sends it"""
   sendRequest(id: ID!, sendTo: RequestSendTo!, note: String = null): Boolean!
 
@@ -22632,6 +22641,12 @@ input SetSubscriptionPaymentMethodInput {
   billingInfoId: String!
 }
 
+"""Create Coupon Redemption Input"""
+input CreateCouponRedemptionInput {
+  """"""
+  couponId: String!
+}
+
 """"""
 enum RequestSendTo {
   """"""
@@ -26121,6 +26136,9 @@ enum NotificationTypeEnum {
 
   """"""
   REQUEST
+
+  """"""
+  CHAT
 }
 
 """"""

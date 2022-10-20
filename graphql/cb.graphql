@@ -324,3 +324,17 @@ query getSavedSearchList($limit: Int!, $keyOffset: String) {
 query getSavedSearchTypes {
   savedSearchTypes: getSavedSearchTypes
 }
+
+mutation updateSavedSearch($input: UpdateSavedSearchInput!) {
+  updateSavedSearch(input: $input) {
+    id
+    name
+    isDefault
+    notificationType
+    __typename
+  }
+}
+
+mutation deleteSavedSearch($ids: [ID!]!) {
+  deleteSavedSearch(ids: $ids)
+}
