@@ -260,6 +260,7 @@ query getSavedSearchList($limit: Int!, $keyOffset: String) {
       attributes {
         workingLocations {
           id
+          code
           name
           __typename
         }
@@ -289,6 +290,7 @@ query getSavedSearchList($limit: Int!, $keyOffset: String) {
         }
         projectTypes {
           id
+          code
           name
           __typename
         }

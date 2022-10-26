@@ -14854,13 +14854,9 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -14899,6 +14895,26 @@
           },
           {
             "name": "coupons",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CouponModel",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "activeCouponRedemption",
             "description": "",
             "args": [],
             "type": {
@@ -16169,13 +16185,9 @@
             "description": "Account billing info",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "AccountBillingInfo",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "AccountBillingInfo",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -39983,13 +39995,9 @@
             "description": "Account billing info",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "AccountBillingInfo",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "AccountBillingInfo",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -99034,6 +99042,53 @@
             "deprecationReason": null
           },
           {
+            "name": "createCouponRedemption",
+            "description": "",
+            "args": [
+              {
+                "name": "input",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateCouponRedemptionInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "removeActiveCouponRedemption",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "sendRequest",
             "description": "Either sends 'Not Yet Sent' request or re-sends it",
             "args": [
@@ -115914,6 +115969,31 @@
         "possibleTypes": null
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateCouponRedemptionInput",
+        "description": "Create Coupon Redemption Input",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "couponId",
+            "description": "",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "RequestSendTo",
         "description": "",
@@ -124766,6 +124846,12 @@
           },
           {
             "name": "REQUEST",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "CHAT",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
