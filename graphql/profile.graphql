@@ -984,6 +984,42 @@ query talentUnions {
   }
 }
 
+query roleTargets{
+  roleTargets {
+    id
+    code
+    name
+    sortOrder
+  }
+}
+
+query paidTypes{
+  paidTypes {
+    id
+    code
+    name
+    sortOrder
+    enabled
+  }
+}
+
+query projectTypes{
+  projectTypes {
+    id
+    code
+    name
+    selectable
+    sortOrder
+    enabled
+    parentObject {
+      id
+      code
+      name
+      sortOrder
+    }
+  }
+}
+
 mutation updateProfile($input: ProfileUpdateInput!) {
   updateProfile(input: $input) {
     profileId
