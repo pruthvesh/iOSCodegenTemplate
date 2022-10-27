@@ -1881,6 +1881,7 @@ query genderAppearances {
     id
     code
     name
+    sortOrder
     __typename
   }
   genderIdentities {
