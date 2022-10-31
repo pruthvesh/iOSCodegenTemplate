@@ -24,7 +24,6 @@ query GET_FIT_FOR_YOU_DEFAULT_VALUES {
         name
         code
       }
-      
     }
     projectTypes {
       id
@@ -42,17 +41,21 @@ query GET_FIT_FOR_YOU_DEFAULT_VALUES {
       id
       name
       code
-      
     }
     ageInYears
-    
   }
 }
 
-
-
-query ROLES_LIST($paginationConfig: PageInput!, $castingBillBoardFilters: CastingBillboardSearchInput!, $sortInput: SortConditionInput) {
-  castingBillboardRoles(castingBillBoardFilters: $castingBillBoardFilters, paginationConfig: $paginationConfig, sortInput: $sortInput) {
+query ROLES_LIST(
+  $paginationConfig: PageInput!
+  $castingBillBoardFilters: CastingBillboardSearchInput!
+  $sortInput: SortConditionInput
+) {
+  castingBillboardRoles(
+    castingBillBoardFilters: $castingBillBoardFilters
+    paginationConfig: $paginationConfig
+    sortInput: $sortInput
+  ) {
     totalCount
     roles {
       ...CastingRoleList
@@ -63,14 +66,10 @@ query ROLES_LIST($paginationConfig: PageInput!, $castingBillBoardFilters: Castin
         roleDateType {
           id
           code
-          
         }
         cityName
-        
       }
-      
     }
-    
   }
 }
 
@@ -88,7 +87,6 @@ fragment CastingRoleList on Role {
     id
     code
     name
-    
   }
   ageInYears
   ageMinMonth
@@ -96,45 +94,35 @@ fragment CastingRoleList on Role {
   genderAppearance {
     id
     name
-    
   }
   ethnicAppearance {
     id
     name
-    
   }
   roleType {
     id
     name
-    
   }
   sexualSituations {
     id
     name
-    
   }
   roleStatus {
     id
     code
-    
   }
   projectType {
     id
     name
-    
   }
   projectUnion {
     id: contractId
     union {
       id
       name
-      
     }
-    
   }
-  
 }
-
 
 query SEARCH_ALERTS_QUERY(
   $startDate: DateTime
@@ -181,71 +169,77 @@ mutation restoreNotifications($ids: [String!]!) {
   restoreNotifications(ids: $ids)
 }
 
-mutation createSavedSearch($input: CreateSavedSearchInput!) {
-  createSavedSearch(input: $input) {
-    id
-    name
-    isDefault
-    notificationType
-    attributes {
-      workingLocations {
-        id
-        name
-        __typename
-      }
-      ethnicAppearances {
-        id
-        code
-        name
-        __typename
-      }
-      genderAppearances {
-        id
-        code
-        name
-        __typename
-      }
-      payPreferences: paidTypes {
-        id
-        code
-        name
-        __typename
-      }
-      roleTargets {
-        id
-        code
-        name
-        __typename
-      }
-      projectTypes {
-        id
-        name
-        __typename
-      }
-      talentUnions {
-        id
-        code
-        name
-        parentObject {
-          id
-          code
-          name
-          __typename
-        }
-        __typename
-      }
-      playableAge {
-        ageMax
-        ageMin
-        inMonths
-        __typename
-      }
-      showRolesNoLongerAcceptingSubmissions
-      roleProjectKeywordSearch
-      keywords
+fragment SavedSearchDetails on SavedSearch {
+  id
+  name
+  isDefault
+  notificationType
+  attributes {
+    workingLocations {
+      id
+      code
+      name
       __typename
     }
+    ethnicAppearances {
+      id
+      code
+      name
+      __typename
+    }
+    genderAppearances {
+      id
+      code
+      name
+      __typename
+    }
+    payPreferences: paidTypes {
+      id
+      code
+      name
+      __typename
+    }
+    roleTargets {
+      id
+      code
+      name
+      __typename
+    }
+    projectTypes {
+      id
+      code
+      name
+      __typename
+    }
+    talentUnions {
+      id
+      code
+      name
+      parentObject {
+        id
+        code
+        name
+        __typename
+      }
+      __typename
+    }
+    playableAge {
+      ageMax
+      ageMin
+      inMonths
+      __typename
+    }
+    showRolesNoLongerAcceptingSubmissions
+    roleProjectKeywordSearch
+    keywords
     __typename
+  }
+  __typename
+}
+
+mutation createSavedSearch($input: CreateSavedSearchInput!) {
+  createSavedSearch(input: $input) {
+    ...SavedSearchDetails
   }
 }
 
@@ -253,73 +247,8 @@ query getSavedSearchList($limit: Int!, $keyOffset: String) {
   savedSearchList: getSavedSearchList(limit: $limit, keyOffset: $keyOffset) {
     nextKeyOffset
     items {
-      id
-      name
-      isDefault
-      notificationType
-      attributes {
-        workingLocations {
-          id
-          code
-          name
-          __typename
-        }
-        ethnicAppearances {
-          id
-          code
-          name
-          __typename
-        }
-        genderAppearances {
-          id
-          code
-          name
-          __typename
-        }
-        payPreferences: paidTypes {
-          id
-          code
-          name
-          __typename
-        }
-        roleTargets {
-          id
-          code
-          name
-          __typename
-        }
-        projectTypes {
-          id
-          code
-          name
-          __typename
-        }
-        talentUnions {
-          id
-          code
-          name
-          parentObject {
-            id
-            code
-            name
-            __typename
-          }
-          __typename
-        }
-        playableAge {
-          ageMax
-          ageMin
-          inMonths
-          __typename
-        }
-        showRolesNoLongerAcceptingSubmissions
-        roleProjectKeywordSearch
-        keywords
-        __typename
-      }
-      __typename
+      ...SavedSearchDetails
     }
-    __typename
   }
 }
 
@@ -329,11 +258,7 @@ query getSavedSearchTypes {
 
 mutation updateSavedSearch($input: UpdateSavedSearchInput!) {
   updateSavedSearch(input: $input) {
-    id
-    name
-    isDefault
-    notificationType
-    __typename
+    ...SavedSearchDetails
   }
 }
 
