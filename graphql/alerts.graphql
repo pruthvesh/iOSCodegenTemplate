@@ -407,21 +407,27 @@ mutation replyToAskQuestionRequest($input: AskQuestionResponseInput!) {
 query getSubmissionByRoleProfile($input: GetSubmissionByRoleProfileInput!) {
   getSubmissionByRoleProfile(input: $input) {
     id
-    workingLocation {
+    note
+    profileWorkingLocationId
+    submissionStatus {
       id
-      name
-      sortOrder
+      code
       __typename
     }
     media {
       ...SubmissionMedia
+      isPrimary
       __typename
     }
-    __typename
+    requestMedia {
+      ...SubmissionMedia
+      __typename
+    }
   }
 }
 
 fragment SubmissionMedia on SubmissionMedia {
+  __typename
   id
   guid
   mediaId
@@ -433,45 +439,76 @@ fragment SubmissionMedia on SubmissionMedia {
   isPrimary
   orderOfAppearance
   thumbnail {
-    ...BaseMedia
     __typename
+    ...BaseMedia
   }
   transformation {
+    __typename
     xAxis
     yAxis
     width
     height
     rotate
-    __typename
   }
   mediaStorageStatus {
+    __typename
     id
     code
-    __typename
   }
   fileType {
+    __typename
     id
     code
-    __typename
   }
   mediaType {
+    __typename
     id
     code
-    __typename
   }
   mediaStatus {
+    __typename
     id
     code
-    __typename
   }
   __typename
 }
+
 
 mutation replyToScheduleInviteRequest($input: ScheduleInviteResponseInput!) {
   replyToScheduleInviteRequest(input: $input) {
     id
     status
     responseNote
+    __typename
+  }
+}
+
+mutation deleteSubmission($submissionId: BigInt!) {
+  deleteSubmission(id: $submissionId)
+}
+
+
+mutation SEND_ROLE_SUBMISSION(
+  $roleId: Int!
+  $submissionStatusCode: String!
+  $profileIds: [Int!]!
+  $dmaId: Int
+  $requestMedia: [SubmissionMediaInput!]
+  $submissionProfileMedia: [SubmissionMediaInput!]
+  $note: String
+) {
+  addProfileSubmission(
+    input: {
+      roleId: $roleId
+      submissionStatusCode: $submissionStatusCode
+      profileIds: $profileIds
+      dmaId: $dmaId
+      requestMedia: $requestMedia
+      submissionProfileMedia: $submissionProfileMedia
+      note: $note
+    }
+  ) {
+    id
     __typename
   }
 }
