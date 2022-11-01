@@ -111,15 +111,19 @@ fragment CastingRoleList on Role {
     id
     code
   }
-  projectType {
-    id
-    name
-  }
-  projectUnion {
-    id: contractId
-    union {
+  project {
+    projectType {
       id
       name
+    }
+    projectUnion {
+      __typename
+      id: contractId
+      union {
+        __typename
+        id
+        name
+      }
     }
   }
 }

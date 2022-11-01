@@ -385,86 +385,86 @@ fragment ProfileDetails on Profile {
     __typename
   }
   profileVehicles {
-      profileVehicleId
-      vehicleName
-      vehicleYear
-      vehicleTypeMake {
+    profileVehicleId
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      id
+      type {
         id
-        type {
-          id
-          code
-          name
-          __typename
-        }
-        make {
-          id
-          code
-          name
-          __typename
-        }
+        code
+        name
+        __typename
+      }
+      make {
+        id
+        code
+        name
         __typename
       }
       __typename
     }
+    __typename
+  }
   profilePets {
-      profilePetId
+    profilePetId
+    id
+    code
+    name
+    petSize {
       id
       code
       name
-      petSize {
-        id
-        code
-        name
-        __typename
-      }
-      parentObject {
-        id
-        name
-        code
-        __typename
-      }
       __typename
     }
+    parentObject {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
   props {
-      profilePropId
+    profilePropId
+    id
+    code
+    name
+    parentObject {
       id
-      code
       name
-      parentObject {
-        id
-        name
-        code
-        __typename
-      }
+      code
       __typename
     }
- sportEquipments {
-      profileSportEquipmentId
+    __typename
+  }
+  sportEquipments {
+    profileSportEquipmentId
+    id
+    code
+    name
+    parentObject {
       id
-      code
       name
-      parentObject {
-        id
-        name
-        code
-        __typename
-      }
+      code
       __typename
     }
+    __typename
+  }
   profileWardrobes {
-      profileWardrobeId
+    profileWardrobeId
+    id
+    code
+    name
+    sortOrder
+    parentObject {
       id
-      code
       name
-      sortOrder
-      parentObject {
-        id
-        name
-        code
-        __typename
-      }
+      code
       __typename
     }
+    __typename
+  }
   documentTypes {
     id
     code
@@ -578,7 +578,6 @@ fragment BillingItems on BillingItemModel {
   __typename
 }
 
-
 mutation updateProfileMediaList($profileMediaList: [ProfileMediaInput!]!) {
   updateProfileMediaList(profileMediaList: $profileMediaList)
 }
@@ -590,7 +589,6 @@ mutation deleteProfileMedia($mediaId: Float!, $profileId: Float!) {
 mutation updateProfileMedia($profileMedia: ProfileMediaInput!) {
   updateProfileMedia(profileMedia: $profileMedia)
 }
-
 
 query PROJECT_DETAIL_QUERY($id: Float!) {
   project(id: $id) {
@@ -717,33 +715,33 @@ fragment ProjectDetails on Project {
   displayedProjectUnion
   contactInfoPermissions
   createdByPC
+  roles(roleStatusFilter: Active) {
+    ...CastingRoleDetails
+  }
   roleDefaults {
-      wardrobe
-      workRequirements
-      publicationSettings {
-        publicationSetting
-        dmas
-        repAgeCategories
-        repCategories
-        repTypes
-        representativeListId
-        representativeIds
-        __typename
-      }
-      locationDates {
-        locationName
-        dateTypeCode
-        startDate
-        endDate
-        __typename
-      }
+    wardrobe
+    workRequirements
+    publicationSettings {
+      publicationSetting
+      dmas
+      repAgeCategories
+      repCategories
+      repTypes
+      representativeListId
+      representativeIds
       __typename
     }
+    locationDates {
+      locationName
+      dateTypeCode
+      startDate
+      endDate
+      __typename
+    }
+    __typename
+  }
   __typename
 }
-
-
-
 
 query ROLE_DETAILS($ids: ID!, $checkSidesVisibility: Boolean) {
   roles(ids: [$ids]) {
@@ -868,6 +866,21 @@ fragment CastingRoleDetails on Role {
     }
     __typename
   }
+  project {
+    projectType {
+      id
+      name
+    }
+    projectUnion {
+      __typename
+      id: contractId
+      union {
+        __typename
+        id
+        name
+      }
+    }
+  }
   photos {
     mediaObject {
       ...MediaAsset
@@ -984,7 +997,7 @@ query talentUnions {
   }
 }
 
-query roleTargets{
+query roleTargets {
   roleTargets {
     id
     code
@@ -993,7 +1006,7 @@ query roleTargets{
   }
 }
 
-query paidTypes{
+query paidTypes {
   paidTypes {
     id
     code
@@ -1003,7 +1016,7 @@ query paidTypes{
   }
 }
 
-query projectTypes{
+query projectTypes {
   projectTypes {
     id
     code
@@ -1060,7 +1073,6 @@ mutation attachMediaToProfile($input: AttachMediaToProfileInput!) {
     __typename
   }
 }
-
 
 query CREDIT_DETAIL($profileId: Float!) {
   credits(profileId: $profileId) {
@@ -1232,11 +1244,9 @@ query sportEquipments {
   }
 }
 
-
 mutation updateProfileSkill($input: ProfileSkillInput!) {
   updateProfileSkill(input: $input)
 }
-
 
 query skillLevels {
   skillLevels {
@@ -1483,7 +1493,6 @@ mutation deleteProfileWardrobe($profileId: Float!, $profileWardrobeId: Float!) {
   )
 }
 
-
 mutation addProfileSportsEquipment(
   $profileId: Float!
   $sportEquipmentId: Float!
@@ -1643,7 +1652,6 @@ query uniqueAttributes {
   }
 }
 
-
 query workTypes {
   pursuings {
     id
@@ -1707,8 +1715,7 @@ query documentTypes($onlySelectable: Boolean) {
   }
 }
 
-
-query profileSizes{
+query profileSizes {
   waists {
     id
     cm
@@ -1873,8 +1880,6 @@ query profileSizes{
     __typename
   }
 }
-
-
 
 query genderAppearances {
   genderAppearances {
