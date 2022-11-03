@@ -113,6 +113,13 @@ query ARTISTS_INFO {
           name
           __typename
         }
+        workingLocations {
+          __typename
+          id
+          name
+          code
+          sortOrder
+        }
         profileMainOrganization {
           id
           name
@@ -345,7 +352,7 @@ mutation updateAccountLanguage(
   }
 }
 
-mutation registerAccountDevice($input:RegisterDeviceInput!) {
+mutation registerAccountDevice($input: RegisterDeviceInput!) {
   registerAccountDevice(input: $input)
 }
 
@@ -362,7 +369,7 @@ query ARTIST_SUBSCRIPTION($input: ArtistSubscriptionInput!) {
       name
       isBasePlan
       billingCode
-      enabled     
+      enabled
     }
   }
 }
@@ -402,7 +409,6 @@ query PREVIEW_PURCHASE($input: PurchaseInput!) {
   }
 }
 
-
 mutation completePurchase($input: PurchaseInput!) {
   completePurchase(input: $input) {
     email
@@ -418,4 +424,3 @@ mutation completePurchase($input: PurchaseInput!) {
     __typename
   }
 }
-
