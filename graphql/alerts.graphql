@@ -189,7 +189,7 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
     mediaAssets {
       profileMediaId
       media {
-        ...MediaAsset
+        ...BaseMedia
         __typename
       }
       isPrimary
@@ -288,53 +288,6 @@ fragment BaseWorkflowMedia on WfMedia {
   __typename
 }
 
-fragment MediaAsset on Media {
-  ...BaseMedia
-  created
-  __typename
-}
-
-fragment BaseMedia on Media {
-  id
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  transformation {
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
-    __typename
-  }
-  mediaStorageStatus {
-    id
-    code
-    __typename
-  }
-  fileType {
-    id
-    code
-    name
-    __typename
-  }
-  mediaType {
-    id
-    code
-    __typename
-  }
-  mediaStatus {
-    id
-    code
-    __typename
-  }
-  isLocked
-  __typename
-}
-
 mutation REPLY_TO_MEDIA_REQUEST($input: MediaResponseInput!) {
   replyToMediaRequest(input: $input) {
     id
@@ -415,18 +368,18 @@ query getSubmissionByRoleProfile($input: GetSubmissionByRoleProfileInput!) {
       __typename
     }
     media {
-      ...SubmissionMedia
+      ...SubmissionMediaFragment
       isPrimary
       __typename
     }
     requestMedia {
-      ...SubmissionMedia
+      ...SubmissionMediaFragment
       __typename
     }
   }
 }
 
-fragment SubmissionMedia on SubmissionMedia {
+fragment SubmissionMediaFragment on SubmissionMedia {
   __typename
   id
   guid

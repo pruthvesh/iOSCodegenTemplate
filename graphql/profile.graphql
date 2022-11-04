@@ -338,7 +338,7 @@ fragment ProfileDetails on Profile {
   pregnancy
   profileMedia {
     media {
-      ...MediaAsset
+      ...BaseMedia
       __typename
     }
     __typename
@@ -473,7 +473,7 @@ fragment ProfileDetails on Profile {
   }
   resume {
     media {
-      ...MediaAsset
+      ...BaseMedia
       __typename
     }
     __typename
@@ -495,7 +495,7 @@ fragment ProfileDetails on Profile {
       __typename
     }
     creditMedia {
-      ...MediaAsset
+      ...BaseMedia
       __typename
     }
     __typename
@@ -513,62 +513,6 @@ fragment ProfileMediaValues on ProfileMedia {
     ...BaseMediaWithThumbnail
     __typename
   }
-  __typename
-}
-
-fragment BaseMediaWithThumbnail on Media {
-  ...BaseMedia
-  thumbnail {
-    ...BaseMedia
-    __typename
-  }
-  __typename
-}
-
-fragment BaseMedia on Media {
-  id
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  transformation {
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
-    __typename
-  }
-  mediaStorageStatus {
-    id
-    code
-    __typename
-  }
-  fileType {
-    id
-    code
-    name
-    __typename
-  }
-  mediaType {
-    id
-    code
-    __typename
-  }
-  mediaStatus {
-    id
-    code
-    __typename
-  }
-  isLocked
-  __typename
-}
-
-fragment MediaAsset on Media {
-  ...BaseMedia
-  created
   __typename
 }
 
@@ -590,7 +534,7 @@ mutation updateProfileMedia($profileMedia: ProfileMediaInput!) {
   updateProfileMedia(profileMedia: $profileMedia)
 }
 
-query PROJECT_DETAIL_QUERY($id: Float!) {
+query PROJECT_DETAIL_QUERY($id: Float!, $checkSidesVisibility: Boolean) {
   project(id: $id) {
     ...ProjectDetails
     projectConflicts {
@@ -883,7 +827,7 @@ fragment CastingRoleDetails on Role {
   }
   photos {
     mediaObject {
-      ...MediaAsset
+      ...BaseMedia
       __typename
     }
     __typename
@@ -930,53 +874,6 @@ fragment LocationDates on RoleDateWithLocation {
     code
     __typename
   }
-  __typename
-}
-
-fragment MediaAsset on Media {
-  ...BaseMedia
-  created
-  __typename
-}
-
-fragment BaseMedia on Media {
-  id
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  transformation {
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
-    __typename
-  }
-  mediaStorageStatus {
-    id
-    code
-    __typename
-  }
-  fileType {
-    id
-    code
-    name
-    __typename
-  }
-  mediaType {
-    id
-    code
-    __typename
-  }
-  mediaStatus {
-    id
-    code
-    __typename
-  }
-  isLocked
   __typename
 }
 
@@ -1092,7 +989,7 @@ query CREDIT_DETAIL($profileId: Float!) {
       __typename
     }
     creditMedia {
-      ...MediaAsset
+      ...BaseMedia
       __typename
     }
     __typename

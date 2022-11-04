@@ -199,53 +199,6 @@ fragment LogoAsset on Media {
   mediaId
 }
 
-fragment MediaAssetWithThumbnail on Media {
-  ...MediaAsset
-  thumbnail {
-    ...BaseMedia
-  }
-}
-
-fragment MediaAsset on Media {
-  ...BaseMedia
-  created
-}
-
-fragment BaseMedia on Media {
-  id
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  transformation {
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
-  }
-  mediaStorageStatus {
-    id
-    code
-  }
-  fileType {
-    id
-    code
-    name
-  }
-  mediaType {
-    id
-    code
-  }
-  mediaStatus {
-    id
-    code
-  }
-  isLocked
-}
-
 mutation refreshToken($refreshToken: String!) {
   refreshToken(refreshToken: $refreshToken) {
     access

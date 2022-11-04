@@ -65,17 +65,11 @@ fragment BaseMediaWithThumbnail on Media {
 }
 
 fragment MediaAssetWithThumbnail on Media {
-  ...MediaAsset
+  ...BaseMedia
   thumbnail {
     ...BaseMedia
     __typename
   }
-  __typename
-}
-
-fragment MediaAsset on Media {
-  ...BaseMedia
-  created
   __typename
 }
 
