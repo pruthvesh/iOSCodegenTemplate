@@ -906,6 +906,9 @@ type Query {
   getSavedSearchTypes: [String!]!
 
   """"""
+  hasSavedSearchNotifyOption(artistId: ID!): Boolean!
+
+  """"""
   submissionTrends(input: SubmissionTrendsInput!): SubmissionTrendsResult!
 
   """"""
@@ -1021,6 +1024,27 @@ type Query {
 
   """"""
   voiceOverMediaRequests(roleId: Int!, submissionIds: [Int!]): [MediaSubRequest!]!
+
+  """"""
+  auditions(
+    """The page index and number of results displayed per page."""
+    searchPage: SearchPageInput
+
+    """Result sort options. By default sorted DESC , last updated at"""
+    sortOptions: [AuditionsSearchSortOptionsInput!]
+  ): AuditionPagedListSearch!
+
+  """"""
+  auditionGrouping(
+    """The page index and number of results displayed per page."""
+    searchPage: SearchPageGroupInput
+
+    """Result sort options. By default sorted DESC , last updated at"""
+    sortOptions: [AuditionsSearchSortOptionsInput!]
+
+    """"""
+    groupBy: AuditionsGroupBy!
+  ): AuditionsGroups!
 }
 
 """BAU Account Object"""
@@ -10390,11 +10414,8 @@ input SearchPageInput {
   """Page size"""
   pageSize: Int!
 
-  """Page number"""
-  pageNumber: Int = 1
-
   """Returns dataset after provided key"""
-  after: String
+  after: [String!]
 }
 
 """"""
@@ -17287,6 +17308,132 @@ type ActivityLogNote {
 
   """"""
   noteModifier: WfBasicSettingModel
+}
+
+""""""
+input AuditionsSearchSortOptionsInput {
+  """Field name by which should be sorted"""
+  orderColumn: AuditionsSortColumn!
+
+  """Sort order value(asc or desc). Default value: asc"""
+  orderDirection: SortOrder
+}
+
+""""""
+enum AuditionsSortColumn {
+  """"""
+  talentName
+
+  """"""
+  projectName
+
+  """"""
+  updatedAt
+
+  """"""
+  castingCompanyName
+}
+
+""""""
+type AuditionPagedListSearch {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [MediaSubRequest!]!
+
+  """Pagination Next Page Key"""
+  after: [String!]
+
+  """Artist does not pay for YOUR_AUDITIONS."""
+  isBasic: Boolean!
+}
+
+""""""
+input SearchPageGroupInput {
+  """Page size"""
+  pageSize: Int = 1
+
+  """Returns dataset after provided key"""
+  after: [GroupLastKeyInput!]
+}
+
+""""""
+input GroupLastKeyInput {
+  """"""
+  id: Float!
+
+  """"""
+  name: String!
+}
+
+""""""
+enum AuditionsGroupBy {
+  """"""
+  talentName
+
+  """"""
+  projectName
+
+  """"""
+  castingCompanyName
+}
+
+""""""
+type AuditionsGroups {
+  """"""
+  groups: [AuditionGrouping!]!
+
+  """Pagination Next Page Key"""
+  after: [GroupLastKey!]
+
+  """Artist does not pay for YOUR_AUDITIONS."""
+  isBasic: Boolean!
+
+  """"""
+  totalCount: Float!
+}
+
+""""""
+type AuditionGrouping {
+  """"""
+  itemCount: Float!
+
+  """"""
+  entityId: Float!
+
+  """"""
+  details: auditionGroupDetails
+}
+
+""""""
+union auditionGroupDetails = WfProfile | WfProject | AuditionsOrganization
+
+"""Organization info"""
+type AuditionsOrganization {
+  """Organization ID"""
+  id: Int!
+
+  """Organization name"""
+  name: String!
+
+  """Logo Media ID"""
+  logoMediaId: Int
+}
+
+""""""
+type GroupLastKey {
+  """"""
+  id: Float!
+
+  """"""
+  name: String!
 }
 
 type Mutation {
@@ -26010,6 +26157,9 @@ enum ItemEnum {
 
   """"""
   SUBMISSION_TRENDS
+
+  """"""
+  YOUR_AUDITIONS
 
   """"""
   SYSTEM_ACCESS

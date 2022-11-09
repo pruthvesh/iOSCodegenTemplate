@@ -197,7 +197,7 @@ fragment SavedSearchDetails on SavedSearch {
       name
       __typename
     }
-    payPreferences: paidTypes {
+    paidTypes {
       id
       code
       name
