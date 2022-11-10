@@ -701,6 +701,17 @@ query ROLE_DETAILS($ids: ID!, $checkSidesVisibility: Boolean) {
         code
         name
         sortOrder
+        region {
+          id
+          code
+          name
+          country {
+            id
+            code
+            name
+            sortOrder
+          }
+        }
         __typename
       }
       __typename
