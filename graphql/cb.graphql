@@ -46,6 +46,33 @@ query GET_FIT_FOR_YOU_DEFAULT_VALUES {
   }
 }
 
+query searchSubmissions(
+  $sortOptions: [SubmissionSearchSortOptionsInput!]
+  $page: PageInput
+  $input: SubmissionSearchInput!
+) {
+  searchSubmissions(sortOptions: $sortOptions, page: $page, input: $input) {
+    totalCount
+    objects {
+      id
+      submissionStatus {
+        id
+        code
+        name
+        __typename
+      }
+      created
+      role {
+        ...CastingRoleList
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+
+
 query ROLES_LIST(
   $paginationConfig: PageInput!
   $castingBillBoardFilters: CastingBillboardSearchInput!

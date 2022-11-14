@@ -1028,7 +1028,7 @@ type Query {
   """"""
   auditions(
     """The page index and number of results displayed per page."""
-    searchPage: SearchPageInput
+    searchPage: SearchPageInputWf
 
     """Result sort options. By default sorted DESC , last updated at"""
     sortOptions: [AuditionsSearchSortOptionsInput!]
@@ -10414,8 +10414,11 @@ input SearchPageInput {
   """Page size"""
   pageSize: Int!
 
+  """Page number"""
+  pageNumber: Int = 1
+
   """Returns dataset after provided key"""
-  after: [String!]
+  after: String
 }
 
 """"""
@@ -17308,6 +17311,15 @@ type ActivityLogNote {
 
   """"""
   noteModifier: WfBasicSettingModel
+}
+
+""""""
+input SearchPageInputWf {
+  """Page size"""
+  pageSize: Int!
+
+  """Returns dataset after provided key"""
+  after: [String!]
 }
 
 """"""
