@@ -64,14 +64,22 @@ query searchSubmissions(
       created
       role {
         ...CastingRoleList
+        rolePublishedAt
+        locationDates {
+          id
+          startDate
+          roleDateType {
+            id
+            code
+          }
+          cityName
+        }
       }
       __typename
     }
     __typename
   }
 }
-
-
 
 query ROLES_LIST(
   $paginationConfig: PageInput!
