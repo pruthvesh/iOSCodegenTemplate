@@ -982,6 +982,10 @@ mutation attachMediaToProfile($input: AttachMediaToProfileInput!) {
   }
 }
 
+mutation attachMediasToProfile($mediaIds: [Int!]!, $profileId: Int!) {
+  attachMediasToProfile(mediaIds: $mediaIds, profileId: $profileId)
+}
+
 query CREDIT_DETAIL($profileId: Float!) {
   credits(profileId: $profileId) {
     id

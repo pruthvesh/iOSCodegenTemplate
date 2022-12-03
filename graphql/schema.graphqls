@@ -544,6 +544,9 @@ type Query {
   getOrganizationsByRepTypeAndName(input: OrganizationsByRepTypeAndNameInput!): OrganizationsByRepTypeAndNameResultPaginatedResult!
 
   """"""
+  publicationHistory(page: PageInput!, projectId: Int!): RolePublicationPaginatedResult!
+
+  """"""
   getIdByLegacyId(input: RedirectInput!): Redirect!
 
   """"""
@@ -925,6 +928,12 @@ type Query {
 
   """Compare a password with hashedPassword"""
   comparePassword(hashedPassword: String!, password: String!): Boolean!
+
+  """"""
+  availableApplications: [String!]!
+
+  """"""
+  permissions: [PermissionsModel!]!
 
   """"""
   searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
@@ -11061,6 +11070,60 @@ type OrganizationsByRepTypeAndNameResult {
   organization: Organization!
 }
 
+"""Paginated result with [RolePublication] objects"""
+type RolePublicationPaginatedResult {
+  """Total count of rows"""
+  totalCount: Int!
+
+  """List of RolePublication objects"""
+  objects: [RolePublication!]!
+
+  """Current page"""
+  page: Int!
+
+  """Total pages"""
+  totalPages: Int!
+
+  """Last key """
+  lastKey: String
+}
+
+""""""
+type RolePublication {
+  """"""
+  publicationType: RolePublishTypeEnum!
+
+  """"""
+  createdAt: DateTime
+
+  """"""
+  messageToReps: String
+
+  """"""
+  messageToTalents: String
+
+  """"""
+  roles: [Role!]!
+
+  """"""
+  publicationSettings: [PublicationSetting!]!
+}
+
+"""Role publication type"""
+enum RolePublishTypeEnum {
+  """"""
+  published
+
+  """"""
+  widened
+
+  """"""
+  additionalSubmissions
+
+  """"""
+  approved
+}
+
 """Input type for entity type redirect"""
 input RedirectInput {
   """"""
@@ -14160,6 +14223,18 @@ enum SystemRoleCode {
 
   """"""
   SHARED_PROJECT_USER
+
+  """"""
+  STUDIO
+}
+
+""""""
+type PermissionsModel {
+  """"""
+  action: String!
+
+  """"""
+  subject: String!
 }
 
 """"""
@@ -16109,6 +16184,12 @@ type WfOrganization {
 
   """Name"""
   name: String
+
+  """Parent Name (if division)"""
+  parentName: String
+
+  """If false, it is a division."""
+  isOrganization: Boolean
 
   """"""
   contacts: [WfContact!]
@@ -18630,7 +18711,7 @@ type Mutation {
   logout(refreshToken: String!): Boolean!
 
   """Creates new pair of tokens"""
-  switchAuthContext(refreshToken: String!, role: SystemRoleCode, artistId: Int, organizationId: Int): AuthToken!
+  switchAuthContext(refreshToken: String!, role: SystemRoleCode, artistId: Int, organizationId: Int, app: String): AuthToken!
 
   """Creates new pair of tokens"""
   createAuthContextByAccountId(accountId: Int!, service: MicroServices, organizationId: Int): AuthToken!
@@ -19316,6 +19397,15 @@ input AccountCreateInput {
 
   """"""
   languageLocaleId: Int
+
+  """"""
+  utmCampaign: String
+
+  """"""
+  utmSource: String
+
+  """"""
+  utmMedium: String
 }
 
 """"""
@@ -26288,6 +26378,9 @@ enum NotificationNatureEnum {
 """"""
 enum NotificationTypeEnum {
   """"""
+  CHAT
+
+  """"""
   MARKETING
 
   """"""
@@ -26298,9 +26391,6 @@ enum NotificationTypeEnum {
 
   """"""
   REQUEST
-
-  """"""
-  CHAT
 }
 
 """"""
