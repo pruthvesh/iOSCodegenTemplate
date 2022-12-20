@@ -1041,6 +1041,11 @@ type Query {
 
     """Result sort options. By default sorted DESC , last updated at"""
     sortOptions: [AuditionsSearchSortOptionsInput!]
+
+    """
+    Only includes results with these filters. Can be used with grouping ids.
+    """
+    auditionsSearchFilter: AuditionsFilterInput
   ): AuditionPagedListSearch!
 
   """"""
@@ -5467,6 +5472,9 @@ type Project {
 
   """"""
   roleDefaults: RoleDefaults
+
+  """Support User(Creator) Account ID"""
+  createdByTalentSystemUser: Float
 
   """Project audition address"""
   auditionAddress: AuditionAddress
@@ -10473,6 +10481,9 @@ enum SearchResultType {
 
   """"""
   DOCUMENTS
+
+  """"""
+  GROUPS
 }
 
 """Paginated result with [Submission] objects"""
@@ -15342,6 +15353,15 @@ enum RequestStatus {
 
   """"""
   CANCELLED_RESCHEDULED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  MEDIA_ADDED
 }
 
 """'Media Request' Type"""
@@ -17428,6 +17448,18 @@ enum AuditionsSortColumn {
 }
 
 """"""
+input AuditionsFilterInput {
+  """Filters by profiles"""
+  profiles: [Int!]
+
+  """Filters by casting orgs"""
+  orgs: [Int!]
+
+  """Filters by projects"""
+  projects: [Int!]
+}
+
+""""""
 type AuditionPagedListSearch {
   """"""
   page: Int!
@@ -18746,6 +18778,9 @@ type Mutation {
   """Either sends 'Not Yet Sent' request or re-sends it"""
   sendRequest(id: ID!, sendTo: RequestSendTo!, note: String = null): Boolean!
 
+  """Sends request to media-request for all selected request statuses"""
+  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
+
   """"""
   cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
 
@@ -19439,6 +19474,9 @@ enum SystemRoleEnum {
 
   """"""
   SharedProjectUser
+
+  """"""
+  Studio
 }
 
 """"""
@@ -22899,10 +22937,25 @@ input CreateCouponRedemptionInput {
 """"""
 enum RequestSendTo {
   """"""
+  SEND_TO_ALL
+
+  """"""
   ONLY_NEW
 
   """"""
   NEW_AND_PENDING
+
+  """"""
+  PENDING
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  COMPLETED
 }
 
 """"""
@@ -26261,13 +26314,13 @@ enum ItemEnum {
   SUBMISSION_TRENDS
 
   """"""
-  YOUR_AUDITIONS
-
-  """"""
   SYSTEM_ACCESS
 
   """"""
   VIDEO_UPLOAD
+
+  """"""
+  YOUR_AUDITIONS
 }
 
 """"""
@@ -27006,6 +27059,9 @@ enum RepresentationTypeEnum {
 
   """"""
   SHARED_PROJECT_USER
+
+  """"""
+  STUDIO
 }
 
 """"""

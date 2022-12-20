@@ -465,3 +465,70 @@ mutation SEND_ROLE_SUBMISSION(
     __typename
   }
 }
+
+query yourAuditions(
+  $page: SearchPageInputWf
+  $sortOptions: [AuditionsSearchSortOptionsInput!]
+) {
+  auditions(searchPage: $page, sortOptions: $sortOptions) {
+    __typename
+    page
+    totalCount
+    totalPages
+    after
+    isBasic
+    data {
+      __typename
+      id
+      status
+      sentAt
+      project {
+        __typename
+        name
+        castingCompany
+      }
+      role {
+        __typename
+        name
+        description
+      }
+      dueDateTimeZone {
+        __typename
+        id
+        abbreviation
+        standardName
+      }
+      profile {
+        __typename
+        isRepresented
+        isPersonal
+        email
+        phone
+        profileMainOrganization {
+          __typename
+          id
+          name
+        }
+        profileMainDivision {
+          __typename
+          id
+          name
+        }
+        profileStatus {
+          __typename
+          code
+        }
+      }
+      mediaList {
+        __typename
+        id
+        isAdditional
+        media {
+          __typename
+          ...WorkflowMedia
+        }
+        __typename
+      }
+    }
+  }
+}

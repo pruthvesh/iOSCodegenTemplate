@@ -12079,6 +12079,16 @@
                   }
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "auditionsSearchFilter",
+                "description": "Only includes results with these filters. Can be used with grouping ids.",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AuditionsFilterInput",
+                  "ofType": null
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -33528,6 +33538,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "RoleDefaults",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "createdByTalentSystemUser",
+            "description": "Support User(Creator) Account ID",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -56577,6 +56599,12 @@
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "GROUPS",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -78132,6 +78160,24 @@
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "CONFIRMED",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "DECLINED",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "MEDIA_ADDED",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -87644,6 +87690,71 @@
             "deprecationReason": null
           }
         ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AuditionsFilterInput",
+        "description": "",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "profiles",
+            "description": "Filters by profiles",
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "orgs",
+            "description": "Filters by casting orgs",
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "projects",
+            "description": "Filters by projects",
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
         "possibleTypes": null
       },
       {
@@ -100301,6 +100412,69 @@
             "deprecationReason": null
           },
           {
+            "name": "createRequest",
+            "description": "Sends request to media-request for all selected request statuses",
+            "args": [
+              {
+                "name": "id",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "sendTo",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "RequestSendTo",
+                        "ofType": null
+                      }
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "note",
+                "description": "",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "null"
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "cancelRequest",
             "description": "",
             "args": [
@@ -103428,6 +103602,12 @@
           },
           {
             "name": "SharedProjectUser",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Studio",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -117189,6 +117369,12 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "SEND_TO_ALL",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "ONLY_NEW",
             "description": "",
             "isDeprecated": false,
@@ -117196,6 +117382,30 @@
           },
           {
             "name": "NEW_AND_PENDING",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PENDING",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "CONFIRMED",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "DECLINED",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "COMPLETED",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -125751,12 +125961,6 @@
             "deprecationReason": null
           },
           {
-            "name": "YOUR_AUDITIONS",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "SYSTEM_ACCESS",
             "description": "",
             "isDeprecated": false,
@@ -125764,6 +125968,12 @@
           },
           {
             "name": "VIDEO_UPLOAD",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "YOUR_AUDITIONS",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -127355,6 +127565,12 @@
           },
           {
             "name": "SHARED_PROJECT_USER",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STUDIO",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
