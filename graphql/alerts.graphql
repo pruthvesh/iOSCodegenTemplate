@@ -482,6 +482,7 @@ query yourAuditions(
       id
       status
       sentAt
+      repliedAt
       project {
         __typename
         name
