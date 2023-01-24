@@ -118,6 +118,17 @@ query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
       standardName
       __typename
     }
+    mediaList {
+      id
+      isAdditional
+      isForwardedToCD
+      alias
+      media {
+        ...WorkflowMedia
+        __typename
+      }
+      __typename
+    }
     medias {
       ...WorkflowMedia
       __typename
