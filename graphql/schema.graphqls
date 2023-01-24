@@ -562,7 +562,7 @@ type Query {
   getTalentAccessProfileContext(input: TalentAccessProfileContextInput!): TalentAccessProfileContextNotificationContextAndRecipient!
 
   """Gets talent pool for the schedule"""
-  getTalentPoolForSchedule(pageInput: PageInput!, roleIds: [Int!]!, scheduleId: Int!, scheduleSelectInput: SchedulesSelectInput, tileSchemaValueCodes: [String!]): [ScheduleTalentPool!]!
+  getTalentPoolForSchedule(mediaRequestFilter: MediaRequestFilterType, pageInput: PageInput!, roleIds: [Int!]!, scheduleId: Int!, scheduleSelectInput: SchedulesSelectInput, tileSchemaValueCodes: [String!]): [ScheduleTalentPool!]!
 
   """Gets the count for all the profiles for a project."""
   getTotalProfileCount(id: Float!): Float!
@@ -13162,6 +13162,15 @@ type TalentAccessProfileContext {
 type TalentAccessProfileDetailsContext {
   """"""
   name: String!
+}
+
+""""""
+enum MediaRequestFilterType {
+  """"""
+  WITH_MEDIA_REQUEST
+
+  """"""
+  WITHOUT_MEDIA_REQUEST
 }
 
 """Search Schedules input"""

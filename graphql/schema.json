@@ -6245,6 +6245,16 @@
             "description": "Gets talent pool for the schedule",
             "args": [
               {
+                "name": "mediaRequestFilter",
+                "description": "",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "MediaRequestFilterType",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "pageInput",
                 "description": "",
                 "type": {
@@ -68749,6 +68759,29 @@
         "inputFields": null,
         "interfaces": [],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MediaRequestFilterType",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "WITH_MEDIA_REQUEST",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "WITHOUT_MEDIA_REQUEST",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
