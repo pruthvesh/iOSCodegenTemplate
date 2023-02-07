@@ -304,3 +304,24 @@ mutation updateSavedSearch($input: UpdateSavedSearchInput!) {
 mutation deleteSavedSearch($ids: [ID!]!) {
   deleteSavedSearch(ids: $ids)
 }
+
+
+query projectUnions {
+  projectUnions {
+    id
+    name
+    code
+    childObjects {
+      id
+      name
+      projectEnabled
+      __typename
+    }
+    parentObject {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+}
