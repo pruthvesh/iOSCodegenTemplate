@@ -1,18 +1,3 @@
-""""""
-directive @key(fields: String!) on OBJECT | INTERFACE
-
-""""""
-directive @extends on OBJECT | INTERFACE
-
-""""""
-directive @external on OBJECT | FIELD_DEFINITION
-
-""""""
-directive @requires(fields: String!) on FIELD_DEFINITION
-
-""""""
-directive @provides(fields: String!) on FIELD_DEFINITION
-
 type Query {
   """"""
   currentUser: BauAccount!
@@ -42,12 +27,6 @@ type Query {
 
   """"""
   getBauCountries: [BauCountry!]
-
-  """"""
-  _entities(representations: [_Any!]!): [_Entity]!
-
-  """"""
-  _service: _Service!
 
   """"""
   accountsIndexable(ids: [Int!]!): JSON!
@@ -1503,10 +1482,964 @@ type BauCountry {
   supportingCountryId: Int
 }
 
-scalar _Any
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 """"""
-union _Entity = Media | Profile
+input FilterInput {
+  """"""
+  keys: [ID!]!
+
+  """"""
+  keyType: KeyType!
+}
+
+"""Type of the identifier to use for dictionary lookup."""
+enum KeyType {
+  """"""
+  code
+
+  """"""
+  id
+}
+
+""""""
+type AccountStatus {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Filters for searching suitable projects"""
+input ProjectFilterInput {
+  """Which casting organization's project should it be?"""
+  castingOrganizationIds: [ID!]
+
+  """Which organization division should be considered?"""
+  dmaIds: [ID!]
+
+  """Has requests attached?"""
+  hasRequests: Boolean
+
+  """Has selects attached?"""
+  hasSelects: Boolean
+
+  """Has submissions attached?"""
+  hasSubmissions: Boolean
+
+  """Should the project contain only kids roles?"""
+  isKidsRolesOnly: Boolean
+
+  """Is project viewed"""
+  isViewed: Boolean
+
+  """Which organization this project belongs?"""
+  organizationId: Float
+
+  """Search in the name"""
+  projectName: String
+
+  """What project types (by ID) should project have?"""
+  projectTypeIds: [ID!]
+
+  """Which project unions should be considered?"""
+  projectUnionIds: [ID!]
+
+  """Search in role name"""
+  roleName: String
+
+  """Search by roleTypes array using codes"""
+  roleTypes: [String!]
+
+  """What submission date should it be?"""
+  submissionDueDate: SubmissionDueDateSearchEnum
+}
+
+"""Determine discrete boundaries for project filtering"""
+enum SubmissionDueDateSearchEnum {
+  """"""
+  FUTURE
+
+  """"""
+  TODAY
+}
+
+"""Page Input object"""
+input PageInput {
+  """Page size"""
+  pageSize: Int!
+
+  """Page number"""
+  pageNumber: Int!
+}
+
+""""""
+type ProjectVisibilityResult {
+  """Clusterized info about project locations"""
+  projectsLocations: [ProjectLocation!]!
+
+  """project_id - is_viewed pair"""
+  projectVisibilities: [ProjectVisibility!]!
+
+  """Total number of projects"""
+  totalCount: Int
+
+  """Total number of new or updated requests"""
+  totalCountOfNewOrUpdatedRequests: Int!
+
+  """Total number of requests"""
+  totalCountOfRequests: Int!
+}
+
+""""""
+type ProjectLocation {
+  """"""
+  id: ID!
+
+  """"""
+  projectId: Int!
+
+  """"""
+  projectLocations: [String!]!
+}
+
+""""""
+type ProjectVisibility {
+  """
+  States if the project has any role with selected talent from user current agency
+  """
+  isAnyRoleSelected: Boolean!
+
+  """
+  States if the project has any role with submitted talent from user current agency
+  """
+  isAnyRoleSubmitted: Boolean!
+
+  """States if the project was viewed by the context user"""
+  isViewed: Boolean!
+
+  """Project ID"""
+  project: Project!
+
+  """States if the project has any requests for current reps agency"""
+  requestsInfo: ProjectRequestsInfo
+}
+
+"""Project object"""
+type Project {
+  """Account name"""
+  accountName: String
+
+  """Project accounts"""
+  accounts: [Account!]
+
+  """AD agency"""
+  adAgency: String
+
+  """Additional provisions"""
+  additionalProvisions: String
+
+  """
+  Project Attachment Security Id - show attachments to reps only - otherwise it will be also viewable on casting billboard
+  """
+  attachmentDisplayTypeId: ID
+
+  """Project audition address"""
+  auditionAddress: AuditionAddress
+
+  """"""
+  canTalentSubmitSelfTape: Boolean
+
+  """Casting assistant"""
+  castingAssistant: String
+
+  """Casting associate"""
+  castingAssociate: String
+
+  """Casting company name"""
+  castingCompany: String
+
+  """Casting director"""
+  castingDirector: String
+
+  """Conflict note"""
+  conflictNote: String
+
+  """Contact email"""
+  contactEmail: String
+
+  """Contact info permissions"""
+  contactInfoPermissions: Boolean
+
+  """Contact phone"""
+  contactPhone: String
+
+  """Created date"""
+  created: DateTime
+
+  """Created By Account Id"""
+  createdBy: Float
+
+  """Is project created by a PC user"""
+  createdByPC: Boolean!
+
+  """Support User(Creator) Account ID"""
+  createdByTalentSystemUser: Float
+
+  """Do not use this field"""
+  creationDate: DateTime @deprecated(reason: "Use 'created' field instead")
+
+  """Director"""
+  director: String
+
+  """Displayed Project Union"""
+  displayedProjectUnion: String!
+
+  """Executive producer"""
+  executiveProducer: String
+
+  """"""
+  fieldRestrictions: [ProjectFieldRestriction!]
+
+  """Project public GUID"""
+  guid: String
+
+  """Is hidden"""
+  hidden: Boolean
+
+  """Primary ID"""
+  id: ID!
+
+  """Project internal name"""
+  internalName: String
+
+  """"""
+  isAuditionInPerson: Boolean
+
+  """"""
+  isSpecificLocation: Boolean
+
+  """"""
+  lastModifiedAt: DateTime!
+
+  """Last Role Published Date"""
+  lastRolePublishedDate: DateTime
+
+  """Legacy instance ID"""
+  legacyInstance: String
+
+  """Legacy instance URL"""
+  legacyInstanceUrl: String
+
+  """Legacy project ID"""
+  legacyProjectId: ID
+
+  """Project asset"""
+  media: [Media!]
+
+  """Project name"""
+  name: String
+
+  """Network"""
+  network: String
+
+  """Project Notes"""
+  notes: String
+
+  """Project organizations"""
+  organizations: [Organization!]
+
+  """Parent Project- eg series """
+  parent: Project
+
+  """"""
+  pendingRequestCount: Int
+
+  """Photographer"""
+  photographer: String
+
+  """Producer"""
+  producer: String
+
+  """Production company"""
+  productionCompany: String
+
+  """Project Conflicts"""
+  projectConflicts: [Conflict!]
+
+  """Project Id"""
+  projectId: Float
+
+  """Project internal name"""
+  projectInternalName: String
+
+  """Project name"""
+  projectName: String
+
+  """Parent ID"""
+  projectParentId: ID
+
+  """Project type"""
+  projectStatus: ProjectStatus
+
+  """Project type"""
+  projectType: ProjectType
+
+  """Project Unions"""
+  projectUnion: [ProjectUnionDetails!]
+
+  """Project rate"""
+  rate: String
+
+  """Release Locations DMA"""
+  releaseLocations: [Dma!]
+
+  """Request brief"""
+  requestBrief: Boolean
+
+  """Request brief instruction"""
+  requestBriefInstruction: String
+
+  """"""
+  roleDefaults: RoleDefaults
+
+  """Project roles"""
+  roles(roleIds: [Int!], roleStatusFilter: RoleStatusFilter): [Role!]
+
+  """Project side visibility"""
+  sideVisibility: ProjectSidesVisibility
+
+  """Studio"""
+  studio: String
+
+  """Submissions due"""
+  submissionsDueBy: DateTime
+
+  """Zendesk support ticket id"""
+  supportTicketNumber: String
+
+  """Synopsis"""
+  synopsis: String
+
+  """Tile scheme ID"""
+  tileSchemeId: ID
+
+  """Total records count"""
+  totalCount: Float
+
+  """Updated date"""
+  updated: DateTime
+
+  """Usage"""
+  usage: String
+
+  """Writer"""
+  writer: String
+}
+
+"""Account info"""
+type Account {
+  """"""
+  accountOrganization(systemRoleCode: [String!]): [OrganizationInfo!]
+
+  """"""
+  accountOrganizationDivisionsAccess: [Organization!]!
+
+  """"""
+  accountOrganizationDivisionsAccessCount: Float
+
+  """Account status object"""
+  accountStatus: AccountStatus
+
+  """"""
+  accountStatusId: Int!
+
+  """"""
+  accountSystemRoles: [SystemRole!]!
+
+  """"""
+  accountUrlTypes: [AccountUrlType!]
+
+  """"""
+  artists: [Artist!]!
+
+  """Account billing info"""
+  billingInfo: AccountBillingInfo
+
+  """Country object"""
+  country: Country
+
+  """"""
+  countryId: Int!
+
+  """"""
+  created: DateTime!
+
+  """Divisions that user belongs to"""
+  divisions: [Organization!]
+
+  """"""
+  email: String!
+
+  """
+  Holds the generated token value, till it gets expired or the email update verification done successfully.
+  """
+  emailResetToken: String
+
+  """
+  Holds the value to reset the original account email till it gets verified
+  """
+  emailToReset: String
+
+  """Returns organization features"""
+  features: [Feature!]
+
+  """"""
+  firstName: String!
+
+  """"""
+  former: Boolean
+
+  """Primary ID"""
+  id: Int!
+
+  """"""
+  ipcInfo: IPCInfo!
+
+  """Checks if user is in role Independent Project Creator"""
+  isAccountIPC: Boolean!
+
+  """"""
+  isAdmin: Boolean!
+
+  """Checks if user is in role Casting Director"""
+  isCCD: Boolean!
+
+  """Checks if the current/switched user is PC or not"""
+  isInPCContext: Boolean!
+
+  """Checks if user is in role Independent Project Creator"""
+  isIPC: Boolean!
+
+  """Language Info object"""
+  language: LanguageInfo
+
+  """"""
+  languageLocaleId: Int
+
+  """"""
+  lastArtistId: Int
+
+  """"""
+  lastLogin: DateTime
+
+  """"""
+  lastName: String!
+
+  """Legacy email"""
+  legacyEmail: String
+
+  """Legacy instance"""
+  legacyInstance: String
+
+  """Legacy login"""
+  legacyLogin: String
+
+  """"""
+  legacyProfileStatus: ProfileStatus
+
+  """"""
+  linkedAccountDivisionCount: Float
+
+  """"""
+  linkedAccountOrganization: [Organization!]
+
+  """"""
+  linkedOrganization: Float
+
+  """"""
+  linkedToAccountId: Int
+
+  """"""
+  loginAttemptCount: Int
+
+  """"""
+  loginAttemptFailedAt: DateTime
+
+  """"""
+  notificationSubscriptions: [NotificationTypeNotificationSubscription!]!
+
+  """"""
+  organizationDivisionsCount: Float
+
+  """Organizations that user belongs to"""
+  organizations(systemRoleCode: [String!]): [Organization!]
+
+  """"""
+  passwordHash: String
+
+  """"""
+  phone: String!
+
+  """"""
+  preferences: AccountPreferences!
+
+  """
+  Roster invitation token to hold the invitation token till logged in user will not create the profile using it
+  """
+  rosterInvitationToken: String
+
+  """"""
+  subscription: ActiveSubscriptionModel
+
+  """system roles"""
+  systemRoles: [String!]
+
+  """"""
+  systemRolesIds: [Float!]
+
+  """"""
+  termsOfUse: Boolean!
+
+  """Time zone object"""
+  timeZone: TimeZone
+
+  """Updated at Date"""
+  updated: DateTime
+}
+
+""""""
+type OrganizationInfo {
+  """"""
+  category: [RepresentationCategory!]!
+
+  """"""
+  categoryName: [String!]!
+
+  """Primary ID"""
+  id: Int!
+
+  """"""
+  name: String!
+}
+
+""""""
+type RepresentationCategory {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Organization object"""
+type Organization {
+  """Abbreviation"""
+  abbreviation: String
+
+  """"""
+  accountCount: Float
+
+  """Organization accounts"""
+  accounts(statusIds: [Int!]): [Account!]!
+
+  """Linked organizations"""
+  addresses: [Address!]
+
+  """"""
+  contacts: [Contact!]
+
+  """"""
+  country: [Country!]!
+
+  """"""
+  created: DateTime
+
+  """Creator ID"""
+  creatorId: Int
+
+  """Diversity disclaimer"""
+  diversityDisclaimer: String
+
+  """"""
+  divisions: [Organization!]!
+
+  """"""
+  dmas: [Dma!]
+
+  """"""
+  features: [Feature!]
+
+  """Primary ID"""
+  id: Int!
+
+  """Tells whether it is organization or division"""
+  isOrganization: Boolean
+
+  """Last updated/modified datetime"""
+  lastUpdated: DateTime
+
+  """"""
+  linkedAccount: Float!
+
+  """"""
+  linkedAccountDivision: [Organization!]!
+
+  """"""
+  linkedDivisionId: Float
+
+  """"""
+  linkedDivisions: [Organization!]!
+
+  """Linked organizations"""
+  linkedOrganizations: [Organization!]!
+
+  """"""
+  logo: Media
+
+  """Logo media ID"""
+  logoMediaId: Int
+
+  """Organization name"""
+  name: String
+
+  """Note"""
+  note: String
+
+  """Parent organization ID"""
+  organizationParentId: Int
+
+  """"""
+  organizationPhone: [Phone!]
+
+  """"""
+  organizationStatus: [OrganizationStatus!]!
+
+  """Parent Organization name"""
+  parentName: String
+
+  """"""
+  parentOrganization: Organization
+
+  """Organization phone list"""
+  phone: [String!]!
+
+  """"""
+  profileCount: Float
+
+  """Profile list ID"""
+  profileListId: Int
+
+  """Organization profiles"""
+  profiles: [Profile!]!
+
+  """Project casting assistant"""
+  projectCastingAssistant: String
+
+  """Project casting associate"""
+  projectCastingAssociate: String
+
+  """Project casting director"""
+  projectCastingDirector: String
+
+  """"""
+  representationAgeCategory: [RepresentationAgeCategory!]
+
+  """"""
+  representationCategory: [RepresentationCategory!]
+
+  """"""
+  representationCategoryList: [Int!]
+
+  """"""
+  representationProfile: [Profile!]!
+
+  """"""
+  representationType: [RepresentationType!]!
+
+  """Representation type ID"""
+  representationTypeId: Int
+
+  """"""
+  representationTypes: [RepresentationType!]!
+
+  """Schedule address note"""
+  scheduleAddressNote: String
+
+  """"""
+  searchDivisions: [Organization!]!
+
+  """Organization status"""
+  status: Float
+
+  """System role ID"""
+  sytemRoleId: Int
+
+  """"""
+  tags: [Tag!]!
+
+  """Tile scheme ID"""
+  tileSchemeId: Int
+
+  """Website url"""
+  websiteUrl: String
+}
+
+"""Address object type"""
+type Address {
+  """City"""
+  city: String!
+
+  """"""
+  country: Country
+
+  """Address Id"""
+  id: Int!
+
+  """Line #1 of address"""
+  line1: String!
+
+  """Line #2 of address"""
+  line2: String!
+
+  """Line #3 of address"""
+  line3: String!
+
+  """Note"""
+  note: String!
+
+  """Other detail"""
+  otherDetail: String!
+
+  """Postal code"""
+  postalCode: String!
+
+  """"""
+  state: State
+
+  """Division state ID"""
+  stateId: Int!
+}
+
+"""Project Union"""
+type Country {
+  """code"""
+  code: String!
+
+  """Continent"""
+  continent: Continent!
+
+  """Currency"""
+  currency: Currency
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """"""
+  regions: [Region!]
+
+  """Sort order"""
+  sortOrder: Int
+
+  """Supporting country id"""
+  supportingCountry: Country
+
+  """Unit System"""
+  unitSystem: UnitSystem!
+}
+
+"""Continent object"""
+type Continent {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Currency object"""
+type Currency {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  symbol: String!
+}
+
+"""Region"""
+type Region {
+  """code"""
+  code: String!
+
+  """country"""
+  country: Country
+
+  """dma objects"""
+  dmas: [Dma!]!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""DMA for Profile"""
+type Dma {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """child objects"""
+  region: Region
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Unit System object"""
+type UnitSystem {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""State"""
+type State {
+  """code"""
+  code: String!
+
+  """Country Id"""
+  country: Country!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Contact information"""
+type Contact {
+  """"""
+  contactId: Float!
+
+  """Email"""
+  email: String
+
+  """"""
+  enabled: Boolean!
+
+  """Contact ID"""
+  id: ID!
+
+  """Defines organization main contact"""
+  mainContact: Boolean!
+
+  """Name"""
+  name: String
+
+  """Phone"""
+  phone: String!
+}
+
+""""""
+type Feature {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
 
 """"""
 type Media {
@@ -1569,6 +2502,9 @@ type Media {
 
   """"""
   size: Int
+
+  """"""
+  source: String
 
   """"""
   tag: String
@@ -1764,6 +2700,48 @@ type MediaTransformation {
 
   """"""
   yAxis: Float
+}
+
+""""""
+type Phone {
+  """"""
+  entityId: BigInt
+
+  """"""
+  entityTypeId: Int
+
+  """"""
+  id: Int!
+
+  """"""
+  name: String
+
+  """"""
+  phoneNumber: String
+
+  """"""
+  phoneTypeId: Int
+}
+
+"""BigInt scalar type"""
+scalar BigInt
+
+"""Organization Status"""
+type OrganizationStatus {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
 }
 
 """Talent Profile - May be associated with Account"""
@@ -1993,9 +2971,6 @@ type Profile {
 
   """Profession"""
   profession: String
-
-  """Get the artist media profile"""
-  profile: Profile!
 
   """
   Access Token of a Profile, generated by Granting Access or Creating a Profile
@@ -2429,141 +3404,6 @@ type Document {
   sortOrder: Int
 }
 
-"""Project Union"""
-type Country {
-  """code"""
-  code: String!
-
-  """Continent"""
-  continent: Continent!
-
-  """Currency"""
-  currency: Currency
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """"""
-  regions: [Region!]
-
-  """Sort order"""
-  sortOrder: Int
-
-  """Supporting country id"""
-  supportingCountry: Country
-
-  """Unit System"""
-  unitSystem: UnitSystem!
-}
-
-"""Continent object"""
-type Continent {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Currency object"""
-type Currency {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  symbol: String!
-}
-
-"""Region"""
-type Region {
-  """code"""
-  code: String!
-
-  """country"""
-  country: Country
-
-  """dma objects"""
-  dmas: [Dma!]!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""DMA for Profile"""
-type Dma {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """child objects"""
-  region: Region
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Unit System object"""
-type UnitSystem {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
 """Dress size object"""
 type ClothesSize {
   """Is this enbaled?"""
@@ -2870,951 +3710,6 @@ type Note {
   projectStatus: ProjectStatus
 }
 
-"""Account info"""
-type Account {
-  """"""
-  accountOrganization(systemRoleCode: [String!]): [OrganizationInfo!]
-
-  """"""
-  accountOrganizationDivisionsAccess: [Organization!]!
-
-  """"""
-  accountOrganizationDivisionsAccessCount: Float
-
-  """Account status object"""
-  accountStatus: AccountStatus
-
-  """"""
-  accountStatusId: Int!
-
-  """"""
-  accountSystemRoles: [SystemRole!]!
-
-  """"""
-  accountUrlTypes: [AccountUrlType!]
-
-  """"""
-  artists: [Artist!]!
-
-  """Account billing info"""
-  billingInfo: AccountBillingInfo
-
-  """Country object"""
-  country: Country
-
-  """"""
-  countryId: Int!
-
-  """"""
-  created: DateTime!
-
-  """Divisions that user belongs to"""
-  divisions: [Organization!]
-
-  """"""
-  email: String!
-
-  """
-  Holds the generated token value, till it gets expired or the email update verification done successfully.
-  """
-  emailResetToken: String
-
-  """
-  Holds the value to reset the original account email till it gets verified
-  """
-  emailToReset: String
-
-  """Returns organization features"""
-  features: [Feature!]
-
-  """"""
-  firstName: String!
-
-  """"""
-  former: Boolean
-
-  """Primary ID"""
-  id: Int!
-
-  """"""
-  ipcInfo: IPCInfo!
-
-  """Checks if user is in role Independent Project Creator"""
-  isAccountIPC: Boolean!
-
-  """"""
-  isAdmin: Boolean!
-
-  """Checks if user is in role Casting Director"""
-  isCCD: Boolean!
-
-  """Checks if the current/switched user is PC or not"""
-  isInPCContext: Boolean!
-
-  """Checks if user is in role Independent Project Creator"""
-  isIPC: Boolean!
-
-  """Language Info object"""
-  language: LanguageInfo
-
-  """"""
-  languageLocaleId: Int
-
-  """"""
-  lastArtistId: Int
-
-  """"""
-  lastLogin: DateTime
-
-  """"""
-  lastName: String!
-
-  """Legacy email"""
-  legacyEmail: String
-
-  """Legacy instance"""
-  legacyInstance: String
-
-  """Legacy login"""
-  legacyLogin: String
-
-  """"""
-  legacyProfileStatus: ProfileStatus
-
-  """"""
-  linkedAccountDivisionCount: Float
-
-  """"""
-  linkedAccountOrganization: [Organization!]
-
-  """"""
-  linkedOrganization: Float
-
-  """"""
-  linkedToAccountId: Int
-
-  """"""
-  loginAttemptCount: Int
-
-  """"""
-  loginAttemptFailedAt: DateTime
-
-  """"""
-  notificationSubscriptions: [NotificationTypeNotificationSubscription!]!
-
-  """"""
-  organizationDivisionsCount: Float
-
-  """Organizations that user belongs to"""
-  organizations(systemRoleCode: [String!]): [Organization!]
-
-  """"""
-  passwordHash: String
-
-  """"""
-  phone: String!
-
-  """"""
-  preferences: AccountPreferences!
-
-  """
-  Roster invitation token to hold the invitation token till logged in user will not create the profile using it
-  """
-  rosterInvitationToken: String
-
-  """"""
-  subscription: ActiveSubscriptionModel
-
-  """system roles"""
-  systemRoles: [String!]
-
-  """"""
-  systemRolesIds: [Float!]
-
-  """"""
-  termsOfUse: Boolean!
-
-  """Time zone object"""
-  timeZone: TimeZone
-
-  """Updated at Date"""
-  updated: DateTime
-}
-
-""""""
-type OrganizationInfo {
-  """"""
-  category: [RepresentationCategory!]!
-
-  """"""
-  categoryName: [String!]!
-
-  """Primary ID"""
-  id: Int!
-
-  """"""
-  name: String!
-}
-
-""""""
-type RepresentationCategory {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Organization object"""
-type Organization {
-  """Abbreviation"""
-  abbreviation: String
-
-  """"""
-  accountCount: Float
-
-  """Organization accounts"""
-  accounts(statusIds: [Int!]): [Account!]!
-
-  """Linked organizations"""
-  addresses: [Address!]
-
-  """"""
-  contacts: [Contact!]
-
-  """"""
-  country: [Country!]!
-
-  """"""
-  created: DateTime
-
-  """Creator ID"""
-  creatorId: Int
-
-  """Diversity disclaimer"""
-  diversityDisclaimer: String
-
-  """"""
-  divisions: [Organization!]!
-
-  """"""
-  dmas: [Dma!]
-
-  """"""
-  features: [Feature!]
-
-  """Primary ID"""
-  id: Int!
-
-  """Tells whether it is organization or division"""
-  isOrganization: Boolean
-
-  """Last updated/modified datetime"""
-  lastUpdated: DateTime
-
-  """"""
-  linkedAccount: Float!
-
-  """"""
-  linkedAccountDivision: [Organization!]!
-
-  """"""
-  linkedDivisionId: Float
-
-  """"""
-  linkedDivisions: [Organization!]!
-
-  """Linked organizations"""
-  linkedOrganizations: [Organization!]!
-
-  """"""
-  logo: Media
-
-  """Logo media ID"""
-  logoMediaId: Int
-
-  """Organization name"""
-  name: String
-
-  """Note"""
-  note: String
-
-  """Parent organization ID"""
-  organizationParentId: Int
-
-  """"""
-  organizationPhone: [Phone!]
-
-  """"""
-  organizationStatus: [OrganizationStatus!]!
-
-  """Parent Organization name"""
-  parentName: String
-
-  """"""
-  parentOrganization: Organization
-
-  """Organization phone list"""
-  phone: [String!]!
-
-  """"""
-  profileCount: Float
-
-  """Profile list ID"""
-  profileListId: Int
-
-  """Organization profiles"""
-  profiles: [Profile!]!
-
-  """Project casting assistant"""
-  projectCastingAssistant: String
-
-  """Project casting associate"""
-  projectCastingAssociate: String
-
-  """Project casting director"""
-  projectCastingDirector: String
-
-  """"""
-  representationAgeCategory: [RepresentationAgeCategory!]
-
-  """"""
-  representationCategory: [RepresentationCategory!]
-
-  """"""
-  representationCategoryList: [Int!]
-
-  """"""
-  representationProfile: [Profile!]!
-
-  """"""
-  representationType: [RepresentationType!]!
-
-  """Representation type ID"""
-  representationTypeId: Int
-
-  """"""
-  representationTypes: [RepresentationType!]!
-
-  """Schedule address note"""
-  scheduleAddressNote: String
-
-  """"""
-  searchDivisions: [Organization!]!
-
-  """Organization status"""
-  status: Float
-
-  """System role ID"""
-  sytemRoleId: Int
-
-  """"""
-  tags: [Tag!]!
-
-  """Tile scheme ID"""
-  tileSchemeId: Int
-
-  """Website url"""
-  websiteUrl: String
-}
-
-"""Address object type"""
-type Address {
-  """City"""
-  city: String!
-
-  """"""
-  country: Country
-
-  """Address Id"""
-  id: Int!
-
-  """Line #1 of address"""
-  line1: String!
-
-  """Line #2 of address"""
-  line2: String!
-
-  """Line #3 of address"""
-  line3: String!
-
-  """Note"""
-  note: String!
-
-  """Other detail"""
-  otherDetail: String!
-
-  """Postal code"""
-  postalCode: String!
-
-  """"""
-  state: State
-
-  """Division state ID"""
-  stateId: Int!
-}
-
-"""State"""
-type State {
-  """code"""
-  code: String!
-
-  """Country Id"""
-  country: Country!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Contact information"""
-type Contact {
-  """"""
-  contactId: Float!
-
-  """Email"""
-  email: String
-
-  """"""
-  enabled: Boolean!
-
-  """Contact ID"""
-  id: ID!
-
-  """Defines organization main contact"""
-  mainContact: Boolean!
-
-  """Name"""
-  name: String
-
-  """Phone"""
-  phone: String!
-}
-
-""""""
-type Feature {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type Phone {
-  """"""
-  entityId: BigInt
-
-  """"""
-  entityTypeId: Int
-
-  """"""
-  id: Int!
-
-  """"""
-  name: String
-
-  """"""
-  phoneNumber: String
-
-  """"""
-  phoneTypeId: Int
-}
-
-"""BigInt scalar type"""
-scalar BigInt
-
-"""Organization Status"""
-type OrganizationStatus {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""RepresentationAgeCategory object"""
-type RepresentationAgeCategory {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type RepresentationType {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Tag object"""
-type Tag {
-  """child objects"""
-  childObjects: [Tag!]!
-
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """parent object"""
-  parentObject: Tag
-
-  """Selectable Flag"""
-  selectable: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type AccountStatus {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type AccountUrlType {
-  """"""
-  accountId: Float!
-
-  """Primary ID"""
-  id: ID!
-
-  """"""
-  url: String!
-
-  """"""
-  urlType: UrlType!
-
-  """"""
-  urlTypeId: Float!
-}
-
-"""Url Type object"""
-type UrlType {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Artist info"""
-type Artist {
-  """"""
-  account: Account
-
-  """Artist Id """
-  artistId: Int!
-
-  """"""
-  artistSubscriptions: [SubscriptionModel!]
-
-  """Created Date"""
-  created: DateTime!
-
-  """First Name"""
-  firstName: String!
-
-  """Primary ID"""
-  id: ID!
-
-  """Last Name"""
-  lastName: String!
-
-  """"""
-  mediaCounts(isLocked: Boolean!): [MediaCount!]
-
-  """True if artist is minor"""
-  minor: Boolean!
-
-  """"""
-  notificationPhone: String
-
-  """"""
-  profiles(oldest: Boolean): [Profile!]
-}
-
-"""Subscription"""
-type SubscriptionModel {
-  """"""
-  billingInfoId: String
-
-  """"""
-  expirationDate: DateTime
-
-  """"""
-  id: ID!
-
-  """"""
-  nextBillingDate: DateTime
-
-  """"""
-  plan: PlanModel
-
-  """"""
-  status: String!
-
-  """"""
-  transaction: String
-}
-
-"""Subscription Plan"""
-type PlanModel {
-  """"""
-  billingCode: String
-
-  """"""
-  billingProviderId: ID
-
-  """"""
-  code: String
-
-  """"""
-  created: DateTime
-
-  """"""
-  currency: Currency
-
-  """"""
-  enabled: Boolean
-
-  """"""
-  id: ID!
-
-  """"""
-  isBasePlan: Boolean
-
-  """"""
-  name: String
-
-  """"""
-  planCurrencyCode: String
-
-  """"""
-  planStatusId: ID
-
-  """"""
-  planTerm: PlanTermModel
-
-  """"""
-  price: Float
-
-  """"""
-  sortOrder: Int
-
-  """"""
-  updated: DateTime
-}
-
-""""""
-type PlanTermModel {
-  """"""
-  code: String
-
-  """"""
-  id: ID!
-
-  """"""
-  name: String
-}
-
-"""Media Count"""
-type MediaCount {
-  """Count of the media"""
-  count: Int!
-
-  """Media Type"""
-  type: MediaType!
-}
-
-"""Account billing info"""
-type AccountBillingInfo {
-  """"""
-  cardExpirationMonth: Int
-
-  """"""
-  cardExpirationYear: Int
-
-  """"""
-  cardType: String
-
-  """"""
-  code: String
-
-  """"""
-  email: String
-
-  """"""
-  firstName: String
-
-  """"""
-  lastFour: String
-
-  """"""
-  lastName: String
-}
-
-""""""
-type IPCInfo {
-  """"""
-  ipcProfessionalBio: String
-}
-
-""""""
-type LanguageInfo {
-  """"""
-  baseLocale: String!
-
-  """"""
-  code: String!
-
-  """"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: Int!
-
-  """"""
-  locale: String!
-
-  """"""
-  name: String!
-}
-
-"""Notification Notitifcation Type Subscription object type"""
-type NotificationTypeNotificationSubscription {
-  """Subscription Creator Id"""
-  accountId: Int!
-
-  """Artist Id"""
-  artistId: Int!
-
-  """Created Date"""
-  created: DateTime!
-
-  """"""
-  entity: NotificationEntityDetails
-
-  """"""
-  entityType: EntityType
-
-  """Notification Id"""
-  notificationId: Int
-
-  """"""
-  notificationNature: NotificationNature
-
-  """Notification Nature Id"""
-  notificationNatureId: Int
-
-  """"""
-  notificationType: NotificationType
-
-  """Notification Type Id"""
-  notificationTypeId: Int
-
-  """Organization Id"""
-  organizationId: Int
-
-  """"""
-  projectType: ProjectType @deprecated(reason: "Use \"entity\" field instead")
-
-  """"""
-  rolePaidType: PaidType @deprecated(reason: "Use \"entity\" field instead")
-
-  """"""
-  roleTarget: RoleTarget @deprecated(reason: "Use \"entity\" field instead")
-}
-
-""""""
-union NotificationEntityDetails = PaidType | ProjectType | RoleTarget | TalentUnion
-
-"""PaidType object"""
-type PaidType {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Available project types"""
-type ProjectType {
-  """child objects"""
-  childObjects: [ProjectType!]!
-
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """parent object"""
-  parentObject: ProjectType
-
-  """Selectable Flag"""
-  selectable: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Role Target object"""
-type RoleTarget {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Talent Union"""
-type TalentUnion {
-  """child objects"""
-  childObjects: [TalentUnion!]!
-
-  """code"""
-  code: String!
-
-  """country"""
-  country: Country
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """parent object"""
-  parentObject: TalentUnion
-
-  """Represents project union for all true values"""
-  projectEnabled: Boolean!
-
-  """Selectable Flag"""
-  selectable: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """Represents talent union for all true values"""
-  talentEnabled: Boolean!
-}
-
 """Entity Type object"""
 type EntityType {
   """code"""
@@ -3831,198 +3726,6 @@ type EntityType {
 
   """Sort order"""
   sortOrder: Int
-}
-
-"""Notification Nature object"""
-type NotificationNature {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Notification Type object"""
-type NotificationType {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type AccountPreferences {
-  """"""
-  projectListFilters: AccountProjectFiltersPreferences
-
-  """"""
-  schedule: AccountSchedulePreferences
-}
-
-""""""
-type AccountProjectFiltersPreferences {
-  """Casting Organisation Search Settings"""
-  castingOrganizations: [Organization!]
-
-  """"""
-  hasRequests: Boolean
-
-  """"""
-  hasSelects: Boolean
-
-  """"""
-  hasSubmissions: Boolean
-
-  """"""
-  isKidsRolesOnly: Boolean
-
-  """"""
-  projectName: String
-
-  """Region Search Settings"""
-  projectRegion: [Dma!]
-
-  """Project Types Search Settings"""
-  projectTypes: [ProjectType!]
-
-  """Project Union Search Settings"""
-  projectUnion: [TalentUnion!]
-
-  """"""
-  projectViewStatus: ProjectViewFilterType
-
-  """"""
-  roleName: String
-
-  """Role Types Search Settings"""
-  roleTypes: [RoleType!]
-
-  """"""
-  submissionDueDate: String
-}
-
-"""Project Viewed Filter"""
-enum ProjectViewFilterType {
-  """"""
-  All
-
-  """"""
-  Unviewed
-
-  """"""
-  Viewed
-}
-
-"""RoleType  object"""
-type RoleType {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """"""
-  projectType: ProjectType!
-
-  """"""
-  roleTarget: RoleTarget!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type AccountSchedulePreferences {
-  """"""
-  showUnionStatus: Boolean!
-
-  """"""
-  thumbnailType: ThumbnailType!
-}
-
-""""""
-enum ThumbnailType {
-  """"""
-  headshot
-
-  """"""
-  snapshot
-}
-
-"""Subscription"""
-type ActiveSubscriptionModel {
-  """"""
-  id: ID!
-
-  """"""
-  nextBillingDate: DateTime
-
-  """"""
-  plans: [PlanModel!]
-}
-
-"""Time Zone object"""
-type TimeZone {
-  """"""
-  abbreviation: String
-
-  """code"""
-  code: String!
-
-  """"""
-  codeBrowser: String!
-
-  """"""
-  daylightSavingsCode: String
-
-  """"""
-  dstOffset: Float!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """"""
-  gmtOffset: Float!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String
-
-  """"""
-  rawOffset: Float!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  standardName: String!
 }
 
 """Note Modifier object"""
@@ -4080,6 +3783,15 @@ type ProjectStatus {
 
   """Sort order"""
   sortOrder: Int
+}
+
+"""Media Count"""
+type MediaCount {
+  """Count of the media"""
+  count: Int!
+
+  """Media Type"""
+  type: MediaType!
 }
 
 """MultipleBirth object"""
@@ -5066,6 +4778,9 @@ type SubmissionMedia {
   size: Int
 
   """"""
+  source: String
+
+  """"""
   tag: String
 
   """"""
@@ -5480,6 +5195,24 @@ type RoleDateType {
   sortOrder: Int
 }
 
+"""PaidType object"""
+type PaidType {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
 """Role media object"""
 type RoleMedia {
   """ID of role and media objects relation"""
@@ -5501,288 +5234,10 @@ type RoleMedia {
   url: String
 }
 
-"""Project object"""
-type Project {
-  """Account name"""
-  accountName: String
-
-  """Project accounts"""
-  accounts: [Account!]
-
-  """AD agency"""
-  adAgency: String
-
-  """Additional provisions"""
-  additionalProvisions: String
-
-  """
-  Project Attachment Security Id - show attachments to reps only - otherwise it will be also viewable on casting billboard
-  """
-  attachmentDisplayTypeId: ID
-
-  """Project audition address"""
-  auditionAddress: AuditionAddress
-
-  """"""
-  canTalentSubmitSelfTape: Boolean
-
-  """Casting assistant"""
-  castingAssistant: String
-
-  """Casting associate"""
-  castingAssociate: String
-
-  """Casting company name"""
-  castingCompany: String
-
-  """Casting director"""
-  castingDirector: String
-
-  """Conflict note"""
-  conflictNote: String
-
-  """Contact email"""
-  contactEmail: String
-
-  """Contact info permissions"""
-  contactInfoPermissions: Boolean
-
-  """Contact phone"""
-  contactPhone: String
-
-  """Created date"""
-  created: DateTime
-
-  """Created By Account Id"""
-  createdBy: Float
-
-  """Is project created by a PC user"""
-  createdByPC: Boolean!
-
-  """Support User(Creator) Account ID"""
-  createdByTalentSystemUser: Float
-
-  """Do not use this field"""
-  creationDate: DateTime @deprecated(reason: "Use 'created' field instead")
-
-  """Director"""
-  director: String
-
-  """Displayed Project Union"""
-  displayedProjectUnion: String!
-
-  """Executive producer"""
-  executiveProducer: String
-
-  """"""
-  fieldRestrictions: [ProjectFieldRestriction!]
-
-  """Project public GUID"""
-  guid: String
-
-  """Is hidden"""
-  hidden: Boolean
-
-  """Primary ID"""
-  id: ID!
-
-  """Project internal name"""
-  internalName: String
-
-  """"""
-  isAuditionInPerson: Boolean
-
-  """"""
-  isSpecificLocation: Boolean
-
-  """"""
-  lastModifiedAt: DateTime!
-
-  """Last Role Published Date"""
-  lastRolePublishedDate: DateTime
-
-  """Legacy instance ID"""
-  legacyInstance: String
-
-  """Legacy instance URL"""
-  legacyInstanceUrl: String
-
-  """Legacy project ID"""
-  legacyProjectId: ID
-
-  """Project asset"""
-  media: [Media!]
-
-  """Project name"""
-  name: String
-
-  """Network"""
-  network: String
-
-  """Project Notes"""
-  notes: String
-
-  """Project organizations"""
-  organizations: [Organization!]
-
-  """Parent Project- eg series """
-  parent: Project
-
-  """"""
-  pendingRequestCount: Int
-
-  """Photographer"""
-  photographer: String
-
-  """Producer"""
-  producer: String
-
-  """Production company"""
-  productionCompany: String
-
-  """Project Conflicts"""
-  projectConflicts: [Conflict!]
-
-  """Project Id"""
-  projectId: Float
-
-  """Project internal name"""
-  projectInternalName: String
-
-  """Project name"""
-  projectName: String
-
-  """Parent ID"""
-  projectParentId: ID
-
-  """Project type"""
-  projectStatus: ProjectStatus
-
-  """Project type"""
-  projectType: ProjectType
-
-  """Project Unions"""
-  projectUnion: [ProjectUnionDetails!]
-
-  """Project rate"""
-  rate: String
-
-  """Release Locations DMA"""
-  releaseLocations: [Dma!]
-
-  """Request brief"""
-  requestBrief: Boolean
-
-  """Request brief instruction"""
-  requestBriefInstruction: String
-
-  """"""
-  roleDefaults: RoleDefaults
-
-  """Project roles"""
-  roles(roleIds: [Int!], roleStatusFilter: RoleStatusFilter): [Role!]
-
-  """Project side visibility"""
-  sideVisibility: ProjectSidesVisibility
-
-  """Studio"""
-  studio: String
-
-  """Submissions due"""
-  submissionsDueBy: DateTime
-
-  """Zendesk support ticket id"""
-  supportTicketNumber: String
-
-  """Synopsis"""
-  synopsis: String
-
-  """Tile scheme ID"""
-  tileSchemeId: ID
-
-  """Total records count"""
-  totalCount: Float
-
-  """Updated date"""
-  updated: DateTime
-
-  """Usage"""
-  usage: String
-
-  """Writer"""
-  writer: String
-}
-
-"""Audition address"""
-type AuditionAddress {
-  """Address Line 1"""
-  addressLine1: String
-
-  """Address Line 2"""
-  addressLine2: String
-
-  """City"""
-  city: String
-
-  """Country"""
-  country: [Country!]
-
-  """Address ID"""
-  id: ID!
-
-  """Location notes"""
-  locationNotes: String
-
-  """ZIP/Postal Code"""
-  postalCode: String
-
-  """State / Province"""
-  state: [State!]
-}
-
-""""""
-type ProjectFieldRestriction {
-  """"""
-  fields: [ProjectFieldRestrictionFieldOption!]!
-
-  """"""
-  restrictedFor: ProjectFieldRestrictionOption!
-}
-
-""""""
-enum ProjectFieldRestrictionFieldOption {
-  """"""
-  adAgency
-
-  """"""
-  director
-
-  """"""
-  executiveProducer
-
-  """"""
-  network
-
-  """"""
-  photographer
-
-  """"""
-  producer
-
-  """"""
-  productionCompany
-
-  """"""
-  studio
-
-  """"""
-  writer
-}
-
-"""Conflict object"""
-type Conflict {
+"""Available project types"""
+type ProjectType {
   """child objects"""
-  childObjects: [Conflict!]!
+  childObjects: [ProjectType!]!
 
   """code"""
   code: String!
@@ -5796,8 +5251,8 @@ type Conflict {
   """name"""
   name: String!
 
-  """array of parent objects"""
-  parentObject: [Conflict!]!
+  """parent object"""
+  parentObject: ProjectType
 
   """Selectable Flag"""
   selectable: Boolean!
@@ -5839,85 +5294,16 @@ type ContractStatus {
   sortOrder: Int
 }
 
-"""Role Default Options"""
-type RoleDefaults {
-  """"""
-  fieldRestrictions: [RoleFieldRestriction!]
+"""Talent Union"""
+type TalentUnion {
+  """child objects"""
+  childObjects: [TalentUnion!]!
 
-  """"""
-  locationDates: [RoleDefaultDateWithLocation!]
-
-  """"""
-  publicationSettings: [RoleDefaultPublicationSetting!]
-
-  """"""
-  wardrobe: String
-
-  """"""
-  workRequirements: String
-}
-
-""""""
-type RoleDefaultDateWithLocation {
-  """CODE of DateType enum"""
-  dateTypeCode: String!
-
-  """End date"""
-  endDate: DateTime
-
-  """Name of City"""
-  locationName: String
-
-  """Start date"""
-  startDate: DateTime
-}
-
-""""""
-type RoleDefaultPublicationSetting {
-  """List of DMAs CODEs for talents"""
-  dmas: [String!]
-
-  """Publication Setting CODE"""
-  publicationSetting: String!
-
-  """List of Representation Age Categories CODEs"""
-  repAgeCategories: [String!]
-
-  """List of Representation Categories CODEs"""
-  repCategories: [String!]
-
-  """Representative IDs"""
-  representativeIds: [Int!]
-
-  """Representative List ID Selected"""
-  representativeListId: Int
-
-  """List of Representation Type CODEs"""
-  repTypes: [String!]
-}
-
-"""Role status filter options"""
-enum RoleStatusFilter {
-  """"""
-  Active
-
-  """"""
-  All
-
-  """"""
-  Archived
-
-  """"""
-  Published
-
-  """"""
-  UnderReview
-}
-
-"""Project Sides Visibility object"""
-type ProjectSidesVisibility {
   """code"""
   code: String!
+
+  """country"""
+  country: Country
 
   """Is this enbaled?"""
   enabled: Boolean!
@@ -5928,8 +5314,20 @@ type ProjectSidesVisibility {
   """name"""
   name: String!
 
+  """parent object"""
+  parentObject: TalentUnion
+
+  """Represents project union for all true values"""
+  projectEnabled: Boolean!
+
+  """Selectable Flag"""
+  selectable: Boolean!
+
   """Sort order"""
   sortOrder: Int
+
+  """Represents talent union for all true values"""
+  talentEnabled: Boolean!
 }
 
 """Role Publication setting"""
@@ -5971,6 +5369,42 @@ type PublicationSetting {
   sortOrder: Int
 }
 
+"""RepresentationAgeCategory object"""
+type RepresentationAgeCategory {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+""""""
+type RepresentationType {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
 """RatePerType object"""
 type RatePerType {
   """code"""
@@ -5996,15 +5430,6 @@ enum RepRoleStatusEnum {
 
   """"""
   REVIEWED
-}
-
-"""Page Input object"""
-input PageInput {
-  """Page size"""
-  pageSize: Int!
-
-  """Page number"""
-  pageNumber: Int!
 }
 
 """Paginated result with [RoleOrganizationPair] objects"""
@@ -6036,6 +5461,48 @@ type RoleOrganizationPair {
 
 """Role Status object"""
 type RoleStatus {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""RoleType  object"""
+type RoleType {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """"""
+  projectType: ProjectType!
+
+  """"""
+  roleTarget: RoleTarget!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Role Target object"""
+type RoleTarget {
   """code"""
   code: String!
 
@@ -6134,6 +5601,45 @@ type SubmissionStatus {
 
   """Sort order"""
   sortOrder: Int
+}
+
+"""Time Zone object"""
+type TimeZone {
+  """"""
+  abbreviation: String
+
+  """code"""
+  code: String!
+
+  """"""
+  codeBrowser: String!
+
+  """"""
+  daylightSavingsCode: String
+
+  """"""
+  dstOffset: Float!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """"""
+  gmtOffset: Float!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String
+
+  """"""
+  rawOffset: Float!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  standardName: String!
 }
 
 """Schedule Information"""
@@ -6511,143 +6017,604 @@ type Willingness {
   sortOrder: Int
 }
 
-""""""
-type _Service {
-  """
-  The sdl representing the federated service capabilities. Includes federation
-  directives, removes federation types, and includes rest of full schema after
-  schema directives have been applied
-  """
-  sdl: String
-}
+"""Tag object"""
+type Tag {
+  """child objects"""
+  childObjects: [Tag!]!
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
+  """code"""
+  code: String!
 
-""""""
-input FilterInput {
-  """"""
-  keys: [ID!]!
+  """Is this enbaled?"""
+  enabled: Boolean!
 
-  """"""
-  keyType: KeyType!
-}
+  """Primary ID"""
+  id: ID!
 
-"""Type of the identifier to use for dictionary lookup."""
-enum KeyType {
-  """"""
-  code
+  """name"""
+  name: String!
 
-  """"""
-  id
-}
+  """parent object"""
+  parentObject: Tag
 
-"""Filters for searching suitable projects"""
-input ProjectFilterInput {
-  """Which casting organization's project should it be?"""
-  castingOrganizationIds: [ID!]
+  """Selectable Flag"""
+  selectable: Boolean!
 
-  """Which organization division should be considered?"""
-  dmaIds: [ID!]
-
-  """Has requests attached?"""
-  hasRequests: Boolean
-
-  """Has selects attached?"""
-  hasSelects: Boolean
-
-  """Has submissions attached?"""
-  hasSubmissions: Boolean
-
-  """Should the project contain only kids roles?"""
-  isKidsRolesOnly: Boolean
-
-  """Is project viewed"""
-  isViewed: Boolean
-
-  """Which organization this project belongs?"""
-  organizationId: Float
-
-  """Search in the name"""
-  projectName: String
-
-  """What project types (by ID) should project have?"""
-  projectTypeIds: [ID!]
-
-  """Which project unions should be considered?"""
-  projectUnionIds: [ID!]
-
-  """Search in role name"""
-  roleName: String
-
-  """Search by roleTypes array using codes"""
-  roleTypes: [String!]
-
-  """What submission date should it be?"""
-  submissionDueDate: SubmissionDueDateSearchEnum
-}
-
-"""Determine discrete boundaries for project filtering"""
-enum SubmissionDueDateSearchEnum {
-  """"""
-  FUTURE
-
-  """"""
-  TODAY
+  """Sort order"""
+  sortOrder: Int
 }
 
 """"""
-type ProjectVisibilityResult {
-  """Clusterized info about project locations"""
-  projectsLocations: [ProjectLocation!]!
+type AccountUrlType {
+  """"""
+  accountId: Float!
 
-  """project_id - is_viewed pair"""
-  projectVisibilities: [ProjectVisibility!]!
+  """Primary ID"""
+  id: ID!
 
-  """Total number of projects"""
-  totalCount: Int
+  """"""
+  url: String!
 
-  """Total number of new or updated requests"""
-  totalCountOfNewOrUpdatedRequests: Int!
+  """"""
+  urlType: UrlType!
 
-  """Total number of requests"""
-  totalCountOfRequests: Int!
+  """"""
+  urlTypeId: Float!
 }
 
-""""""
-type ProjectLocation {
+"""Url Type object"""
+type UrlType {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Artist info"""
+type Artist {
+  """"""
+  account: Account
+
+  """Artist Id """
+  artistId: Int!
+
+  """"""
+  artistSubscriptions: [SubscriptionModel!]
+
+  """Created Date"""
+  created: DateTime!
+
+  """First Name"""
+  firstName: String!
+
+  """Primary ID"""
+  id: ID!
+
+  """Last Name"""
+  lastName: String!
+
+  """"""
+  mediaCounts(isLocked: Boolean!): [MediaCount!]
+
+  """True if artist is minor"""
+  minor: Boolean!
+
+  """"""
+  notificationPhone: String
+
+  """"""
+  profiles(oldest: Boolean): [Profile!]
+}
+
+"""Subscription"""
+type SubscriptionModel {
+  """"""
+  billingInfoId: String
+
+  """"""
+  expirationDate: DateTime
+
   """"""
   id: ID!
 
   """"""
-  projectId: Int!
+  nextBillingDate: DateTime
 
   """"""
-  projectLocations: [String!]!
+  plan: PlanModel
+
+  """"""
+  status: String!
+
+  """"""
+  transaction: String
+}
+
+"""Subscription Plan"""
+type PlanModel {
+  """"""
+  billingCode: String
+
+  """"""
+  billingProviderId: ID
+
+  """"""
+  code: String
+
+  """"""
+  created: DateTime
+
+  """"""
+  currency: Currency
+
+  """"""
+  enabled: Boolean
+
+  """"""
+  id: ID!
+
+  """"""
+  isBasePlan: Boolean
+
+  """"""
+  name: String
+
+  """"""
+  planCurrencyCode: String
+
+  """"""
+  planStatusId: ID
+
+  """"""
+  planTerm: PlanTermModel
+
+  """"""
+  price: Float
+
+  """"""
+  sortOrder: Int
+
+  """"""
+  updated: DateTime
 }
 
 """"""
-type ProjectVisibility {
-  """
-  States if the project has any role with selected talent from user current agency
-  """
-  isAnyRoleSelected: Boolean!
+type PlanTermModel {
+  """"""
+  code: String
 
-  """
-  States if the project has any role with submitted talent from user current agency
-  """
-  isAnyRoleSubmitted: Boolean!
+  """"""
+  id: ID!
 
-  """States if the project was viewed by the context user"""
-  isViewed: Boolean!
+  """"""
+  name: String
+}
 
-  """Project ID"""
-  project: Project!
+"""Account billing info"""
+type AccountBillingInfo {
+  """"""
+  cardExpirationMonth: Int
 
-  """States if the project has any requests for current reps agency"""
-  requestsInfo: ProjectRequestsInfo
+  """"""
+  cardExpirationYear: Int
+
+  """"""
+  cardType: String
+
+  """"""
+  code: String
+
+  """"""
+  email: String
+
+  """"""
+  firstName: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  lastName: String
+}
+
+""""""
+type IPCInfo {
+  """"""
+  ipcProfessionalBio: String
+}
+
+""""""
+type LanguageInfo {
+  """"""
+  baseLocale: String!
+
+  """"""
+  code: String!
+
+  """"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: Int!
+
+  """"""
+  locale: String!
+
+  """"""
+  name: String!
+}
+
+"""Notification Notitifcation Type Subscription object type"""
+type NotificationTypeNotificationSubscription {
+  """Subscription Creator Id"""
+  accountId: Int!
+
+  """Artist Id"""
+  artistId: Int!
+
+  """Created Date"""
+  created: DateTime!
+
+  """"""
+  entity: NotificationEntityDetails
+
+  """"""
+  entityType: EntityType
+
+  """Notification Id"""
+  notificationId: Int
+
+  """"""
+  notificationNature: NotificationNature
+
+  """Notification Nature Id"""
+  notificationNatureId: Int
+
+  """"""
+  notificationType: NotificationType
+
+  """Notification Type Id"""
+  notificationTypeId: Int
+
+  """Organization Id"""
+  organizationId: Int
+
+  """"""
+  projectType: ProjectType @deprecated(reason: "Use \"entity\" field instead")
+
+  """"""
+  rolePaidType: PaidType @deprecated(reason: "Use \"entity\" field instead")
+
+  """"""
+  roleTarget: RoleTarget @deprecated(reason: "Use \"entity\" field instead")
+}
+
+""""""
+union NotificationEntityDetails = PaidType | ProjectType | RoleTarget | TalentUnion
+
+"""Notification Nature object"""
+type NotificationNature {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Notification Type object"""
+type NotificationType {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+""""""
+type AccountPreferences {
+  """"""
+  projectListFilters: AccountProjectFiltersPreferences
+
+  """"""
+  schedule: AccountSchedulePreferences
+}
+
+""""""
+type AccountProjectFiltersPreferences {
+  """Casting Organisation Search Settings"""
+  castingOrganizations: [Organization!]
+
+  """"""
+  hasRequests: Boolean
+
+  """"""
+  hasSelects: Boolean
+
+  """"""
+  hasSubmissions: Boolean
+
+  """"""
+  isKidsRolesOnly: Boolean
+
+  """"""
+  projectName: String
+
+  """Region Search Settings"""
+  projectRegion: [Dma!]
+
+  """Project Types Search Settings"""
+  projectTypes: [ProjectType!]
+
+  """Project Union Search Settings"""
+  projectUnion: [TalentUnion!]
+
+  """"""
+  projectViewStatus: ProjectViewFilterType
+
+  """"""
+  roleName: String
+
+  """Role Types Search Settings"""
+  roleTypes: [RoleType!]
+
+  """"""
+  submissionDueDate: String
+}
+
+"""Project Viewed Filter"""
+enum ProjectViewFilterType {
+  """"""
+  All
+
+  """"""
+  Unviewed
+
+  """"""
+  Viewed
+}
+
+""""""
+type AccountSchedulePreferences {
+  """"""
+  showUnionStatus: Boolean!
+
+  """"""
+  thumbnailType: ThumbnailType!
+}
+
+""""""
+enum ThumbnailType {
+  """"""
+  headshot
+
+  """"""
+  snapshot
+}
+
+"""Subscription"""
+type ActiveSubscriptionModel {
+  """"""
+  id: ID!
+
+  """"""
+  nextBillingDate: DateTime
+
+  """"""
+  plans: [PlanModel!]
+}
+
+"""Audition address"""
+type AuditionAddress {
+  """Address Line 1"""
+  addressLine1: String
+
+  """Address Line 2"""
+  addressLine2: String
+
+  """City"""
+  city: String
+
+  """Country"""
+  country: [Country!]
+
+  """Address ID"""
+  id: ID!
+
+  """Location notes"""
+  locationNotes: String
+
+  """ZIP/Postal Code"""
+  postalCode: String
+
+  """State / Province"""
+  state: [State!]
+}
+
+""""""
+type ProjectFieldRestriction {
+  """"""
+  fields: [ProjectFieldRestrictionFieldOption!]!
+
+  """"""
+  restrictedFor: ProjectFieldRestrictionOption!
+}
+
+""""""
+enum ProjectFieldRestrictionFieldOption {
+  """"""
+  adAgency
+
+  """"""
+  director
+
+  """"""
+  executiveProducer
+
+  """"""
+  network
+
+  """"""
+  photographer
+
+  """"""
+  producer
+
+  """"""
+  productionCompany
+
+  """"""
+  studio
+
+  """"""
+  writer
+}
+
+"""Conflict object"""
+type Conflict {
+  """child objects"""
+  childObjects: [Conflict!]!
+
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """array of parent objects"""
+  parentObject: [Conflict!]!
+
+  """Selectable Flag"""
+  selectable: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Role Default Options"""
+type RoleDefaults {
+  """"""
+  fieldRestrictions: [RoleFieldRestriction!]
+
+  """"""
+  locationDates: [RoleDefaultDateWithLocation!]
+
+  """"""
+  publicationSettings: [RoleDefaultPublicationSetting!]
+
+  """"""
+  wardrobe: String
+
+  """"""
+  workRequirements: String
+}
+
+""""""
+type RoleDefaultDateWithLocation {
+  """CODE of DateType enum"""
+  dateTypeCode: String!
+
+  """End date"""
+  endDate: DateTime
+
+  """Name of City"""
+  locationName: String
+
+  """Start date"""
+  startDate: DateTime
+}
+
+""""""
+type RoleDefaultPublicationSetting {
+  """List of DMAs CODEs for talents"""
+  dmas: [String!]
+
+  """Publication Setting CODE"""
+  publicationSetting: String!
+
+  """List of Representation Age Categories CODEs"""
+  repAgeCategories: [String!]
+
+  """List of Representation Categories CODEs"""
+  repCategories: [String!]
+
+  """Representative IDs"""
+  representativeIds: [Int!]
+
+  """Representative List ID Selected"""
+  representativeListId: Int
+
+  """List of Representation Type CODEs"""
+  repTypes: [String!]
+}
+
+"""Role status filter options"""
+enum RoleStatusFilter {
+  """"""
+  Active
+
+  """"""
+  All
+
+  """"""
+  Archived
+
+  """"""
+  Published
+
+  """"""
+  UnderReview
+}
+
+"""Project Sides Visibility object"""
+type ProjectSidesVisibility {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
 }
 
 """"""
@@ -9002,9 +8969,6 @@ type ArtistMediaProfile {
   """Profession"""
   profession: String
 
-  """Get the artist media profile"""
-  profile: Profile!
-
   """
   Access Token of a Profile, generated by Granting Access or Creating a Profile
   """
@@ -10046,9 +10010,6 @@ type PublicProfile {
 
   """Profession"""
   profession: String
-
-  """Get the artist media profile"""
-  profile: Profile!
 
   """
   Access Token of a Profile, generated by Granting Access or Creating a Profile
@@ -18828,9 +18789,6 @@ type Mutation {
 
   """"""
   removeActiveCouponRedemption: Boolean!
-
-  """Either sends 'Not Yet Sent' request or re-sends it"""
-  sendRequest(id: ID!, sendTo: RequestSendTo!, note: String = null): Boolean!
 
   """Sends request to media-request for all selected request statuses"""
   createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
