@@ -986,7 +986,7 @@ mutation attachMediasToProfile($mediaIds: [Int!]!, $profileId: Int!) {
   attachMediasToProfile(mediaIds: $mediaIds, profileId: $profileId)
 }
 
-query CREDIT_DETAIL($profileId: Float!) {
+query CREDIT_DETAIL($profileId: String!) {
   credits(profileId: $profileId) {
     id
     year

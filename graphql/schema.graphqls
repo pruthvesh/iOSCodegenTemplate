@@ -29,6 +29,15 @@ type Query {
   getBauCountries: [BauCountry!]
 
   """"""
+  getLists(projectId: Int, filter: CastingListFilterInput! = {}, pageNumber: Int, pageSize: Int): ListGqlModelPagedList!
+
+  """"""
+  getCastingListsByProfileAndProject(projectId: Int!, profileId: ID!, pageNumber: Int! = 1, pageSize: Int! = 20): ListGqlModelPagedList!
+
+  """"""
+  getCastingListProfile(input: GetCastingListProfileArgs!): GetCastingListProfileResult!
+
+  """"""
   accountsIndexable(ids: [Int!]!): JSON!
 
   """"""
@@ -133,7 +142,7 @@ type Query {
   countSubmissionsPerRole(input: SubmissionCountPerRoleInput!): [SubmissionCountPerRole!]!
 
   """Get all the profile's credits in the db"""
-  credits(profileId: Float!): [Credit!]
+  credits(profileId: String!): [Credit!]
 
   """"""
   creditTypes(input: FilterInput): [CreditType!]!
@@ -543,6 +552,9 @@ type Query {
   """Gets talent pool for the schedule"""
   getTalentPoolForSchedule(mediaRequestFilter: MediaRequestFilterType, pageInput: PageInput!, roleIds: [Int!]!, scheduleId: Int!, scheduleSelectInput: SchedulesSelectInput, tileSchemaValueCodes: [String!]): [ScheduleTalentPool!]!
 
+  """"""
+  getTalentScoutHistory(page: PageInput): TalentScoutPageListResult
+
   """Gets the count for all the profiles for a project."""
   getTotalProfileCount(id: Float!): Float!
 
@@ -617,6 +629,9 @@ type Query {
 
   """Get projects for a organization"""
   organizationProjects(
+    """"""
+    filter: OrganizationProjectFilterInput
+
     """"""
     name: String
 
@@ -868,6 +883,9 @@ type Query {
 
   """"""
   systemRoles(input: FilterInput): [SystemRole!]!
+
+  """Searching Talent Scout Profiles"""
+  talentScoutSearch(input: ProfileSearchInput!, page: PageInput, resultType: SearchResultType = DOCUMENTS, sortOptions: [ProfileSearchSortOption!]): ProfileSearch
 
   """"""
   talentUnions(input: FilterInput): [TalentUnion!]!
@@ -1482,164 +1500,53 @@ type BauCountry {
   supportingCountryId: Int
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
 """"""
-input FilterInput {
+input CastingListFilterInput {
   """"""
-  keys: [ID!]!
-
-  """"""
-  keyType: KeyType!
-}
-
-"""Type of the identifier to use for dictionary lookup."""
-enum KeyType {
-  """"""
-  code
-
-  """"""
-  id
+  name: String
 }
 
 """"""
-type AccountStatus {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""Filters for searching suitable projects"""
-input ProjectFilterInput {
-  """Which casting organization's project should it be?"""
-  castingOrganizationIds: [ID!]
-
-  """Which organization division should be considered?"""
-  dmaIds: [ID!]
-
-  """Has requests attached?"""
-  hasRequests: Boolean
-
-  """Has selects attached?"""
-  hasSelects: Boolean
-
-  """Has submissions attached?"""
-  hasSubmissions: Boolean
-
-  """Should the project contain only kids roles?"""
-  isKidsRolesOnly: Boolean
-
-  """Is project viewed"""
-  isViewed: Boolean
-
-  """Which organization this project belongs?"""
-  organizationId: Float
-
-  """Search in the name"""
-  projectName: String
-
-  """What project types (by ID) should project have?"""
-  projectTypeIds: [ID!]
-
-  """Which project unions should be considered?"""
-  projectUnionIds: [ID!]
-
-  """Search in role name"""
-  roleName: String
-
-  """Search by roleTypes array using codes"""
-  roleTypes: [String!]
-
-  """What submission date should it be?"""
-  submissionDueDate: SubmissionDueDateSearchEnum
-}
-
-"""Determine discrete boundaries for project filtering"""
-enum SubmissionDueDateSearchEnum {
+type ListGqlModelPagedList {
   """"""
-  FUTURE
+  page: Int!
 
   """"""
-  TODAY
-}
+  totalCount: Int!
 
-"""Page Input object"""
-input PageInput {
-  """Page size"""
-  pageSize: Int!
+  """"""
+  totalPages: Int!
 
-  """Page number"""
-  pageNumber: Int!
+  """"""
+  data: [ListGqlModel!]!
 }
 
 """"""
-type ProjectVisibilityResult {
-  """Clusterized info about project locations"""
-  projectsLocations: [ProjectLocation!]!
-
-  """project_id - is_viewed pair"""
-  projectVisibilities: [ProjectVisibility!]!
-
-  """Total number of projects"""
-  totalCount: Int
-
-  """Total number of new or updated requests"""
-  totalCountOfNewOrUpdatedRequests: Int!
-
-  """Total number of requests"""
-  totalCountOfRequests: Int!
-}
-
-""""""
-type ProjectLocation {
+type ListGqlModel {
   """"""
   id: ID!
 
-  """"""
+  """Project ID"""
   projectId: Int!
 
   """"""
-  projectLocations: [String!]!
-}
+  name: String!
 
-""""""
-type ProjectVisibility {
-  """
-  States if the project has any role with selected talent from user current agency
-  """
-  isAnyRoleSelected: Boolean!
+  """"""
+  createdAt: DateTime
 
-  """
-  States if the project has any role with submitted talent from user current agency
-  """
-  isAnyRoleSubmitted: Boolean!
+  """"""
+  updatedAt: DateTime
 
-  """States if the project was viewed by the context user"""
-  isViewed: Boolean!
-
-  """Project ID"""
+  """"""
   project: Project!
-
-  """States if the project has any requests for current reps agency"""
-  requestsInfo: ProjectRequestsInfo
 }
 
 """Project object"""
 type Project {
+  """Primary ID"""
+  id: ID!
+
   """Account name"""
   accountName: String
 
@@ -1719,9 +1626,6 @@ type Project {
 
   """Is hidden"""
   hidden: Boolean
-
-  """Primary ID"""
-  id: ID!
 
   """Project internal name"""
   internalName: String
@@ -2443,6 +2347,9 @@ type Feature {
 
 """"""
 type Media {
+  """Primary ID"""
+  id: ID!
+
   """"""
   accountId: Float!
 
@@ -2463,9 +2370,6 @@ type Media {
 
   """"""
   height: Int
-
-  """Primary ID"""
-  id: ID!
 
   """"""
   isLocked: Boolean
@@ -2746,6 +2650,12 @@ type OrganizationStatus {
 
 """Talent Profile - May be associated with Account"""
 type Profile {
+  """Primary ID"""
+  id: ID!
+
+  """"""
+  isInCastingList(listId: ID!): Boolean!
+
   """Checks if profile have granted access to roster"""
   accessGranted: Boolean!
 
@@ -2778,6 +2688,9 @@ type Profile {
 
   """Conflicts for the profile"""
   conflicts: [ProfileConflict!]!
+
+  """"""
+  contactedByRep: [ProfileContactedByRep!]
 
   """Dynamic field. Based on profile status and representative type"""
   contactInfo: ProfileContactInfo
@@ -2866,9 +2779,6 @@ type Profile {
   """Hip size Object"""
   hipSize: Hip
 
-  """Primary ID"""
-  id: ID!
-
   """Inseam size Object"""
   inseam: Inseam
 
@@ -2900,8 +2810,14 @@ type Profile {
   """Identify represented profile"""
   isRepresented: Boolean!
 
+  """Is talent seeking representation"""
+  isSeekingRepresentation: Boolean
+
   """Last note for the profile"""
   lastNote: Note
+
+  """Luminate profile Data"""
+  luminateProfile: LuminateProfile
 
   """Manager Email"""
   managerEmail: String
@@ -2926,6 +2842,9 @@ type Profile {
 
   """Notes for the profile"""
   notes: [Note!]!
+
+  """Note to Representative"""
+  noteToRepresentative: String
 
   """"""
   organization: Organization
@@ -3282,6 +3201,15 @@ type ProfileConflict {
 }
 
 """"""
+type ProfileContactedByRep {
+  """"""
+  createdAt: DateTime
+
+  """"""
+  profileId: Float
+}
+
+""""""
 type ProfileContactInfo {
   """"""
   email: String
@@ -3292,6 +3220,12 @@ type ProfileContactInfo {
 
 """Credit Attribute"""
 type Credit {
+  """Primary ID"""
+  id: ID!
+
+  """Profile ID"""
+  profileId: ID!
+
   """Created at Date"""
   created: DateTime!
 
@@ -3313,14 +3247,8 @@ type Credit {
   """Highlighted"""
   highlighted: Boolean!
 
-  """Primary ID"""
-  id: ID!
-
   """Profile Credit Type Id"""
   profileCreditTypeId: Float!
-
-  """Profile ID"""
-  profileId: Int!
 
   """Role title"""
   role: String
@@ -3783,6 +3711,57 @@ type ProjectStatus {
 
   """Sort order"""
   sortOrder: Int
+}
+
+"""Luminate profile Data"""
+type LuminateProfile {
+  """Luminate profile agencies"""
+  agencies: [LuminateCompanyModel!]
+
+  """"""
+  countryOfOrigin: String
+
+  """Luminate profile credits"""
+  credits: [Credit!]
+
+  """"""
+  dateOfBirth: String
+
+  """Luminate profile management companies"""
+  managements: [LuminateCompanyModel!]
+
+  """"""
+  pronounce: String
+
+  """"""
+  screenScore: String
+}
+
+"""Luminate company"""
+type LuminateCompanyModel {
+  """"""
+  contacts: [LuminateContactModel!]
+
+  """"""
+  email: String
+
+  """"""
+  name: String
+
+  """"""
+  phone: String
+}
+
+"""Luminate contact"""
+type LuminateContactModel {
+  """"""
+  email: String
+
+  """"""
+  name: String
+
+  """"""
+  phone: String
 }
 
 """Media Count"""
@@ -5432,6 +5411,15 @@ enum RepRoleStatusEnum {
   REVIEWED
 }
 
+"""Page Input object"""
+input PageInput {
+  """Page size"""
+  pageSize: Int!
+
+  """Page number"""
+  pageNumber: Int!
+}
+
 """Paginated result with [RoleOrganizationPair] objects"""
 type RoleOrganizationPairPaginatedResult {
   """Last key """
@@ -6045,6 +6033,24 @@ type Tag {
 }
 
 """"""
+type AccountStatus {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+""""""
 type AccountUrlType {
   """"""
   accountId: Float!
@@ -6615,6 +6621,228 @@ type ProjectSidesVisibility {
 
   """Sort order"""
   sortOrder: Int
+}
+
+""""""
+input GetCastingListProfileArgs {
+  """"""
+  listId: ID!
+
+  """"""
+  pageNumber: Int! = 1
+
+  """"""
+  pageSize: Int! = 5
+}
+
+""""""
+type GetCastingListProfileResult {
+  """"""
+  success: CastingListProfilePagedList
+
+  """"""
+  error: GetCastingListProfileResultError
+}
+
+""""""
+type CastingListProfilePagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [CastingListProfile!]!
+}
+
+""""""
+type CastingListProfile {
+  """"""
+  id: ID!
+
+  """"""
+  listId: ID!
+
+  """"""
+  note: String!
+
+  """"""
+  audios: [CastingListProfileMedia!]
+
+  """"""
+  photos: [CastingListProfileMedia!]
+
+  """"""
+  videos: [CastingListProfileMedia!]
+
+  """"""
+  profile: Profile!
+
+  """"""
+  credits: [Credit!]
+}
+
+""""""
+type CastingListProfileMedia {
+  """"""
+  isPrimary: Boolean!
+
+  """"""
+  media: Media!
+}
+
+""""""
+union GetCastingListProfileResultError = ValidationError
+
+""""""
+type ValidationError implements IError {
+  """"""
+  code: Int!
+
+  """"""
+  message: String!
+}
+
+""""""
+interface IError {
+  """"""
+  code: Int!
+
+  """"""
+  message: String!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+""""""
+input FilterInput {
+  """"""
+  keys: [ID!]!
+
+  """"""
+  keyType: KeyType!
+}
+
+"""Type of the identifier to use for dictionary lookup."""
+enum KeyType {
+  """"""
+  code
+
+  """"""
+  id
+}
+
+"""Filters for searching suitable projects"""
+input ProjectFilterInput {
+  """Which casting organization's project should it be?"""
+  castingOrganizationIds: [ID!]
+
+  """Which organization division should be considered?"""
+  dmaIds: [ID!]
+
+  """Has requests attached?"""
+  hasRequests: Boolean
+
+  """Has selects attached?"""
+  hasSelects: Boolean
+
+  """Has submissions attached?"""
+  hasSubmissions: Boolean
+
+  """Should the project contain only kids roles?"""
+  isKidsRolesOnly: Boolean
+
+  """Is project viewed"""
+  isViewed: Boolean
+
+  """Which organization this project belongs?"""
+  organizationId: Float
+
+  """Search in the name"""
+  projectName: String
+
+  """What project types (by ID) should project have?"""
+  projectTypeIds: [ID!]
+
+  """Which project unions should be considered?"""
+  projectUnionIds: [ID!]
+
+  """Search in role name"""
+  roleName: String
+
+  """Search by roleTypes array using codes"""
+  roleTypes: [String!]
+
+  """What submission date should it be?"""
+  submissionDueDate: SubmissionDueDateSearchEnum
+}
+
+"""Determine discrete boundaries for project filtering"""
+enum SubmissionDueDateSearchEnum {
+  """"""
+  FUTURE
+
+  """"""
+  TODAY
+}
+
+""""""
+type ProjectVisibilityResult {
+  """Clusterized info about project locations"""
+  projectsLocations: [ProjectLocation!]!
+
+  """project_id - is_viewed pair"""
+  projectVisibilities: [ProjectVisibility!]!
+
+  """Total number of projects"""
+  totalCount: Int
+
+  """Total number of new or updated requests"""
+  totalCountOfNewOrUpdatedRequests: Int!
+
+  """Total number of requests"""
+  totalCountOfRequests: Int!
+}
+
+""""""
+type ProjectLocation {
+  """"""
+  id: ID!
+
+  """"""
+  projectId: Int!
+
+  """"""
+  projectLocations: [String!]!
+}
+
+""""""
+type ProjectVisibility {
+  """
+  States if the project has any role with selected talent from user current agency
+  """
+  isAnyRoleSelected: Boolean!
+
+  """
+  States if the project has any role with submitted talent from user current agency
+  """
+  isAnyRoleSubmitted: Boolean!
+
+  """States if the project was viewed by the context user"""
+  isViewed: Boolean!
+
+  """Project ID"""
+  project: Project!
+
+  """States if the project has any requests for current reps agency"""
+  requestsInfo: ProjectRequestsInfo
 }
 
 """"""
@@ -7791,6 +8019,9 @@ input ProfileSearchInput {
   """Range of IDs for dress size"""
   dressId: IdRangeInput
 
+  """Enables search by luminate profiles, false by default"""
+  enableLuminate: Boolean = false
+
   """Ethninc Appearance Ids"""
   ethnicAppearanceIds: [ID!]
 
@@ -7909,6 +8140,9 @@ input ProfileSearchInput {
   """Search By Profile Statuses"""
   profileStatusToSearch: ProfileStatusSearchEnum
 
+  """Search by profile types"""
+  profileTypeCodes: [ProfileTypeEnum!]
+
   """Search by profile type"""
   profileTypeId: Int
 
@@ -7920,6 +8154,9 @@ input ProfileSearchInput {
 
   """Relationship To Minor Id"""
   relationshipToMinorId: [ID!]
+
+  """"""
+  representationType: [ProfileSearchRepresentationType!]
 
   """Representative Ids"""
   representativeIds: [Int!]
@@ -8055,6 +8292,30 @@ enum ProfileStatusSearchEnum {
 
   """"""
   ROSTER_HIDDEN
+}
+
+""""""
+enum ProfileTypeEnum {
+  """"""
+  B21
+
+  """"""
+  FASTCAST
+
+  """"""
+  LUMINATE
+}
+
+"""Profile search representation type"""
+enum ProfileSearchRepresentationType {
+  """"""
+  Luminate
+
+  """"""
+  Represented
+
+  """"""
+  Unrepresented
 }
 
 """"""
@@ -8767,6 +9028,9 @@ type ArtistMediaProfile {
   """Conflicts for the profile"""
   conflicts: [ProfileConflict!]!
 
+  """"""
+  contactedByRep: [ProfileContactedByRep!]
+
   """Dynamic field. Based on profile status and representative type"""
   contactInfo: ProfileContactInfo
 
@@ -8894,8 +9158,14 @@ type ArtistMediaProfile {
   """Identify represented profile"""
   isRepresented: Boolean!
 
+  """Is talent seeking representation"""
+  isSeekingRepresentation: Boolean
+
   """Last note for the profile"""
   lastNote: Note
+
+  """Luminate profile Data"""
+  luminateProfile: LuminateProfile
 
   """Manager Email"""
   managerEmail: String
@@ -8920,6 +9190,9 @@ type ArtistMediaProfile {
 
   """Notes for the profile"""
   notes: [Note!]!
+
+  """Note to Representative"""
+  noteToRepresentative: String
 
   """Order of display for the media"""
   order: Int
@@ -9815,6 +10088,9 @@ type PublicProfile {
   """Conflicts for the profile"""
   conflicts: [ProfileConflict!]!
 
+  """"""
+  contactedByRep: [ProfileContactedByRep!]
+
   """Dynamic field. Based on profile status and representative type"""
   contactInfo: ProfileContactInfo
 
@@ -9939,8 +10215,14 @@ type PublicProfile {
   """Identify represented profile"""
   isRepresented: Boolean!
 
+  """Is talent seeking representation"""
+  isSeekingRepresentation: Boolean
+
   """Last note for the profile"""
   lastNote: Note
+
+  """Luminate profile Data"""
+  luminateProfile: LuminateProfile
 
   """Manager Email"""
   managerEmail: String
@@ -9965,6 +10247,9 @@ type PublicProfile {
 
   """Notes for the profile"""
   notes: [Note!]!
+
+  """Note to Representative"""
+  noteToRepresentative: String
 
   """"""
   organization: Organization
@@ -10200,7 +10485,7 @@ type PublicCredit {
   profileCreditTypeId: Float!
 
   """Profile ID"""
-  profileId: Int!
+  profileId: ID!
 
   """Role title"""
   role: String
@@ -13155,6 +13440,39 @@ type ScheduleTalentPool {
   submissions: [Submission!]
 }
 
+"""Talent scout history list"""
+type TalentScoutPageListResult {
+  """List of talent scout"""
+  data: [TalentScoutModel!]!
+
+  """Current Page"""
+  page: Int!
+
+  """Total records count"""
+  totalCount: Int!
+
+  """Total Pages"""
+  totalPages: Int!
+}
+
+""""""
+type TalentScoutModel {
+  """"""
+  createdAt: DateTime!
+
+  """Account of creator"""
+  createdBy: Account
+
+  """"""
+  id: String!
+
+  """"""
+  message: String!
+
+  """"""
+  profile: Profile
+}
+
 """Account info"""
 type UnclaimedAccount {
   """"""
@@ -13407,6 +13725,15 @@ type OrganizationAccount {
   organizationStatus: Float!
 }
 
+""""""
+input OrganizationProjectFilterInput {
+  """Project status codes"""
+  projectStatusCodes: [String!]
+
+  """Project type codes"""
+  projectTypeCodes: [String!]
+}
+
 """Project status filter options"""
 enum ProjectStatusFilterEnum {
   """"""
@@ -13453,6 +13780,9 @@ type ProjectBase {
 
   """Project type"""
   projectType: ProjectType
+
+  """Zendesk support ticket id"""
+  supportTicketNumber: String
 }
 
 """Paginated result with [OrganizationsByRoleSubmissionsAndName] objects"""
@@ -14133,15 +14463,6 @@ union SubmissionTrendsResult = SubmissionTrendsNoAccessError | SubmissionTrendsS
 
 """"""
 type SubmissionTrendsNoAccessError implements IError {
-  """"""
-  code: Int!
-
-  """"""
-  message: String!
-}
-
-""""""
-interface IError {
   """"""
   code: Int!
 
@@ -17624,6 +17945,54 @@ type Mutation {
   """Returns a session bearer token."""
   updatePCOrganizations(input: BauPCAccountUpdateInput!): UpdateLegacyResult!
 
+  """"""
+  createList(projectId: Int!, name: String!): CreateCastingListResult!
+
+  """"""
+  editCastingList(
+    """List ID"""
+    listId: ID!
+
+    """List Name"""
+    name: String!
+  ): EditCastingListResult!
+
+  """"""
+  reorderList(movingId: ID!, refId: ID!, moveBehind: Boolean!): ReorderResult!
+
+  """"""
+  deleteList(listId: [ID!]!): DeleteCastingListResult!
+
+  """"""
+  reorderProfile(movingId: ID!, refId: ID!, moveBehind: Boolean!): ReorderResult!
+
+  """"""
+  setCastingListProfileNote(input: AddProfileNoteInput!): AddNoteToCastingListProfileResult!
+
+  """"""
+  addProfileToCastingList(input: AddProfileToCastingListInput!): AddProfileToCastingListResult!
+
+  """"""
+  editCastingListProfiles(input: EditProfileInput!): EditProfileCastingListResult!
+
+  """"""
+  removeProfileFromCastingList(input: RemoveProfileFromCastingListInput!): RemoveProfileFromCastingListResult!
+
+  """"""
+  moveProfileToCastingList(input: MoveProfileToCastingListInput!): MoveProfileToCastingListResult!
+
+  """"""
+  moveAllProfileToCastingList(input: MoveAllProfileToCastingListInput!): MoveProfileToCastingListResult!
+
+  """"""
+  copyProfileToCastingList(input: CopyProfileToCastingListInput!): CopyProfileToCastingListResult!
+
+  """"""
+  copyAllProfileToCastingList(input: CopyAllProfileToCastingListInput!): CopyProfileToCastingListResult!
+
+  """"""
+  addCastingListProfilesToRole(input: AddCastingListProfileToRoleInput!): AddProfileToRoleResult!
+
   """
   Denotes if the project has been accepted successfully along with it(s) associated role(s)
   """
@@ -17993,6 +18362,9 @@ type Mutation {
   """"""
   createAgencyCallListReport(input: AgencyCallListReportCreateInput!): String!
 
+  """"""
+  createArtistCredits(credit: ArtistCreditsInput!): [Credit!]!
+
   """Mutation for creating Audition Presentation"""
   createAuditionPresentation(input: AuditionPresentationInput!): Int!
 
@@ -18082,6 +18454,9 @@ type Mutation {
 
   """"""
   createSubscription(input: CreateSubscriptionInput!): Boolean!
+
+  """"""
+  createTalentScoutHistory(input: CreateTalentScoutHistoryInput!): TalentScoutModel!
 
   """"""
   createTalentSubmissionReport(input: TalentSubmissionReportCreateInput!): String!
@@ -18372,6 +18747,9 @@ type Mutation {
 
   """"""
   removeUserFromOrganization(accountId: Float!, organizationId: Float!): Float
+
+  """"""
+  reopenDivision(divisionId: Float!): Boolean!
 
   """
   Request for additional submissions for provided roles. Returns either request was sent or not.
@@ -19166,6 +19544,267 @@ input BauPCAccountUpdateInput {
   """"""
   facebookLink: String
 }
+
+""""""
+type CreateCastingListResult {
+  """"""
+  success: Int
+
+  """"""
+  error: MutateListError
+}
+
+""""""
+union MutateListError = ValidationError
+
+""""""
+type EditCastingListResult {
+  """"""
+  success: Boolean
+
+  """"""
+  error: EditListError
+}
+
+""""""
+union EditListError = ValidationError | MissingDataError | NotFoundError
+
+""""""
+type MissingDataError implements IError {
+  """"""
+  code: Int!
+
+  """"""
+  message: String!
+}
+
+""""""
+type NotFoundError implements IError {
+  """"""
+  code: Int!
+
+  """"""
+  message: String!
+}
+
+""""""
+type ReorderResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: ReorderError
+}
+
+""""""
+union ReorderError = MissingDataError | NotFoundError
+
+""""""
+type DeleteCastingListResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: MutateListError
+}
+
+""""""
+input AddProfileNoteInput {
+  """"""
+  note: String!
+
+  """"""
+  listProfileId: ID!
+}
+
+""""""
+type AddNoteToCastingListProfileResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: AddNoteToProfileError
+}
+
+""""""
+union AddNoteToProfileError = ValidationError
+
+""""""
+input AddProfileToCastingListInput {
+  """"""
+  profileIds: [ID!]!
+
+  """"""
+  listId: ID!
+}
+
+""""""
+type AddProfileToCastingListResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: AddProfileError
+}
+
+""""""
+union AddProfileError = ValidationError
+
+""""""
+input EditProfileInput {
+  """List Profile Id"""
+  listProfileId: ID!
+
+  """Profile Customisations to Save"""
+  profilesCustomisation: CustomProfileInput
+}
+
+""""""
+input CustomProfileInput {
+  """Audio Customisation"""
+  audios: [CustomMediaInput!]
+
+  """Video Customisation"""
+  videos: [CustomMediaInput!]
+
+  """Photos Customisation"""
+  photos: [CustomMediaInput!]
+
+  """Custom Credits"""
+  credits: [ID!]
+}
+
+""""""
+input CustomMediaInput {
+  """Media Id"""
+  mediaId: ID!
+
+  """Is Primary Media"""
+  isPrimary: Boolean! = false
+}
+
+""""""
+type EditProfileCastingListResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: EditProfileError
+}
+
+""""""
+union EditProfileError = ValidationError | MissingDataError | NotFoundError
+
+""""""
+input RemoveProfileFromCastingListInput {
+  """"""
+  listProfileIds: [ID!]!
+
+  """"""
+  listId: ID!
+}
+
+""""""
+type RemoveProfileFromCastingListResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: RemoveProfileFromCastingListError
+}
+
+""""""
+union RemoveProfileFromCastingListError = ValidationError
+
+""""""
+input MoveProfileToCastingListInput {
+  """"""
+  ids: [ID!]!
+
+  """"""
+  toListId: ID!
+}
+
+""""""
+type MoveProfileToCastingListResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: MoveProfileToCastingListError
+}
+
+""""""
+union MoveProfileToCastingListError = ValidationError
+
+""""""
+input MoveAllProfileToCastingListInput {
+  """"""
+  fromListId: ID!
+
+  """"""
+  toListId: ID!
+}
+
+""""""
+input CopyProfileToCastingListInput {
+  """"""
+  listProfileIds: [ID!]!
+
+  """"""
+  toListIds: [ID!]!
+}
+
+""""""
+type CopyProfileToCastingListResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: CopyProfileToCastingListError
+}
+
+""""""
+union CopyProfileToCastingListError = ValidationError
+
+""""""
+input CopyAllProfileToCastingListInput {
+  """"""
+  fromListId: ID!
+
+  """"""
+  toListIds: [ID!]!
+}
+
+""""""
+input AddCastingListProfileToRoleInput {
+  """"""
+  roleId: ID!
+
+  """"""
+  tileSchemaValueId: ID!
+
+  """"""
+  listProfileIds: [ID!]
+
+  """"""
+  listId: ID
+}
+
+""""""
+type AddProfileToRoleResult {
+  """"""
+  success: Boolean!
+
+  """"""
+  error: AddProfileToRoleError
+
+  """Failed Profile Ids"""
+  failedIds: [Float!]
+}
+
+""""""
+union AddProfileToRoleError = ValidationError | MissingDataError | NotFoundError
 
 """"""
 input AddProfileToTimeSlotAddInInput {
@@ -19981,6 +20620,33 @@ type AuthToken {
 input AgencyCallListReportCreateInput {
   """"""
   scheduleId: Int!
+}
+
+"""Input type for Artist Credits"""
+input ArtistCreditsInput {
+  """Credit type id"""
+  creditTypeId: Int!
+
+  """The director of the Project"""
+  director: String!
+
+  """Display order descending"""
+  displayOrder: Int
+
+  """Highlighted"""
+  highlighted: Boolean
+
+  """Profile ids"""
+  profileIds: [ID!]!
+
+  """Role name"""
+  role: String!
+
+  """Credit title"""
+  title: String!
+
+  """Year"""
+  year: Int
 }
 
 """Audition Presentation input type"""
@@ -21195,6 +21861,15 @@ enum BillingCode {
   registration
 }
 
+""""""
+input CreateTalentScoutHistoryInput {
+  """"""
+  message: String!
+
+  """"""
+  profileId: Int!
+}
+
 """Talent Submission Report Input Arguments"""
 input TalentSubmissionReportCreateInput {
   """"""
@@ -22206,6 +22881,9 @@ input ProfileUpdateInput {
   """If Profile is overscaled"""
   isOverscaled: Boolean
 
+  """is Seeking Representation"""
+  isSeekingRepresentation: Boolean
+
   """Last Name"""
   lastName: String
 
@@ -22223,6 +22901,9 @@ input ProfileUpdateInput {
 
   """neckId"""
   neckId: ID
+
+  """Note to reps"""
+  noteToRepresentative: String
 
   """otherExperiences"""
   otherExperiences: String
@@ -26338,6 +27019,9 @@ enum ItemEnum {
   SYSTEM_ACCESS
 
   """"""
+  TALENT_SCOUT_ACCESS
+
+  """"""
   VIDEO_UPLOAD
 
   """"""
@@ -26711,15 +27395,6 @@ enum ProfileStatusEnum {
 
   """"""
   VERIFY_AGE
-}
-
-""""""
-enum ProfileTypeEnum {
-  """"""
-  B21
-
-  """"""
-  FASTCAST
 }
 
 """"""
