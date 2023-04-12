@@ -462,6 +462,9 @@ type Query {
   """Get all roles for a Project by role Status"""
   getProjectRolesByOrg(orgId: Float!, projectId: Float!, statusFilter: [String!]!): [Role!]!
 
+  """Project Series"""
+  getProjectSeriesById(input: GetProjectSeriesByIdInput!): [ProjectSeries!]!
+
   """"""
   getPublishedOrganizationIdsForProject(page: PageInput!, projectId: Float!): [Float!]!
 
@@ -650,6 +653,9 @@ type Query {
     statusFilter: ProjectStatusFilterEnum
   ): ProjectBasePaginatedResult!
 
+  """Get projects groups for a organization"""
+  organizationProjectsGroups(filter: OrganizationProjectFilterInput, page: PageInput, projectGroupType: ProjectGroupType!): OrganizationProjectGroupPaginatedResult!
+
   """Return Organization objects from an id array"""
   organizations(ids: [ID!]!): [Organization!]!
 
@@ -802,6 +808,9 @@ type Query {
 
   """"""
   searchProjectsByOrg(page: PageInput = {pageSize: 100, pageNumber: 1}, partialProjectName: String = ""): ProjectPaginatedResult!
+
+  """Project Series"""
+  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageSize: 100, pageNumber: 1}): ProjectSeriesPaginatedResult!
 
   """"""
   searchRepresentatives(input: SearchRepresentativeInput!, page: PageInput!): RepresentativeSearchResult!
@@ -1695,6 +1704,9 @@ type Project {
 
   """Parent ID"""
   projectParentId: ID
+
+  """"""
+  projectSeries: SeriesDetails
 
   """Project type"""
   projectStatus: ProjectStatus
@@ -6530,6 +6542,21 @@ type Conflict {
   sortOrder: Int
 }
 
+""""""
+type SeriesDetails {
+  """"""
+  projectSeriesEpisode: Int
+
+  """"""
+  projectSeriesId: ID
+
+  """"""
+  projectSeriesName: String
+
+  """"""
+  projectSeriesSeason: Int
+}
+
 """Role Default Options"""
 type RoleDefaults {
   """"""
@@ -7067,6 +7094,9 @@ type RolesPublishedContext {
 type RolesPublishedRoleContext {
   """"""
   roleDetails: RolesPublishedRoleDetailsContext!
+
+  """"""
+  roleId: Int!
 
   """"""
   roleName: String!
@@ -11113,6 +11143,24 @@ type ProjectBacklotSearchResult {
 }
 
 """"""
+input GetProjectSeriesByIdInput {
+  """"""
+  projectSeriesId: [ID!]!
+}
+
+"""Project Series"""
+type ProjectSeries {
+  """Project Series ID"""
+  id: ID!
+
+  """Org ID"""
+  organizationId: ID!
+
+  """Series Name"""
+  seriesName: String!
+}
+
+""""""
 union ReportUnion = AgencyCallListReportModel | BookingCallListsReportModel | PresentationLogReportModel | PresentationPickReportModel | PresentationSizeSheetsReportModel | ProjectOverviewCDReportModel | ProjectOverviewReportModel | ProjectSubmissionReportModel | ScheduleReportModel | ScheduleSizeSheetsReportModel | TalentSubmissionModel
 
 """"""
@@ -13727,6 +13775,9 @@ type OrganizationAccount {
 
 """"""
 input OrganizationProjectFilterInput {
+  """Project name filter"""
+  name: String
+
   """Project status codes"""
   projectStatusCodes: [String!]
 
@@ -13763,6 +13814,9 @@ type ProjectBasePaginatedResult {
 
 """"""
 type ProjectBase {
+  """Created date"""
+  created: DateTime
+
   """Primary ID"""
   id: ID!
 
@@ -13784,6 +13838,48 @@ type ProjectBase {
   """Zendesk support ticket id"""
   supportTicketNumber: String
 }
+
+"""Project group type enum"""
+enum ProjectGroupType {
+  """"""
+  Series
+
+  """"""
+  Status
+
+  """"""
+  Type
+}
+
+"""Paginated result with [OrganizationProjectGroup] objects"""
+type OrganizationProjectGroupPaginatedResult {
+  """Last key """
+  lastKey: String
+
+  """List of OrganizationProjectGroup objects"""
+  objects: [OrganizationProjectGroup!]!
+
+  """Current page"""
+  page: Int!
+
+  """Total count of rows"""
+  totalCount: Int!
+
+  """Total pages"""
+  totalPages: Int!
+}
+
+""""""
+type OrganizationProjectGroup {
+  """Organization project group details"""
+  details: OrganizationProjectGroupDetails!
+
+  """"""
+  itemCount: Int!
+}
+
+""""""
+union OrganizationProjectGroupDetails = ProjectSeries | ProjectStatus | ProjectType
 
 """Paginated result with [OrganizationsByRoleSubmissionsAndName] objects"""
 type OrganizationsByRoleSubmissionsAndNamePaginatedResult {
@@ -14201,6 +14297,30 @@ type ProjectPaginatedResult {
 
   """List of Project objects"""
   objects: [Project!]!
+
+  """Current page"""
+  page: Int!
+
+  """Total count of rows"""
+  totalCount: Int!
+
+  """Total pages"""
+  totalPages: Int!
+}
+
+""""""
+input GetProjectSeriesByNameInput {
+  """"""
+  projectSeriesName: String!
+}
+
+"""Paginated result with [ProjectSeries] objects"""
+type ProjectSeriesPaginatedResult {
+  """Last key """
+  lastKey: String
+
+  """List of ProjectSeries objects"""
+  objects: [ProjectSeries!]!
 
   """Current page"""
   page: Int!
@@ -18425,6 +18545,9 @@ type Mutation {
   """"""
   createProjectOverviewReport(input: ProjectReportCreateInput!): String!
 
+  """Project Series ID"""
+  createProjectSeries(input: CreateProjectSeriesInput!): Float!
+
   """"""
   createProjectSubmissionReport(input: ProjectSubmissionCreateInput!): String!
 
@@ -18581,6 +18704,9 @@ type Mutation {
   """"""
   deleteProfileWardrobe(profileId: Float!, profileWardrobeId: Float!): Boolean!
 
+  """Count of items deleted"""
+  deleteProjectSeries(input: DeleteProjectSeriesInput!): Float!
+
   """Deletes the representative list by ListId."""
   deleteRepresentativeList(listId: Float!): Float!
 
@@ -18634,6 +18760,9 @@ type Mutation {
 
   """"""
   editMediaThumbnail(id: Int!, input: MediaTransformationInput!): Media!
+
+  """Count of Modified Series"""
+  editProjectSeries(input: EditProjectSeriesInput!): Float!
 
   """"""
   finalizeMediaUpload(input: [MediaMetadataInput!]!): [Media!]!
@@ -20968,6 +21097,15 @@ input CreatePCProjectInput {
   projectParentId: ID
 
   """"""
+  projectSeriesEpisode: Int
+
+  """"""
+  projectSeriesId: ID
+
+  """"""
+  projectSeriesSeason: Int
+
+  """"""
   projectStatusCode: String
 
   """"""
@@ -21537,6 +21675,15 @@ input CreateProjectInput {
   projectParentId: ID
 
   """"""
+  projectSeriesEpisode: Int
+
+  """"""
+  projectSeriesId: ID
+
+  """"""
+  projectSeriesSeason: Int
+
+  """"""
   projectStatusCode: String
 
   """"""
@@ -21601,6 +21748,12 @@ input ProjectReportCDCreateInput {
 
   """"""
   roleTypes: [String!]!
+}
+
+""""""
+input CreateProjectSeriesInput {
+  """"""
+  seriesName: String!
 }
 
 """Project Report Input Arguments"""
@@ -21933,6 +22086,12 @@ input DeletePresentationProfilePickPublickInput {
   userName: String!
 }
 
+""""""
+input DeleteProjectSeriesInput {
+  """"""
+  projectSeriesId: [ID!]!
+}
+
 """Holds the Input for Deleting Submission from a Slot"""
 input DeleteSubmissionFromSlotInput {
   """Message for Cancellation"""
@@ -21973,6 +22132,15 @@ input DeleteTimeframeInput {
 
   """Timeframe Id"""
   timeframeId: Float!
+}
+
+""""""
+input EditProjectSeriesInput {
+  """"""
+  projectSeriesId: ID!
+
+  """"""
+  projectSeriesName: String!
 }
 
 """"""
@@ -22329,6 +22497,15 @@ input UpdatePCProjectInput {
 
   """"""
   projectParentId: ID
+
+  """"""
+  projectSeriesEpisode: Int
+
+  """"""
+  projectSeriesId: ID
+
+  """"""
+  projectSeriesSeason: Int
 
   """"""
   projectStatusCode: String
@@ -23233,6 +23410,15 @@ input UpdateProjectInput {
 
   """"""
   projectParentId: ID
+
+  """"""
+  projectSeriesEpisode: Int
+
+  """"""
+  projectSeriesId: ID
+
+  """"""
+  projectSeriesSeason: Int
 
   """"""
   projectStatusCode: String

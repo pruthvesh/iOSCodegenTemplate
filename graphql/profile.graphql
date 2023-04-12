@@ -1820,3 +1820,10 @@ mutation setProfileResume($mediaId: Int!, $profileId: Int!) {
     __typename
   }
 }
+
+mutation createArtistCredits($creditInput: ArtistCreditsInput!) {
+  createArtistCredits(credit: $creditInput) {
+    id
+    __typename
+  }
+}
