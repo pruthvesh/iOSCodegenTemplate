@@ -382,3 +382,11 @@ mutation completePurchase($input: PurchaseInput!) {
     __typename
   }
 }
+
+mutation loginImpersonatedAccount($accountId: Float!) {
+  loginImpersonatedAccount(accountId: $accountId) {
+    access
+    refresh
+    __typename
+  }
+}
