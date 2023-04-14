@@ -15519,6 +15519,18 @@
             "deprecationReason": null
           },
           {
+            "name": "seriesName",
+            "description": "Series Name",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "sideVisibility",
             "description": "Project side visibility",
             "args": [],
@@ -30812,6 +30824,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "auditionSessionId",
+            "description": "Audition Session ID",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
               "ofType": null
             },
             "isDeprecated": false,
@@ -72285,6 +72309,18 @@
             "deprecationReason": null
           },
           {
+            "name": "seriesName",
+            "description": "Series Name",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "supportTicketNumber",
             "description": "Zendesk support ticket id",
             "args": [],
@@ -74052,6 +74088,12 @@
           },
           {
             "name": "Random",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Relevance",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -120838,6 +120880,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "auditionSessionId",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
               "ofType": null
             },
             "defaultValue": null

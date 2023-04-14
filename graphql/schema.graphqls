@@ -1735,6 +1735,9 @@ type Project {
   """Project roles"""
   roles(roleIds: [Int!], roleStatusFilter: RoleStatusFilter): [Role!]
 
+  """Series Name"""
+  seriesName: String
+
   """Project side visibility"""
   sideVisibility: ProjectSidesVisibility
 
@@ -4821,6 +4824,9 @@ type Role {
 
   """Age range"""
   ageRange: String
+
+  """Audition Session ID"""
+  auditionSessionId: ID
 
   """Number of intended talents"""
   backgroundTalentIntended: Int
@@ -13835,6 +13841,9 @@ type ProjectBase {
   """Project type"""
   projectType: ProjectType
 
+  """Series Name"""
+  seriesName: String
+
   """Zendesk support ticket id"""
   supportTicketNumber: String
 }
@@ -14261,6 +14270,9 @@ enum ProfileSearchSortField {
 
   """"""
   Random
+
+  """"""
+  Relevance
 }
 
 """Paginated result with [ProfileSearchResultByOrgId] objects"""
@@ -23488,6 +23500,9 @@ input RoleUpdateInput {
 
   """"""
   ageMinMonths: Int
+
+  """"""
+  auditionSessionId: ID
 
   """"""
   backgroundTalentIntended: Float

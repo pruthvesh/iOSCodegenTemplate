@@ -390,3 +390,11 @@ mutation loginImpersonatedAccount($accountId: Float!) {
     __typename
   }
 }
+
+mutation googleLoginInternal($googleAuthToken: String!) {
+  googleLoginInternal(googleAuthToken: $googleAuthToken) {
+    refresh
+    access
+    __typename
+  }
+}
