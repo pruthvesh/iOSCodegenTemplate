@@ -1,4 +1,4 @@
-query GET_FIT_FOR_YOU_DEFAULT_VALUES {
+query getFitForYouDefaultValues {
   getFitForYouValuesForArtist {
     workingLocations {
       id
@@ -81,7 +81,7 @@ query searchSubmissions(
   }
 }
 
-query ROLES_LIST(
+query rolesList(
   $paginationConfig: PageInput!
   $castingBillBoardFilters: CastingBillboardSearchInput!
   $sortInput: SortConditionInput
@@ -163,7 +163,7 @@ fragment CastingRoleList on Role {
   }
 }
 
-query SEARCH_ALERTS_QUERY(
+query searchAlerts(
   $startDate: DateTime
   $endDate: DateTime
   $page: PageInput!

@@ -1,3 +1,8 @@
+"""
+A directive used by the Apollo iOS client to annotate operations or fragments that should be used exclusively for generating local cache mutations instead of as standard operations.
+"""
+directive @apollo_client_ios_localCacheMutation on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
+
 type Query {
   """"""
   currentUser: BauAccount!
@@ -6951,6 +6956,9 @@ type AuditionSession {
   """Returns Account object who`s created the audition session"""
   createdBy: Account
 
+  """Indicates that the audition session should be hidden"""
+  hidden: Boolean
+
   """ID of audition session"""
   id: Int!
 
@@ -8107,6 +8115,9 @@ input ProfileSearchInput {
 
   """Hair Style Id"""
   hairStyleId: [ID!]
+
+  """If set TRUE, will return only Profiles with Profile Pictures"""
+  hasCover: Boolean
 
   """Has Representation"""
   hasRepresentation: Boolean
@@ -18507,6 +18518,9 @@ type Mutation {
   createChatMessage(messageInput: ChatMessageCreateInput!): ChatMessageModel!
 
   """"""
+  createCollaboratorAccount(input: CollaboratorAccountCreateInput!): AuthToken!
+
+  """"""
   createCredit(credit: CreditInput!): Credit!
 
   """"""
@@ -19864,6 +19878,9 @@ input MoveProfileToCastingListInput {
 
   """"""
   toListId: ID!
+
+  """"""
+  includeNotes: Boolean
 }
 
 """"""
@@ -19885,6 +19902,9 @@ input MoveAllProfileToCastingListInput {
 
   """"""
   toListId: ID!
+
+  """"""
+  includeNotes: Boolean
 }
 
 """"""
@@ -19894,6 +19914,9 @@ input CopyProfileToCastingListInput {
 
   """"""
   toListIds: [ID!]!
+
+  """"""
+  includeNotes: Boolean! = true
 }
 
 """"""
@@ -19915,6 +19938,9 @@ input CopyAllProfileToCastingListInput {
 
   """"""
   toListIds: [ID!]!
+
+  """"""
+  includeNotes: Boolean! = true
 }
 
 """"""
@@ -20026,6 +20052,9 @@ input AddArtistFreeCreditsInput {
 input AuditionSessionCreateInput {
   """ID of the creator"""
   createdBy: Int
+
+  """Indicates that the audition session should be hidden"""
+  hidden: Boolean = false
 
   """Name of audition session"""
   name: String!
@@ -20820,6 +20849,33 @@ input ChatMessageCreateInput {
   topicKey: String!
 }
 
+"""Creates a user account based on given input values"""
+input CollaboratorAccountCreateInput {
+  """"""
+  countryId: ID!
+
+  """"""
+  email: String!
+
+  """"""
+  firstName: String!
+
+  """"""
+  invitationId: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  password: String!
+
+  """"""
+  termsOfUse: Boolean!
+
+  """"""
+  timeZoneId: Int!
+}
+
 """Input type for Credit"""
 input CreditInput {
   """Credit type id"""
@@ -21323,6 +21379,9 @@ input RoleCreateInput {
 
   """"""
   compensations: [RoleCompensationInput!]
+
+  """Should session be created"""
+  createSubmissionMediaSession: Boolean
 
   """CODE of Currency object"""
   currencyCode: String
@@ -22642,6 +22701,9 @@ input AuditionGroupMediaOrderUpdateInput {
 
 """"""
 input AuditionSessionUpdateInput {
+  """Indicates that the audition session should be hidden"""
+  hidden: Boolean
+
   """ID of existing audition submission"""
   id: Int!
 

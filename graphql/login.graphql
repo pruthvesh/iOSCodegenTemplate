@@ -24,7 +24,7 @@ mutation switchAuthContext(
   }
 }
 
-query ARTISTS_INFO {
+query artistsInfo {
   myAccount {
     id
     firstName
@@ -332,7 +332,7 @@ query ARTIST_SUBSCRIPTION($input: ArtistSubscriptionInput!) {
   }
 }
 
-query PREVIEW_PURCHASE($input: PurchaseInput!) {
+query previewPurchase($input: PurchaseInput!) {
   previewPurchase(input: $input) {
     items {
       name

@@ -1,4 +1,4 @@
-query TALENT_PROFILE_DETAIL($ids: ID!) {
+query talentProfileDetail($ids: ID!) {
   profiles(ids: [$ids]) {
     ...ProfileDetails
     __typename
@@ -534,7 +534,7 @@ mutation updateProfileMedia($profileMedia: ProfileMediaInput!) {
   updateProfileMedia(profileMedia: $profileMedia)
 }
 
-query PROJECT_DETAIL_QUERY($id: Float!, $checkSidesVisibility: Boolean) {
+query projectDetail($id: Float!, $checkSidesVisibility: Boolean) {
   project(id: $id) {
     ...ProjectDetails
     projectConflicts {
@@ -687,7 +687,7 @@ fragment ProjectDetails on Project {
   __typename
 }
 
-query ROLE_DETAILS($ids: ID!, $checkSidesVisibility: Boolean) {
+query roleDetails($ids: ID!, $checkSidesVisibility: Boolean) {
   roles(ids: [$ids]) {
     ...CastingRoleDetails
     publicationSettings {
@@ -986,7 +986,7 @@ mutation attachMediasToProfile($mediaIds: [Int!]!, $profileId: Int!) {
   attachMediasToProfile(mediaIds: $mediaIds, profileId: $profileId)
 }
 
-query CREDIT_DETAIL($profileId: String!) {
+query creditDetail($profileId: String!) {
   credits(profileId: $profileId) {
     id
     year

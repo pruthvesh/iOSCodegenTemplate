@@ -2,7 +2,7 @@ mutation markNotifications($ids: [ID!]!, $viewed: Boolean!) {
   markNotifications(ids: $ids, viewed: $viewed)
 }
 
-query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
+query scheduleInviteRequestDetails($id: ID!) {
   scheduleInviteSubRequestDetails(id: $id) {
     id
     noteForTalents
@@ -94,7 +94,7 @@ query SCHEDULE_INVITE_REQUEST_DETAILS_QUERY($id: ID!) {
   }
 }
 
-query MEDIA_REQUEST_DETAILS($id: ID!, $profileId: ID!) {
+query mediaRequestDetails($id: ID!, $profileId: ID!) {
   mediaSubRequestDetails(id: $id) {
     id
     includeSides
@@ -299,7 +299,7 @@ fragment BaseWorkflowMedia on WfMedia {
   __typename
 }
 
-mutation REPLY_TO_MEDIA_REQUEST($input: MediaResponseInput!) {
+mutation replyToMediaRequest($input: MediaResponseInput!) {
   replyToMediaRequest(input: $input) {
     id
     status
@@ -307,7 +307,7 @@ mutation REPLY_TO_MEDIA_REQUEST($input: MediaResponseInput!) {
   }
 }
 
-query ASK_QUESTION_REQUEST_DETAILS_QUERY($id: ID!) {
+query askQuestionRequestDetails($id: ID!) {
   askQuestionSubRequestDetails(id: $id) {
     id
     question
@@ -452,7 +452,7 @@ mutation deleteSubmission($submissionId: BigInt!) {
 }
 
 
-mutation SEND_ROLE_SUBMISSION(
+mutation sendRoleSubmission(
   $roleId: Int!
   $submissionStatusCode: String!
   $profileIds: [Int!]!

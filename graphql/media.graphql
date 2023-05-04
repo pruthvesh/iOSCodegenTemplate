@@ -1,4 +1,4 @@
-query GET_ARTIST_MEDIA_LIST($id: Float!, $mediaTypeCode: String!) {
+query getArtistMediaList($id: Float!, $mediaTypeCode: String!) {
   getMediaByArtist(artistId: $id, mediaTypeCode: $mediaTypeCode) {
     mediaId
     media {
@@ -114,7 +114,7 @@ fragment BaseMedia on Media {
   __typename
 }
 
-mutation UPDATE_MEDIA_ASSET($mediaId: Int!, $name: String!) {
+mutation updateMediaAsset($mediaId: Int!, $name: String!) {
   updateMediaAsset(input: { mediaId: $mediaId, name: $name }) {
     mediaId
     name
