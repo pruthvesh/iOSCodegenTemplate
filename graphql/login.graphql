@@ -196,6 +196,12 @@ query artistsInfo {
       __typename
       id
       name
+      parentName
+      abbreviation
+      organizationParentId
+      logo {
+        ...MediaAssetWithThumbnail
+      }
     }
     accountStatus {
       __typename
