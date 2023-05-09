@@ -1,8 +1,3 @@
-"""
-A directive used by the Apollo iOS client to annotate operations or fragments that should be used exclusively for generating local cache mutations instead of as standard operations.
-"""
-directive @apollo_client_ios_localCacheMutation on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
-
 type Query {
   """"""
   currentUser: BauAccount!
@@ -5005,6 +5000,9 @@ type Role {
   """Scale modifier ID"""
   scaleModifierId: ID
 
+  """Session"""
+  session: AuditionSession
+
   """Sexy description"""
   sexualSituationDescription: String!
 
@@ -5532,6 +5530,57 @@ type RoleTarget {
 
 """RoleUnion object"""
 type RoleUnion {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Audition session"""
+type AuditionSession {
+  """Created date of audition session"""
+  created: DateTime!
+
+  """Returns Account object who`s created the audition session"""
+  createdBy: Account
+
+  """Indicates that the audition session should be hidden"""
+  hidden: Boolean
+
+  """ID of audition session"""
+  id: Int!
+
+  """Name of audition session"""
+  name: String
+
+  """Note of audition session"""
+  note: String
+
+  """Order of appearence of audition session"""
+  order: Int!
+
+  """Project id"""
+  projectId: Int
+
+  """Gets AuditionSource object"""
+  source: AuditionSource
+
+  """Submissions Count"""
+  submissionCount: BigInt
+}
+
+"""AuditionSource object"""
+type AuditionSource {
   """code"""
   code: String!
 
@@ -6946,57 +6995,6 @@ type AuditionGroup {
 
   """Updated date of audition group"""
   updated: DateTime
-}
-
-"""Audition session"""
-type AuditionSession {
-  """Created date of audition session"""
-  created: DateTime!
-
-  """Returns Account object who`s created the audition session"""
-  createdBy: Account
-
-  """Indicates that the audition session should be hidden"""
-  hidden: Boolean
-
-  """ID of audition session"""
-  id: Int!
-
-  """Name of audition session"""
-  name: String
-
-  """Note of audition session"""
-  note: String
-
-  """Order of appearence of audition session"""
-  order: Int!
-
-  """Project id"""
-  projectId: Int
-
-  """Gets AuditionSource object"""
-  source: AuditionSource
-
-  """Submissions Count"""
-  submissionCount: BigInt
-}
-
-"""AuditionSource object"""
-type AuditionSource {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
 }
 
 """Represent relation between Audition Group and Media"""
@@ -14334,7 +14332,7 @@ type ProjectPaginatedResult {
 """"""
 input GetProjectSeriesByNameInput {
   """"""
-  projectSeriesName: String!
+  projectSeriesName: String
 }
 
 """Paginated result with [ProjectSeries] objects"""
