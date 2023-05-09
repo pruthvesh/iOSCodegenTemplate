@@ -1,0 +1,80 @@
+query getWorksheetData(
+  $page: PageInput!
+  $filters: RepsWorksheetFiltersArgs
+  $sortBy: RepWorksheetFieldOrder
+  $sortOptions: [RepWorksheetOrderOption!]
+) {
+  repsWorksheet(
+    page: $page
+    filters: $filters
+    sortBy: $sortBy
+    sortOptions: $sortOptions
+  ) {
+    __typename
+    page
+    totalCount
+    totalPages
+    data {
+      ...RepsWorkSheetItem
+      __typename
+    }
+  }
+}
+
+fragment RepsWorkSheetItem on RepsWorksheetItem {
+  __typename
+  id
+  type
+  status
+  updatedAt
+  createdAt
+  forwardCount
+  unreadMessageCount
+  lastMessageId
+  submission {
+    __typename
+    id
+    profile {
+      __typename
+      id
+      stageName
+      phone
+      email
+    }
+    role {
+      __typename
+      id
+      name
+      project {
+        __typename
+        id
+        name
+        castingCompany
+      }
+    }
+    isCreatedByCD
+  }
+  schedule {
+    __typename
+    id
+    timeZone {
+      __typename
+      id
+      abbreviation
+      standardName
+    }
+  }
+  talentResponse {
+    __typename
+    status
+    note
+    repliedAt
+  }
+  response {
+    __typename
+    status
+    note
+    repliedAt
+  }
+  slotDate
+}
