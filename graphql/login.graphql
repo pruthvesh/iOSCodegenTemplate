@@ -192,6 +192,23 @@ query artistsInfo {
       abbreviation
       standardName
     }
+    organizations {
+      __typename
+      id
+      name
+    }
+    accountStatus {
+      __typename
+      id
+      name
+      code
+    }
+    accountSystemRoles {
+      __typename
+      id
+      name
+      code
+    }
   }
 }
 
