@@ -21,6 +21,36 @@ query getWorksheetData(
   }
 }
 
+query getWorksheetDataByProject(
+  $page: PageInput!
+  $filters: RepsWorksheetFiltersArgs
+  $sortBy: RepWorksheetFieldOrder
+  $sortOptions: [RepWorksheetOrderOption!]
+) {
+  repsWorksheet(
+    page: $page
+    filters: $filters
+    sortBy: $sortBy
+    sortOptions: $sortOptions
+  ) {
+    page
+    totalCount
+    totalPages
+    data {
+      status
+      submission {
+        role {
+          project {
+            id
+            name
+            castingCompany
+          }
+        }
+      }
+    }
+  }
+}
+
 fragment RepsWorkSheetItem on RepsWorksheetItem {
   __typename
   id
