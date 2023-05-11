@@ -108,3 +108,21 @@ fragment RepsWorkSheetItem on RepsWorksheetItem {
   }
   slotDate
 }
+
+mutation forwardRequests(
+  $ids: [ID!]!
+  $message: String
+  $ccManagerEmail: Boolean
+) {
+  forwardRequests(
+    ids: $ids
+    message: $message
+    ccManagerEmail: $ccManagerEmail
+  ) {
+    id
+    status
+    forwardCount
+    __typename
+  }
+}
+

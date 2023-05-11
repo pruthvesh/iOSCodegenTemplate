@@ -13798,6 +13798,9 @@ input OrganizationProjectFilterInput {
 
   """Project type codes"""
   projectTypeCodes: [String!]
+
+  """Project series filter"""
+  seriesIds: [ID!]
 }
 
 """Project status filter options"""
