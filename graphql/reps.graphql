@@ -38,6 +38,9 @@ query getWorksheetDataByProject(
     totalPages
     data {
       status
+      dueDate
+      createdAt
+      updatedAt
       submission {
         role {
           project {

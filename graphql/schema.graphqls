@@ -248,6 +248,9 @@ type Query {
   getChatMessageByTopic(pageSize: Int!, topicKey: String!): GetChatMessagesByTopicModel!
 
   """"""
+  getCollaboratorInviteById(input: GetCollaboratorInviteInput!): CollaboratorInvite!
+
+  """"""
   getCommentsForPresentationSubmissionPublic(
     """"""
     groupId: Int!
@@ -1029,7 +1032,10 @@ type Query {
   rosterInvitations(page: PageInput!): RosterTalentInvitationPagedList!
 
   """Get roster invitation history for provided talent's name and email"""
-  rosterInvitationTalentHistory(filter: RosterInvitationTalentHistoryFilterInput!): [RosterTalentInvitation!]!
+  rosterInvitationTalentHistory(filter: RosterInvitationTalentHistoryFilterInput!): [RosterTalentInvitation!]! @deprecated(reason: "Use rosterTalentInvitationHistory instead")
+
+  """Get roster invitation history for provided talent's name and email"""
+  rosterTalentInvitationHistory(filter: [RosterInvitationTalentHistoryFilterInput!]!): [RosterTalentInvitation!]!
 
   """Returns talent response by rep's request id"""
   talentResponse(id: ID!): RepWorksheetResponse
@@ -8652,6 +8658,24 @@ type GetChatMessagesByTopicModel {
 
   """"""
   unreadMessageCount: Int
+}
+
+"""Creates an invite for a user to Collaborate on a project"""
+input GetCollaboratorInviteInput {
+  """"""
+  inviteId: ID!
+}
+
+""""""
+type CollaboratorInvite {
+  """"""
+  email: String!
+
+  """Primary ID"""
+  inviteId: ID!
+
+  """"""
+  inviteStatus: String!
 }
 
 """"""
@@ -18522,6 +18546,9 @@ type Mutation {
   createCollaboratorAccount(input: CollaboratorAccountCreateInput!): AuthToken!
 
   """"""
+  createCollaboratorInvite(input: CollaboratorInviteCreateInput!): ID!
+
+  """"""
   createCredit(credit: CreditInput!): Credit!
 
   """"""
@@ -20875,6 +20902,15 @@ input CollaboratorAccountCreateInput {
 
   """"""
   timeZoneId: Int!
+}
+
+"""Creates an invite for a user to Collaborate on a project"""
+input CollaboratorInviteCreateInput {
+  """"""
+  email: String!
+
+  """"""
+  projectId: ID!
 }
 
 """Input type for Credit"""
