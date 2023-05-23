@@ -129,3 +129,37 @@ mutation forwardRequests(
   }
 }
 
+query searchProjectsByOrg($partialProjectName: String, $page: PageInput) {
+  searchProjectsByOrg(partialProjectName: $partialProjectName, page: $page) {
+    totalCount
+    objects {
+      id
+      name
+      castingCompany
+    }
+  }
+}
+
+query searchProfilesByOrgId($partialStageName: String, $page: PageInput) {
+  searchProfilesByOrgId(partialStageName: $partialStageName, page: $page) {
+    totalCount
+    objects {
+      id
+      stageName
+    }
+  }
+}
+
+query getOrganizationsByRepTypeAndName(
+  $input: OrganizationsByRepTypeAndNameInput!
+) {
+  getOrganizationsByRepTypeAndName(input: $input) {
+    totalCount
+    objects {
+      organization {
+        id
+        name
+      }
+    }
+  }
+}
