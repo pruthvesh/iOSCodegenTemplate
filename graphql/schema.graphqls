@@ -248,7 +248,10 @@ type Query {
   getChatMessageByTopic(pageSize: Int!, topicKey: String!): GetChatMessagesByTopicModel!
 
   """"""
-  getCollaboratorInviteById(input: GetCollaboratorInviteInput!): CollaboratorInvite!
+  getCollaboratorInviteById(input: GetCollaboratorInviteInput!): CollaboratorsInvite!
+
+  """"""
+  getCollaboratorsByProjectId(page: PageInput = {pageSize: 100, pageNumber: 1}, projectId: ID): CollaboratorsInvitePaginatedResult!
 
   """"""
   getCommentsForPresentationSubmissionPublic(
@@ -8667,15 +8670,81 @@ input GetCollaboratorInviteInput {
 }
 
 """"""
-type CollaboratorInvite {
+type CollaboratorsInvite {
+  """"""
+  collaborator: CollaboratorDetails
+
+  """"""
+  collaboratorInviteFromOrgDetails: CollaboratorInviteFromOrgDetails
+
+  """"""
+  collaboratorInviteProjectDetails: CollaboratorInviteProjectDetails
+
   """"""
   email: String!
 
-  """Primary ID"""
-  inviteId: ID!
+  """"""
+  inviteId: String!
 
   """"""
-  inviteStatus: String!
+  inviteStatus: CollaboratorInviteStatusCode!
+}
+
+""""""
+type CollaboratorDetails {
+  """"""
+  collaboratorId: Float
+
+  """"""
+  firstName: String
+
+  """"""
+  lastName: String
+}
+
+""""""
+type CollaboratorInviteFromOrgDetails {
+  """"""
+  orgId: ID
+
+  """The name of the organization that the invite is from"""
+  orgName: String
+}
+
+""""""
+type CollaboratorInviteProjectDetails {
+  """"""
+  projectName: String
+}
+
+""""""
+enum CollaboratorInviteStatusCode {
+  """"""
+  INVITED
+
+  """"""
+  JOINED
+
+  """"""
+  REVOKED
+}
+
+"""Paginated result with [CollaboratorsInvite] objects"""
+type CollaboratorsInvitePaginatedResult {
+  """Last key """
+  lastKey: String
+
+  """List of CollaboratorsInvite objects"""
+  objects: [CollaboratorsInvite!]!
+
+  """Current page"""
+  page: Int!
+
+  """Total count of rows"""
+  totalCount: Int!
+
+  """Total pages"""
+  totalPages: Int!
 }
 
 """"""
@@ -11193,7 +11262,7 @@ type ProjectSeries {
   id: ID!
 
   """Org ID"""
-  organizationId: ID!
+  organizationId: ID
 
   """Series Name"""
   seriesName: String!
@@ -18627,7 +18696,10 @@ type Mutation {
   createSessionAndAddSubmissions(sessionName: String!, submissionIds: [BigInt!]!): Int!
 
   """Mutation for creating Share Selects Presentation"""
-  createShareSelectPresentation(input: ShareSelectPresentationInput!): Presentation!
+  createShareSelectPresentation(input: ShareSelectPresentationInput!): Presentation! @deprecated(reason: "use createShareTalentPresentation instead")
+
+  """Mutation for creating Share Selects Presentation"""
+  createShareTalentPresentation(input: ShareTalentPresentationInput!): Presentation!
 
   """"""
   createSubscription(input: CreateSubscriptionInput!): Boolean!
@@ -21976,6 +22048,56 @@ input ShareSelectPresentationInput {
 
   """Tile Scheme Codes"""
   tileSchemeCodes: [String!]!
+}
+
+"""Parameters used to create a Share Talent Presentation"""
+input ShareTalentPresentationInput {
+  """Date of link expiration"""
+  linkExpiresAt: DateTime
+
+  """The name of the presentation"""
+  name: String!
+
+  """Project ID"""
+  projectId: Int!
+
+  """
+  Talent from these roles that meet the request criteria will be added to the presentation.
+  """
+  roleIds: [Int!]!
+
+  """The list of statuses of submissions to add to the presentation."""
+  submissionStatuses: [SubmissionStatusEnum!]!
+
+  """Determines which title schemes should be added to the presentation"""
+  tileSchemeCodes: [String!]!
+}
+
+""""""
+enum SubmissionStatusEnum {
+  """"""
+  BOOKED
+
+  """"""
+  DRAFT
+
+  """"""
+  ON_AVAIL
+
+  """"""
+  REVIEWED
+
+  """"""
+  SELECTED
+
+  """"""
+  TO_REVIEW
+
+  """"""
+  UNDER_CONSIDERATION
+
+  """"""
+  UNSUBMITTED
 }
 
 """Create Subscription Input"""
@@ -30563,33 +30685,6 @@ enum SkillLevelEnum {
 
   """"""
   INTERMEDIATE
-}
-
-""""""
-enum SubmissionStatusEnum {
-  """"""
-  BOOKED
-
-  """"""
-  DRAFT
-
-  """"""
-  ON_AVAIL
-
-  """"""
-  REVIEWED
-
-  """"""
-  SELECTED
-
-  """"""
-  TO_REVIEW
-
-  """"""
-  UNDER_CONSIDERATION
-
-  """"""
-  UNSUBMITTED
 }
 
 """"""

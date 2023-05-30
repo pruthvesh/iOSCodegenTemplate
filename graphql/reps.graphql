@@ -41,6 +41,8 @@ query getWorksheetDataByProject(
       dueDate
       createdAt
       updatedAt
+      slotDate
+      type
       submission {
         role {
           project {
