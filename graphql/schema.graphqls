@@ -505,7 +505,7 @@ type Query {
   getSavedSearchTypes: [String!]!
 
   """"""
-  getScheduleReminderContext(input: ScheduleReminderInput!): ScheduleReminder!
+  getScheduleReminderContext(calendarId: Int!, calendarSlotId: Int!, calendarTypeId: Int!, submissionId: Int!): ScheduleReminderContextNotificationContextAndRecipient!
 
   """Fetch Schedules Details by Ids"""
   getSchedules(ids: [Int!]!): [ScheduleDetail!]!
@@ -948,54 +948,6 @@ type Query {
   willingnesses(input: FilterInput): [Willingness!]!
 
   """"""
-  authHealth: String!
-
-  """List of sessions"""
-  getAccountSessions(accountId: Float!): [Session!]!
-
-  """Returns true if username and password are matched, otherwise false"""
-  authenticate(email: String!, password: String!): Boolean!
-
-  """Hash a password"""
-  hashPassword(password: String!): String!
-
-  """Compare a password with hashedPassword"""
-  comparePassword(hashedPassword: String!, password: String!): Boolean!
-
-  """"""
-  availableApplications: [String!]!
-
-  """"""
-  permissions: [PermissionsModel!]!
-
-  """"""
-  searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
-
-  """"""
-  searchNotifications(startDate: DateTime, endDate: DateTime, page: PageInput!, orderBy: NotificationOrderByInput = {timestamp: DESC}, filters: SearchNotificationFiltersArgs): NotificationPagedList!
-
-  """"""
-  searchCompanies(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
-
-  """"""
-  getCompanyDictionary(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationDictionaryItemPagedList!
-
-  """"""
-  searchCompanyDivisions(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
-
-  """"""
-  repsWorksheet(page: PageInput!, filters: RepsWorksheetFiltersArgs, sortBy: RepWorksheetFieldOrder, sortOptions: [RepWorksheetOrderOption!]): RepsWorksheetItemPagedList!
-
-  """"""
-  repsWorksheetGroups(limit: Int!, groupType: RepsWorksheetGroupType!, groupId: ID, filters: RepsWorksheetFiltersArgs, sortOrder: SortOrder = ASC): RepsWorksheetGroups!
-
-  """"""
-  repsWorksheetFilters: RepsWorksheetFilters!
-
-  """"""
-  getBillingInfo(input: GetBillingInfoInput!): [BillingInfo!]!
-
-  """"""
   wfApiHealth: String!
 
   """"""
@@ -1095,6 +1047,54 @@ type Query {
     """"""
     groupBy: AuditionsGroupBy!
   ): AuditionsGroups!
+
+  """"""
+  authHealth: String!
+
+  """List of sessions"""
+  getAccountSessions(accountId: Float!): [Session!]!
+
+  """Returns true if username and password are matched, otherwise false"""
+  authenticate(email: String!, password: String!): Boolean!
+
+  """Hash a password"""
+  hashPassword(password: String!): String!
+
+  """Compare a password with hashedPassword"""
+  comparePassword(hashedPassword: String!, password: String!): Boolean!
+
+  """"""
+  availableApplications: [String!]!
+
+  """"""
+  permissions: [PermissionsModel!]!
+
+  """"""
+  searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
+
+  """"""
+  searchNotifications(startDate: DateTime, endDate: DateTime, page: PageInput!, orderBy: NotificationOrderByInput = {timestamp: DESC}, filters: SearchNotificationFiltersArgs): NotificationPagedList!
+
+  """"""
+  searchCompanies(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
+
+  """"""
+  getCompanyDictionary(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationDictionaryItemPagedList!
+
+  """"""
+  searchCompanyDivisions(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
+
+  """"""
+  repsWorksheet(page: PageInput!, filters: RepsWorksheetFiltersArgs, sortBy: RepWorksheetFieldOrder, sortOptions: [RepWorksheetOrderOption!]): RepsWorksheetItemPagedList!
+
+  """"""
+  repsWorksheetGroups(limit: Int!, groupType: RepsWorksheetGroupType!, groupId: ID, filters: RepsWorksheetFiltersArgs, sortOrder: SortOrder = ASC): RepsWorksheetGroups!
+
+  """"""
+  repsWorksheetFilters: RepsWorksheetFilters!
+
+  """"""
+  getBillingInfo(input: GetBillingInfoInput!): [BillingInfo!]!
 }
 
 """BAU Account Object"""
@@ -7690,49 +7690,49 @@ input SubmissionRequestSearchInput {
   responseStatuses: [RequestStatusUnion!]
 }
 
-""""""
+"""Request status union"""
 enum RequestStatusUnion {
   """"""
-  NOT_SENT
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
+  ADDITIONAL_MEDIA_ADDED
 
   """"""
   ANSWERED
 
   """"""
-  MEDIA_ADDED
+  CANCELLED
 
   """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
-  DECLINED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  UPDATED
+  CANCELLED_RESCHEDULED
 
   """"""
   CHANGE_REQUESTED
 
   """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  NOT_SENT
+
+  """"""
+  ON_HOLD
+
+  """"""
+  PENDING
+
+  """"""
   RESCHEDULE_REQUESTED
 
   """"""
-  CANCELLED_RESCHEDULED
+  RESCHEDULED
+
+  """"""
+  UPDATED
 }
 
 """"""
@@ -7747,31 +7747,31 @@ input SubmissionScheduleRequestSearchInput {
   responseStatuses: [ScheduleInviteRequestStatus!]
 }
 
-""""""
+"""Schedule request status"""
 enum ScheduleInviteRequestStatus {
   """"""
-  PENDING
-
-  """"""
   CANCELLED
-
-  """"""
-  DECLINED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  RESCHEDULED
 
   """"""
   CANCELLED_RESCHEDULED
 
   """"""
-  RESCHEDULE_REQUESTED
+  CONFIRMED
+
+  """"""
+  DECLINED
 
   """"""
   ON_HOLD
+
+  """"""
+  PENDING
+
+  """"""
+  RESCHEDULE_REQUESTED
+
+  """"""
+  RESCHEDULED
 
   """"""
   UPDATED
@@ -8495,10 +8495,10 @@ type CalendarType {
 """"""
 type ScheduleInviteRequestNotes {
   """"""
-  noteForTalents: String
+  noteForRepresentative: String
 
   """"""
-  noteForRepresentative: String
+  noteForTalents: String
 }
 
 """Schedule Timeframe Details"""
@@ -13140,117 +13140,105 @@ type SavedSearchList {
   nextKeyOffset: String
 }
 
-"""Schedule Reminder input"""
-input ScheduleReminderInput {
-  """Calendar Slot id."""
-  calendarSlotId: Int!
+""""""
+type ScheduleReminderContextNotificationContextAndRecipient {
+  """"""
+  context: ScheduleReminderContext!
 
-  """Submission id."""
-  submissionId: Int!
-
-  """Calendar id."""
-  calendarId: Int!
-
-  """Calendar Type id."""
-  calendarTypeId: Int!
-}
-
-"""
-Schedule Reminder type. The Schedule Reminder is used on getScheduleReminiders
-context to fill in template of reminder email sending to talent
-"""
-type ScheduleReminder {
   """"""
   to: String
 
-  """Schedule reminder email context"""
-  context: ScheduleReminderContext!
+  """"""
+  toAccountId: Int
+
+  """"""
+  toOrgId: Int
+
+  """"""
+  toProfileId: Int
 }
 
-"""
-Schedule Reminder Context type. The Schedule Reminder is used on
-getScheduleReminiders context to fill in template of reminder email sending to talent
-"""
+"""Contex object for audition/callback notification"""
 type ScheduleReminderContext {
-  """Schedule type"""
-  scheduleType: String!
-
-  """Email heading text"""
-  heading: String!
-
-  """Email sub heading text"""
-  subHeading: String!
-
-  """Reminder receiver email"""
-  receiverEmail: String
-
-  """URL to manage email settings"""
-  manageEmailSettingsUrl: String!
-
-  """Talent profile context"""
-  profile: ScheduleReminderProfileContext!
-
-  """Project context"""
-  project: ScheduleReminderProjectContext!
-
-  """Role context"""
-  role: ScheduleReminderRoleContext!
-
-  """Schedule date"""
-  scheduleDate: String!
-
-  """Schedule location"""
-  scheduleLocation: String!
-
-  """Schedule location notes"""
-  locationNote: String
-
-  """Instructions for talent"""
-  instructionForTalent: String
-
-  """Email divider text"""
-  dividerText: String!
-
-  """Open schedule button text"""
+  """"""
   buttonText: String!
 
-  """Open schedule button URL"""
+  """"""
   buttonURL: String
+
+  """"""
+  dividerText: String!
+
+  """"""
+  heading: String!
+
+  """"""
+  instructionForTalent: String
+
+  """"""
+  locationNote: String
+
+  """"""
+  manageEmailSettingsUrl: String!
+
+  """"""
+  profile: ScheduleReminderProfileContext!
+
+  """"""
+  project: ScheduleReminderProjectContext!
+
+  """"""
+  receiverEmail: String
+
+  """"""
+  role: ScheduleReminderRoleContext!
+
+  """"""
+  scheduleDate: String!
+
+  """"""
+  scheduleLocation: String!
+
+  """"""
+  scheduleType: String!
+
+  """"""
+  subHeading: String!
 }
 
-"""Profile Context for Schedule reminder Context type."""
+""""""
 type ScheduleReminderProfileContext {
-  """Profile ID"""
-  id: Int!
+  """"""
+  id: Float!
 
-  """Profile name"""
+  """"""
   name: String!
 
-  """Profile photo URL"""
+  """"""
   primaryPhotoUrl: String!
 }
 
-"""Project Context for Schedule reminder Context type."""
+""""""
 type ScheduleReminderProjectContext {
-  """Project Name"""
-  name: String!
-
-  """Project Casting Company"""
+  """"""
   castingCompany: ScheduleReminderCastingCompanyContext!
-}
 
-"""Casting company context for schedule reminder"""
-type ScheduleReminderCastingCompanyContext {
-  """Profile photo URL"""
+  """"""
   name: String!
-
-  """Casting company logo"""
-  logo: String!
 }
 
-"""Role Context for Schedule reminder Context type."""
+""""""
+type ScheduleReminderCastingCompanyContext {
+  """"""
+  logo: String!
+
+  """"""
+  name: String!
+}
+
+""""""
 type ScheduleReminderRoleContext {
-  """Role Name"""
+  """"""
   name: String!
 }
 
@@ -14533,22 +14521,22 @@ type Schedule {
 """"""
 type ScheduleInviteResponseStatusCounts {
   """"""
-  scheduleId: Int!
-
-  """"""
-  notSent: Int!
-
-  """"""
   confirmed: Int!
 
   """"""
   declined: Int!
 
   """"""
+  notSent: Int!
+
+  """"""
   pending: Int!
 
   """"""
   rescheduleRequested: Int!
+
+  """"""
+  scheduleId: Int!
 }
 
 """"""
@@ -14735,1119 +14723,6 @@ enum TileSchemaEnum {
 }
 
 """"""
-type Session {
-  """"""
-  accessToken: String
-
-  """"""
-  expirationDate: DateTime
-
-  """"""
-  deviceId: String
-
-  """"""
-  context: AccountContext
-}
-
-""""""
-type AccountContext {
-  """"""
-  role: ContextRole
-
-  """"""
-  artistId: Float
-
-  """"""
-  organizationId: Float
-}
-
-""""""
-type ContextRole {
-  """"""
-  id: Int!
-
-  """"""
-  code: SystemRoleCode!
-}
-
-""""""
-enum SystemRoleCode {
-  """"""
-  API
-
-  """"""
-  AGENT
-
-  """"""
-  TALENT
-
-  """"""
-  MANAGER
-
-  """"""
-  ROOT_USER
-
-  """"""
-  LEGACY_USER
-
-  """"""
-  PROJECT_CREATOR
-
-  """"""
-  CASTING_DIRECTOR
-
-  """"""
-  CREATIVE
-
-  """"""
-  SHARED_PROJECT_USER
-
-  """"""
-  STUDIO
-}
-
-""""""
-type PermissionsModel {
-  """"""
-  action: String!
-
-  """"""
-  subject: String!
-}
-
-""""""
-input SearchAccountsFiltersArgs {
-  """"""
-  accountId: Int
-
-  """"""
-  firstName: String
-
-  """"""
-  lastName: String
-
-  """"""
-  phone: String
-
-  """"""
-  email: String
-
-  """"""
-  systemRoleIds: [Int!]
-
-  """"""
-  organizationIds: [Int!]
-
-  """"""
-  former: Boolean
-
-  """"""
-  legacyLogin: String
-
-  """"""
-  legacyInstance: String
-
-  """"""
-  legacyEmail: String
-}
-
-""""""
-type AccountItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [AccountItem!]!
-}
-
-""""""
-type AccountItem {
-  """"""
-  id: Float!
-
-  """"""
-  firstName: String!
-
-  """"""
-  lastName: String!
-
-  """"""
-  email: String!
-
-  """"""
-  phone: String
-
-  """"""
-  accountStatus: AccountStatus
-
-  """"""
-  accountSystemRole: [SystemRole!]
-
-  """"""
-  lastSuccessfulLogin: DateTime
-
-  """"""
-  created: DateTime
-
-  """"""
-  updated: DateTime
-
-  """"""
-  emailToReset: String
-
-  """"""
-  legacyLogin: String
-
-  """"""
-  legacyInstance: String
-
-  """"""
-  legacyEmail: String
-
-  """"""
-  organizationIds: [AccountOrganizationItem!]
-
-  """"""
-  legacyProfileStatus: ProfileStatus
-}
-
-""""""
-type AccountOrganizationItem {
-  """"""
-  organizationId: Float!
-
-  """"""
-  organizationParentId: Float
-
-  """"""
-  enabled: Boolean
-
-  """"""
-  admin: Boolean
-}
-
-"""Order By options, default set to timestamp DESC"""
-input NotificationOrderByInput {
-  """Timestamp Sort field"""
-  timestamp: SortOrder!
-}
-
-""""""
-enum SortOrder {
-  """"""
-  ASC
-
-  """"""
-  DESC
-}
-
-""""""
-input SearchNotificationFiltersArgs {
-  """"""
-  archived: Boolean
-}
-
-""""""
-type NotificationPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [Notification!]!
-}
-
-""""""
-type Notification {
-  """"""
-  id: ID!
-
-  """"""
-  timestamp: DateTime!
-
-  """"""
-  toArtistId: Int
-
-  """"""
-  toProfileId: Int!
-
-  """"""
-  toAccountId: Int
-
-  """"""
-  type: String!
-
-  """"""
-  from: String
-
-  """"""
-  subject: String!
-
-  """"""
-  message: String!
-
-  """"""
-  context: NotificationContext
-
-  """"""
-  viewed: Boolean
-
-  """"""
-  archivedAt: DateTime
-}
-
-""""""
-type NotificationContext {
-  """"""
-  requestId: ID
-
-  """"""
-  requestType: RequestType
-
-  """"""
-  auditionDateUTC: DateTime
-}
-
-""""""
-enum RequestType {
-  """"""
-  MEDIA
-
-  """"""
-  AUDITION
-
-  """"""
-  CALLBACK
-
-  """"""
-  ASK_QUESTION
-
-  """"""
-  ROSTER_INVITATION
-}
-
-""""""
-input SearchOrganizationsFiltersArgs {
-  """Organization Id"""
-  organizationId: Int
-
-  """Organization name"""
-  name: String
-
-  """Organization Type Id"""
-  representationTypeId: Int
-
-  """Organization Parent Id"""
-  organizationParentId: Int
-
-  """Organization status code"""
-  organizationStatusCodes: [String!]
-
-  """System role code"""
-  systemRoles: [String!]
-}
-
-""""""
-type OrganizationItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [OrganizationItem!]!
-}
-
-""""""
-type OrganizationItem {
-  """Primary ID"""
-  id: Int!
-
-  """"""
-  created: DateTime
-
-  """"""
-  updated: DateTime
-
-  """Organization name"""
-  name: String
-
-  """Parent organization ID"""
-  organizationParentId: Int
-
-  """abbreviation"""
-  abbreviation: String
-
-  """"""
-  divisions: [OrganizationItem!]
-
-  """"""
-  representationType: RepresentationType
-
-  """Profile Count"""
-  profileCount: Int
-
-  """Account Count"""
-  accountCount: Int
-
-  """"""
-  accounts: [AccountItem!]
-
-  """"""
-  dmas: [DmaItem!]
-
-  """"""
-  representationCategory: [RepresentationCategory!]
-
-  """"""
-  logo: MediaItem
-}
-
-""""""
-type DmaItem {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  region: RegionItem
-}
-
-""""""
-type RegionItem {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  country: CountryItem
-}
-
-""""""
-type CountryItem {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type MediaItem {
-  """Media ID"""
-  mediaId: Int!
-
-  """name"""
-  name: String
-
-  """Upload Path"""
-  uploadPath: String
-}
-
-""""""
-type OrganizationDictionaryItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [OrganizationDictionaryItem!]!
-}
-
-""""""
-type OrganizationDictionaryItem {
-  """Primary ID"""
-  id: Int!
-
-  """Organization name"""
-  name: String
-
-  """Organization abbreviation"""
-  abbreviation: String
-}
-
-""""""
-input RepsWorksheetFiltersArgs {
-  """"""
-  type: RequestType
-
-  """"""
-  receivedFrom: DateTime
-
-  """"""
-  receivedTo: DateTime
-
-  """"""
-  slotDateFrom: DateTime
-
-  """"""
-  slotDateTo: DateTime
-
-  """"""
-  dueDateFrom: DateTime
-
-  """"""
-  dueDateTo: DateTime
-
-  """"""
-  statuses: [RepRequestStatus!]
-
-  """"""
-  projectIds: [Int!]
-
-  """"""
-  profileIds: [Int!]
-
-  """"""
-  fromOrgIds: [Int!]
-
-  """"""
-  responseStatus: ResponseStatus
-
-  """"""
-  talentResponseStatus: ResponseStatus
-}
-
-"""Status enum for rep's worksheet"""
-enum RepRequestStatus {
-  """"""
-  NOT_SENT
-
-  """"""
-  NEW_REQUEST
-
-  """"""
-  NEW_MESSAGE
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  REVIEW_RESPONSE
-
-  """"""
-  UPDATED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
-
-  """"""
-  COMPLETED
-
-  """"""
-  RESCHEDULE_REQUESTED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  DECLINED
-}
-
-""""""
-enum ResponseStatus {
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  ANSWERED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  RESCHEDULE_REQUESTED
-}
-
-""""""
-enum RepWorksheetFieldOrder {
-  """"""
-  receivedAt
-
-  """"""
-  dueDate
-
-  """"""
-  slotDate
-
-  """"""
-  status
-
-  """"""
-  type
-
-  """"""
-  talentName
-
-  """"""
-  projectName
-}
-
-""""""
-input RepWorksheetOrderOption {
-  """"""
-  field: RepWorksheetFieldOrder!
-
-  """"""
-  sortOrder: SortOrder = ASC
-}
-
-""""""
-type RepsWorksheetItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [RepsWorksheetItem!]!
-}
-
-""""""
-type RepsWorksheetItem {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: String!
-
-  """Request Status"""
-  status: RepRequestStatus!
-
-  """"""
-  submission: RepWorksheetSubmission
-
-  """"""
-  updatedAt: DateTime
-
-  """Date when request was created"""
-  createdAt: DateTime!
-
-  """Talent's response to a request"""
-  talentResponse: RepWorksheetResponse
-
-  """Response to a request"""
-  response: RepWorksheetResponse
-
-  """How many times a request has been forwarded to a talent"""
-  forwardCount: Int
-
-  """Schedule"""
-  schedule: RepWorksheetScheduleDetail
-
-  """Date of Slot"""
-  slotDate: DateTime
-
-  """"""
-  unreadMessageCount: Int
-
-  """"""
-  lastMessageId: String
-
-  """"""
-  dueDate: DateTime
-}
-
-"""Submission info"""
-type RepWorksheetSubmission {
-  """Talent's ID"""
-  id: Int!
-
-  """"""
-  profile: RepWorksheetProfile
-
-  """"""
-  role: RepWorksheetRole!
-
-  """Submission's note"""
-  note: String
-
-  """"""
-  isCreatedByCD: Boolean
-}
-
-"""Talent info"""
-type RepWorksheetProfile {
-  """Talent's ID"""
-  id: Int!
-
-  """Talent's stage name"""
-  stageName: String!
-
-  """Talents phone"""
-  phone: String
-
-  """Talent's email"""
-  email: String
-
-  """"""
-  defaultSubmissionNote: String
-
-  """"""
-  profileMainDivision: RepWorksheetOrganization
-
-  """"""
-  talentUnions: [RepWorksheetTalentUnion!]
-}
-
-""""""
-type RepWorksheetOrganization {
-  """"""
-  id: Int
-
-  """"""
-  name: String
-}
-
-""""""
-type RepWorksheetTalentUnion {
-  """"""
-  id: String
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-}
-
-""""""
-type RepWorksheetRole {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-
-  """"""
-  project: RepWorksheetProject!
-}
-
-"""Project info"""
-type RepWorksheetProject {
-  """Project's ID"""
-  id: Int!
-
-  """Project's name"""
-  name: String!
-
-  """Casting company"""
-  castingCompany: String
-}
-
-"""Response type for Rep Worksheet"""
-type RepWorksheetResponse {
-  """Response status"""
-  status: ResponseStatus!
-
-  """"""
-  repliedAt: DateTime
-
-  """Response note"""
-  note: String
-
-  """The media files sent in response"""
-  medias: [WfMedia!] @deprecated(reason: "please use mediaList")
-
-  """"""
-  mediaList: [MediaResponseItem!]
-}
-
-""""""
-type WfMedia {
-  """"""
-  mediaId: Int!
-
-  """"""
-  name: String
-
-  """"""
-  filename: String!
-
-  """"""
-  guid: String!
-
-  """"""
-  fileType: WfMediaFileType
-
-  """"""
-  mediaType: WfMediaType
-
-  """"""
-  mediaStatus: WfMediaStatus
-
-  """"""
-  mediaStorageStatus: WfMediaStatus
-
-  """"""
-  tag: String
-
-  """"""
-  url: String
-
-  """"""
-  fileKey: String
-
-  """"""
-  thumbnailUrl: String
-
-  """"""
-  transformation: WfMediaTransformation
-
-  """"""
-  isLocked: Boolean
-
-  """"""
-  thumbnail: WfMedia
-}
-
-""""""
-type WfMediaFileType {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-
-  """"""
-  code: String!
-
-  """"""
-  mediaType: WfMediaType!
-}
-
-""""""
-type WfMediaType {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-
-  """"""
-  code: String!
-}
-
-""""""
-type WfMediaStatus {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-
-  """"""
-  code: String!
-}
-
-""""""
-type WfMediaTransformation {
-  """"""
-  xAxis: Float
-
-  """"""
-  yAxis: Float
-
-  """"""
-  width: Float
-
-  """"""
-  height: Float
-
-  """"""
-  rotate: Float
-}
-
-""""""
-type MediaResponseItem {
-  """"""
-  id: Int!
-
-  """"""
-  alias: String
-
-  """"""
-  timestamp: DateTime!
-
-  """"""
-  isAdditional: Boolean
-
-  """"""
-  isForwardedToCD: Boolean
-
-  """"""
-  type: String!
-
-  """"""
-  media: WfMedia!
-}
-
-""""""
-type RepWorksheetScheduleDetail {
-  """"""
-  id: ID
-
-  """"""
-  timeZone: RepWorksheetTimeZone
-
-  """"""
-  address: RepWorksheetScheduleAddress
-}
-
-"""Measurement object"""
-type RepWorksheetTimeZone {
-  """"""
-  id: ID
-
-  """"""
-  standardName: String!
-
-  """"""
-  abbreviation: String
-}
-
-""""""
-type RepWorksheetScheduleAddress {
-  """"""
-  id: Int!
-
-  """"""
-  line1: String
-
-  """"""
-  line2: String
-
-  """"""
-  line3: String
-
-  """"""
-  postalCode: String
-
-  """"""
-  city: String
-
-  """"""
-  note: String
-
-  """"""
-  otherDetail: String
-
-  """"""
-  state: RepWorksheetScheduleAddressState
-
-  """"""
-  country: RepWorksheetScheduleAddressCountry
-}
-
-""""""
-type RepWorksheetScheduleAddressState {
-  """"""
-  id: ID
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-}
-
-""""""
-type RepWorksheetScheduleAddressCountry {
-  """"""
-  id: ID
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-}
-
-""""""
-enum RepsWorksheetGroupType {
-  """"""
-  PROJECT
-
-  """"""
-  PROFILE
-}
-
-""""""
-type RepsWorksheetGroups {
-  """"""
-  nextGroupId: ID
-
-  """"""
-  groups: [RepsWorksheetGroup!]!
-}
-
-""""""
-type RepsWorksheetGroup {
-  """"""
-  id: ID!
-
-  """"""
-  itemCount: Int!
-
-  """"""
-  details: RepsWorksheetGroupDetails
-}
-
-""""""
-union RepsWorksheetGroupDetails = RepWorksheetProfile | RepWorksheetProject
-
-""""""
-type RepsWorksheetFilters {
-  """"""
-  projects: [ProjectFilter!]
-
-  """"""
-  profiles: [ProfileFilter!]
-
-  """"""
-  organizations: [OrganizationFilter!]
-}
-
-""""""
-type ProjectFilter {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-}
-
-""""""
-type ProfileFilter {
-  """"""
-  id: Int!
-
-  """"""
-  stageName: String!
-}
-
-""""""
-type OrganizationFilter {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-}
-
-""""""
-input GetBillingInfoInput {
-  """"""
-  ids: [String!]
-}
-
-"""Billing information"""
-type BillingInfo {
-  """"""
-  id: ID
-
-  """"""
-  firstName: String
-
-  """"""
-  lastName: String
-
-  """"""
-  isPrimaryPaymentMethod: Boolean
-
-  """"""
-  isBackupPaymentMethod: Boolean
-
-  """"""
-  cardType: String
-
-  """"""
-  lastFour: String
-
-  """"""
-  month: Int
-
-  """"""
-  year: Int
-
-  """"""
-  postalCode: String
-}
-
-""""""
 type RequestPagedList {
   """"""
   page: Int!
@@ -15878,6 +14753,24 @@ type Request {
 
   """"""
   lastActionAt: DateTime
+}
+
+""""""
+enum RequestType {
+  """"""
+  MEDIA
+
+  """"""
+  AUDITION
+
+  """"""
+  CALLBACK
+
+  """"""
+  ASK_QUESTION
+
+  """"""
+  ROSTER_INVITATION
 }
 
 """"""
@@ -16109,6 +15002,111 @@ type WfSubmission {
 
   """"""
   mediaCount(requested: Boolean): [WfMediaCount!]
+}
+
+""""""
+type WfMedia {
+  """"""
+  mediaId: Int!
+
+  """"""
+  name: String
+
+  """"""
+  filename: String!
+
+  """"""
+  guid: String!
+
+  """"""
+  fileType: WfMediaFileType
+
+  """"""
+  mediaType: WfMediaType
+
+  """"""
+  mediaStatus: WfMediaStatus
+
+  """"""
+  mediaStorageStatus: WfMediaStatus
+
+  """"""
+  tag: String
+
+  """"""
+  url: String
+
+  """"""
+  fileKey: String
+
+  """"""
+  thumbnailUrl: String
+
+  """"""
+  transformation: WfMediaTransformation
+
+  """"""
+  isLocked: Boolean
+
+  """"""
+  thumbnail: WfMedia
+}
+
+""""""
+type WfMediaFileType {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  code: String!
+
+  """"""
+  mediaType: WfMediaType!
+}
+
+""""""
+type WfMediaType {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  code: String!
+}
+
+""""""
+type WfMediaStatus {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  code: String!
+}
+
+""""""
+type WfMediaTransformation {
+  """"""
+  xAxis: Float
+
+  """"""
+  yAxis: Float
+
+  """"""
+  width: Float
+
+  """"""
+  height: Float
+
+  """"""
+  rotate: Float
 }
 
 """"""
@@ -16948,30 +15946,54 @@ type WfProfileContactInfo {
 }
 
 """"""
-enum MediaRequestStatus {
+type MediaResponseItem {
   """"""
-  NOT_SENT
+  id: Int!
 
   """"""
-  PENDING
+  alias: String
+
+  """"""
+  timestamp: DateTime!
+
+  """"""
+  isAdditional: Boolean
+
+  """"""
+  isForwardedToCD: Boolean
+
+  """"""
+  type: String!
+
+  """"""
+  media: WfMedia!
+}
+
+""""""
+enum MediaRequestStatus {
+  """"""
+  ADDITIONAL_MEDIA_ADDED
 
   """"""
   CANCELLED
 
   """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
   CHANGE_REQUESTED
+
+  """"""
+  CONFIRMED
 
   """"""
   DECLINED
 
   """"""
-  CONFIRMED
+  MEDIA_ADDED
+
+  """"""
+  NOT_SENT
+
+  """"""
+  PENDING
 }
 
 """"""
@@ -17389,6 +16411,18 @@ input RosterInvitationTalentHistoryFilterInput {
 
   """Filter by email"""
   email: String!
+}
+
+"""Response type for Rep Worksheet"""
+type RepWorksheetResponse {
+  """"""
+  status: String!
+
+  """"""
+  repliedAt: DateTime!
+
+  """Response note"""
+  note: String
 }
 
 """
@@ -18018,6 +17052,15 @@ enum AuditionsSortColumn {
 }
 
 """"""
+enum SortOrder {
+  """"""
+  ASC
+
+  """"""
+  DESC
+}
+
+""""""
 input AuditionsFilterInput {
   """Filters by profiles"""
   profiles: [Int!]
@@ -18053,7 +17096,7 @@ type AuditionPagedListSearch {
 """"""
 input SearchPageGroupInput {
   """Page size"""
-  pageSize: Int = 1
+  pageSize: Int! = 1
 
   """Returns dataset after provided key"""
   after: [GroupLastKeyInput!]
@@ -18129,6 +17172,942 @@ type GroupLastKey {
 
   """"""
   name: String!
+}
+
+""""""
+type Session {
+  """"""
+  accessToken: String
+
+  """"""
+  expirationDate: DateTime
+
+  """"""
+  deviceId: String
+
+  """"""
+  context: AccountContext
+}
+
+""""""
+type AccountContext {
+  """"""
+  role: ContextRole
+
+  """"""
+  artistId: Float
+
+  """"""
+  organizationId: Float
+}
+
+""""""
+type ContextRole {
+  """"""
+  id: Int!
+
+  """"""
+  code: SystemRoleCode!
+}
+
+""""""
+enum SystemRoleCode {
+  """"""
+  API
+
+  """"""
+  AGENT
+
+  """"""
+  TALENT
+
+  """"""
+  MANAGER
+
+  """"""
+  ROOT_USER
+
+  """"""
+  LEGACY_USER
+
+  """"""
+  PROJECT_CREATOR
+
+  """"""
+  CASTING_DIRECTOR
+
+  """"""
+  CREATIVE
+
+  """"""
+  SHARED_PROJECT_USER
+
+  """"""
+  STUDIO
+}
+
+""""""
+type PermissionsModel {
+  """"""
+  action: String!
+
+  """"""
+  subject: String!
+}
+
+""""""
+input SearchAccountsFiltersArgs {
+  """"""
+  accountId: Int
+
+  """"""
+  firstName: String
+
+  """"""
+  lastName: String
+
+  """"""
+  phone: String
+
+  """"""
+  email: String
+
+  """"""
+  systemRoleIds: [Int!]
+
+  """"""
+  organizationIds: [Int!]
+
+  """"""
+  former: Boolean
+
+  """"""
+  legacyLogin: String
+
+  """"""
+  legacyInstance: String
+
+  """"""
+  legacyEmail: String
+}
+
+""""""
+type AccountItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [AccountItem!]!
+}
+
+""""""
+type AccountItem {
+  """"""
+  id: Float!
+
+  """"""
+  firstName: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  email: String!
+
+  """"""
+  phone: String
+
+  """"""
+  accountStatus: AccountStatus
+
+  """"""
+  accountSystemRole: [SystemRole!]
+
+  """"""
+  lastSuccessfulLogin: DateTime
+
+  """"""
+  created: DateTime
+
+  """"""
+  updated: DateTime
+
+  """"""
+  emailToReset: String
+
+  """"""
+  legacyLogin: String
+
+  """"""
+  legacyInstance: String
+
+  """"""
+  legacyEmail: String
+
+  """"""
+  organizationIds: [AccountOrganizationItem!]
+
+  """"""
+  legacyProfileStatus: ProfileStatus
+}
+
+""""""
+type AccountOrganizationItem {
+  """"""
+  organizationId: Float!
+
+  """"""
+  organizationParentId: Float
+
+  """"""
+  enabled: Boolean
+
+  """"""
+  admin: Boolean
+}
+
+"""Order By options, default set to timestamp DESC"""
+input NotificationOrderByInput {
+  """Timestamp Sort field"""
+  timestamp: SortOrder!
+}
+
+""""""
+input SearchNotificationFiltersArgs {
+  """"""
+  archived: Boolean
+}
+
+""""""
+type NotificationPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [Notification!]!
+}
+
+""""""
+type Notification {
+  """"""
+  id: ID!
+
+  """"""
+  timestamp: DateTime!
+
+  """"""
+  toArtistId: Int
+
+  """"""
+  toProfileId: Int!
+
+  """"""
+  toAccountId: Int
+
+  """"""
+  type: String!
+
+  """"""
+  from: String
+
+  """"""
+  subject: String!
+
+  """"""
+  message: String!
+
+  """"""
+  context: NotificationContext
+
+  """"""
+  viewed: Boolean
+
+  """"""
+  archivedAt: DateTime
+}
+
+""""""
+type NotificationContext {
+  """"""
+  requestId: ID
+
+  """"""
+  requestType: RequestType
+
+  """"""
+  auditionDateUTC: DateTime
+}
+
+""""""
+input SearchOrganizationsFiltersArgs {
+  """Organization Id"""
+  organizationId: Int
+
+  """Organization name"""
+  name: String
+
+  """Organization Type Id"""
+  representationTypeId: Int
+
+  """Organization Parent Id"""
+  organizationParentId: Int
+
+  """Organization status code"""
+  organizationStatusCodes: [String!]
+
+  """System role code"""
+  systemRoles: [String!]
+}
+
+""""""
+type OrganizationItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [OrganizationItem!]!
+}
+
+""""""
+type OrganizationItem {
+  """Primary ID"""
+  id: Int!
+
+  """"""
+  created: DateTime
+
+  """"""
+  updated: DateTime
+
+  """Organization name"""
+  name: String
+
+  """Parent organization ID"""
+  organizationParentId: Int
+
+  """abbreviation"""
+  abbreviation: String
+
+  """"""
+  divisions: [OrganizationItem!]
+
+  """"""
+  representationType: RepresentationType
+
+  """Profile Count"""
+  profileCount: Int
+
+  """Account Count"""
+  accountCount: Int
+
+  """"""
+  accounts: [AccountItem!]
+
+  """"""
+  dmas: [DmaItem!]
+
+  """"""
+  representationCategory: [RepresentationCategory!]
+
+  """"""
+  logo: MediaItem
+}
+
+""""""
+type DmaItem {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  region: RegionItem
+}
+
+""""""
+type RegionItem {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  country: CountryItem
+}
+
+""""""
+type CountryItem {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+""""""
+type MediaItem {
+  """Media ID"""
+  mediaId: Int!
+
+  """name"""
+  name: String
+
+  """Upload Path"""
+  uploadPath: String
+}
+
+""""""
+type OrganizationDictionaryItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [OrganizationDictionaryItem!]!
+}
+
+""""""
+type OrganizationDictionaryItem {
+  """Primary ID"""
+  id: Int!
+
+  """Organization name"""
+  name: String
+
+  """Organization abbreviation"""
+  abbreviation: String
+}
+
+""""""
+input RepsWorksheetFiltersArgs {
+  """"""
+  type: RequestType
+
+  """"""
+  receivedFrom: DateTime
+
+  """"""
+  receivedTo: DateTime
+
+  """"""
+  slotDateFrom: DateTime
+
+  """"""
+  slotDateTo: DateTime
+
+  """"""
+  dueDateFrom: DateTime
+
+  """"""
+  dueDateTo: DateTime
+
+  """"""
+  statuses: [RepRequestStatus!]
+
+  """"""
+  projectIds: [Int!]
+
+  """"""
+  profileIds: [Int!]
+
+  """"""
+  fromOrgIds: [Int!]
+
+  """"""
+  responseStatus: ResponseStatus
+
+  """"""
+  talentResponseStatus: ResponseStatus
+}
+
+"""Status enum for rep's worksheet"""
+enum RepRequestStatus {
+  """"""
+  NOT_SENT
+
+  """"""
+  NEW_REQUEST
+
+  """"""
+  NEW_MESSAGE
+
+  """"""
+  RESCHEDULED
+
+  """"""
+  REVIEW_RESPONSE
+
+  """"""
+  UPDATED
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  ON_HOLD
+
+  """"""
+  PENDING
+
+  """"""
+  CANCELLED
+
+  """"""
+  COMPLETED
+
+  """"""
+  RESCHEDULE_REQUESTED
+
+  """"""
+  CANCELLED_RESCHEDULED
+
+  """"""
+  DECLINED
+}
+
+""""""
+enum ResponseStatus {
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  ANSWERED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  RESCHEDULE_REQUESTED
+}
+
+""""""
+enum RepWorksheetFieldOrder {
+  """"""
+  receivedAt
+
+  """"""
+  dueDate
+
+  """"""
+  slotDate
+
+  """"""
+  status
+
+  """"""
+  type
+
+  """"""
+  talentName
+
+  """"""
+  projectName
+}
+
+""""""
+input RepWorksheetOrderOption {
+  """"""
+  field: RepWorksheetFieldOrder!
+
+  """"""
+  sortOrder: SortOrder = ASC
+}
+
+""""""
+type RepsWorksheetItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [RepsWorksheetItem!]!
+}
+
+""""""
+type RepsWorksheetItem {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: String!
+
+  """Request Status"""
+  status: RepRequestStatus!
+
+  """"""
+  submission: RepWorksheetSubmission
+
+  """"""
+  updatedAt: DateTime
+
+  """Date when request was created"""
+  createdAt: DateTime!
+
+  """Talent's response to a request"""
+  talentResponse: RepWorksheetResponse
+
+  """Response to a request"""
+  response: RepWorksheetResponse
+
+  """How many times a request has been forwarded to a talent"""
+  forwardCount: Int
+
+  """Schedule"""
+  schedule: RepWorksheetScheduleDetail
+
+  """Date of Slot"""
+  slotDate: DateTime
+
+  """"""
+  unreadMessageCount: Int
+
+  """"""
+  lastMessageId: String
+
+  """"""
+  dueDate: DateTime
+}
+
+"""Submission info"""
+type RepWorksheetSubmission {
+  """Talent's ID"""
+  id: Int!
+
+  """"""
+  profile: RepWorksheetProfile
+
+  """"""
+  role: RepWorksheetRole!
+
+  """Submission's note"""
+  note: String
+
+  """"""
+  isCreatedByCD: Boolean
+}
+
+"""Talent info"""
+type RepWorksheetProfile {
+  """Talent's ID"""
+  id: Int!
+
+  """Talent's stage name"""
+  stageName: String!
+
+  """Talents phone"""
+  phone: String
+
+  """Talent's email"""
+  email: String
+
+  """"""
+  defaultSubmissionNote: String
+
+  """"""
+  profileMainDivision: RepWorksheetOrganization
+
+  """"""
+  talentUnions: [RepWorksheetTalentUnion!]
+}
+
+""""""
+type RepWorksheetOrganization {
+  """"""
+  id: Int
+
+  """"""
+  name: String
+}
+
+""""""
+type RepWorksheetTalentUnion {
+  """"""
+  id: String
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+type RepWorksheetRole {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
+
+  """"""
+  project: RepWorksheetProject!
+}
+
+"""Project info"""
+type RepWorksheetProject {
+  """Project's ID"""
+  id: Int!
+
+  """Project's name"""
+  name: String!
+
+  """Casting company"""
+  castingCompany: String
+}
+
+""""""
+type RepWorksheetScheduleDetail {
+  """"""
+  id: ID
+
+  """"""
+  timeZone: RepWorksheetTimeZone
+
+  """"""
+  address: RepWorksheetScheduleAddress
+}
+
+"""Measurement object"""
+type RepWorksheetTimeZone {
+  """"""
+  id: ID
+
+  """"""
+  standardName: String!
+
+  """"""
+  abbreviation: String
+}
+
+""""""
+type RepWorksheetScheduleAddress {
+  """"""
+  id: Int!
+
+  """"""
+  line1: String
+
+  """"""
+  line2: String
+
+  """"""
+  line3: String
+
+  """"""
+  postalCode: String
+
+  """"""
+  city: String
+
+  """"""
+  note: String
+
+  """"""
+  otherDetail: String
+
+  """"""
+  state: RepWorksheetScheduleAddressState
+
+  """"""
+  country: RepWorksheetScheduleAddressCountry
+}
+
+""""""
+type RepWorksheetScheduleAddressState {
+  """"""
+  id: ID
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+type RepWorksheetScheduleAddressCountry {
+  """"""
+  id: ID
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+enum RepsWorksheetGroupType {
+  """"""
+  PROJECT
+
+  """"""
+  PROFILE
+}
+
+""""""
+type RepsWorksheetGroups {
+  """"""
+  nextGroupId: ID
+
+  """"""
+  groups: [RepsWorksheetGroup!]!
+}
+
+""""""
+type RepsWorksheetGroup {
+  """"""
+  id: ID!
+
+  """"""
+  itemCount: Int!
+
+  """"""
+  details: RepsWorksheetGroupDetails
+}
+
+""""""
+union RepsWorksheetGroupDetails = RepWorksheetProfile | RepWorksheetProject
+
+""""""
+type RepsWorksheetFilters {
+  """"""
+  projects: [ProjectFilter!]
+
+  """"""
+  profiles: [ProfileFilter!]
+
+  """"""
+  organizations: [OrganizationFilter!]
+}
+
+""""""
+type ProjectFilter {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+}
+
+""""""
+type ProfileFilter {
+  """"""
+  id: Int!
+
+  """"""
+  stageName: String!
+}
+
+""""""
+type OrganizationFilter {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
+}
+
+""""""
+input GetBillingInfoInput {
+  """"""
+  ids: [String!]
+}
+
+"""Billing information"""
+type BillingInfo {
+  """"""
+  id: ID
+
+  """"""
+  firstName: String
+
+  """"""
+  lastName: String
+
+  """"""
+  isPrimaryPaymentMethod: Boolean
+
+  """"""
+  isBackupPaymentMethod: Boolean
+
+  """"""
+  cardType: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  month: Int
+
+  """"""
+  year: Int
+
+  """"""
+  postalCode: String
 }
 
 type Mutation {
@@ -19050,6 +19029,9 @@ type Mutation {
   restoreRole(roleIds: [String!]!): String!
 
   """"""
+  revokeCollaboratorAccessFromProject(input: CollaboratorRevokeAccessFromProjectInput!): Boolean!
+
+  """"""
   sendAccountEmailVerificationCode: String!
 
   """"""
@@ -19381,48 +19363,6 @@ type Mutation {
   """"""
   widenPublicationRoles(messageToReps: String, messageToTalents: String, roleIds: [Int!]!, rolePublicationSettings: [RolePublicationSettingInput!]!): Boolean!
 
-  """Returns a session bearer token."""
-  login(email: String!, password: String!): AuthToken!
-
-  """Sign in user on behalf of internal service"""
-  loginDelegatedUser(email: String!, password: String!, service: MicroServices!): AuthToken!
-
-  """Deletes refresh token"""
-  logout(refreshToken: String!): Boolean!
-
-  """Creates new pair of tokens"""
-  switchAuthContext(refreshToken: String!, role: SystemRoleCode, artistId: Int, organizationId: Int, app: String): AuthToken!
-
-  """Creates new pair of tokens"""
-  createAuthContextByAccountId(accountId: Int!, service: MicroServices, organizationId: Int): AuthToken!
-
-  """Creates new pair of tokens for CSR user"""
-  loginImpersonatedAccount(accountId: Float!): AuthToken!
-
-  """Creates new pair of tokens"""
-  refreshToken(refreshToken: String!): AuthToken!
-
-  """Returns a session bearer token for internal user."""
-  googleLoginInternal(googleAuthToken: String!): AuthToken!
-
-  """"""
-  addBillingInfo(input: AddBillingInfoInput!): BillingInfo!
-
-  """"""
-  updateBillingInfo(input: UpdateBillingInfoInput!): BillingInfo!
-
-  """"""
-  removeBillingInfo(input: RemoveBillingInfoInput!): Boolean!
-
-  """"""
-  setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
-
-  """"""
-  createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
-
-  """"""
-  removeActiveCouponRedemption: Boolean!
-
   """Sends request to media-request for all selected request statuses"""
   createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
 
@@ -19488,6 +19428,48 @@ type Mutation {
 
   """Sends Voice Over 'Media' request"""
   sendVoiceOverMediaRequest(input: SendVoiceOverMediaRequestInput!): [MediaSubRequest!]!
+
+  """Returns a session bearer token."""
+  login(email: String!, password: String!): AuthToken!
+
+  """Sign in user on behalf of internal service"""
+  loginDelegatedUser(email: String!, password: String!, service: MicroServices!): AuthToken!
+
+  """Deletes refresh token"""
+  logout(refreshToken: String!): Boolean!
+
+  """Creates new pair of tokens"""
+  switchAuthContext(refreshToken: String!, role: SystemRoleCode, artistId: Int, organizationId: Int, app: String): AuthToken!
+
+  """Creates new pair of tokens"""
+  createAuthContextByAccountId(accountId: Int!, service: MicroServices, organizationId: Int): AuthToken!
+
+  """Creates new pair of tokens for CSR user"""
+  loginImpersonatedAccount(accountId: Float!): AuthToken!
+
+  """Creates new pair of tokens"""
+  refreshToken(refreshToken: String!): AuthToken!
+
+  """Returns a session bearer token for internal user."""
+  googleLoginInternal(googleAuthToken: String!): AuthToken!
+
+  """"""
+  addBillingInfo(input: AddBillingInfoInput!): BillingInfo!
+
+  """"""
+  updateBillingInfo(input: UpdateBillingInfoInput!): BillingInfo!
+
+  """"""
+  removeBillingInfo(input: RemoveBillingInfoInput!): Boolean!
+
+  """"""
+  setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
+
+  """"""
+  createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
+
+  """"""
+  removeActiveCouponRedemption: Boolean!
 }
 
 """Creates a user account based on given input values"""
@@ -22507,6 +22489,15 @@ input UpdateAccountInput {
   timezoneId: Int
 }
 
+"""Revokes Access For User from Project"""
+input CollaboratorRevokeAccessFromProjectInput {
+  """"""
+  inviteId: ID!
+
+  """"""
+  projectId: ID!
+}
+
 """"""
 input SendDirectMessageToTalentsInput {
   """"""
@@ -23996,69 +23987,6 @@ input UpdateSubmissionStatusInput {
 }
 
 """"""
-enum MicroServices {
-  """"""
-  FAST_CAPTURE
-
-  """"""
-  BACKLOT
-}
-
-""""""
-input AddBillingInfoInput {
-  """"""
-  tokenId: String!
-
-  """"""
-  primaryPaymentMethod: Boolean
-
-  """"""
-  backupPaymentMethod: Boolean
-
-  """"""
-  threeDSecureActionResultTokenId: String
-}
-
-""""""
-input UpdateBillingInfoInput {
-  """"""
-  tokenId: String
-
-  """"""
-  billingInfoId: String!
-
-  """"""
-  primaryPaymentMethod: Boolean
-
-  """"""
-  backupPaymentMethod: Boolean
-
-  """"""
-  threeDSecureActionResultTokenId: String
-}
-
-""""""
-input RemoveBillingInfoInput {
-  """"""
-  billingInfoId: String!
-}
-
-""""""
-input SetSubscriptionPaymentMethodInput {
-  """"""
-  subscriptionId: Int!
-
-  """"""
-  billingInfoId: String!
-}
-
-"""Create Coupon Redemption Input"""
-input CreateCouponRedemptionInput {
-  """"""
-  couponId: String!
-}
-
-""""""
 enum RequestSendTo {
   """"""
   SEND_TO_ALL
@@ -24444,6 +24372,69 @@ input SendVoiceOverMediaRequestInput {
   submissionIds: [Int!]!
 }
 
+""""""
+enum MicroServices {
+  """"""
+  FAST_CAPTURE
+
+  """"""
+  BACKLOT
+}
+
+""""""
+input AddBillingInfoInput {
+  """"""
+  tokenId: String!
+
+  """"""
+  primaryPaymentMethod: Boolean
+
+  """"""
+  backupPaymentMethod: Boolean
+
+  """"""
+  threeDSecureActionResultTokenId: String
+}
+
+""""""
+input UpdateBillingInfoInput {
+  """"""
+  tokenId: String
+
+  """"""
+  billingInfoId: String!
+
+  """"""
+  primaryPaymentMethod: Boolean
+
+  """"""
+  backupPaymentMethod: Boolean
+
+  """"""
+  threeDSecureActionResultTokenId: String
+}
+
+""""""
+input RemoveBillingInfoInput {
+  """"""
+  billingInfoId: String!
+}
+
+""""""
+input SetSubscriptionPaymentMethodInput {
+  """"""
+  subscriptionId: Int!
+
+  """"""
+  billingInfoId: String!
+}
+
+"""Create Coupon Redemption Input"""
+input CreateCouponRedemptionInput {
+  """"""
+  couponId: String!
+}
+
 """Account status object"""
 type OnboardingStatus {
   """Primary ID"""
@@ -24481,24 +24472,6 @@ input ProfileInput {
 
   """Artist ID"""
   artistId: Int
-}
-
-""""""
-type ScheduleReminderContextNotificationContextAndRecipient {
-  """"""
-  context: ScheduleReminderContext!
-
-  """"""
-  to: String
-
-  """"""
-  toAccountId: Int
-
-  """"""
-  toOrgId: Int
-
-  """"""
-  toProfileId: Int
 }
 
 """"""
