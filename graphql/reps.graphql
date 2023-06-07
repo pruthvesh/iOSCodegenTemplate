@@ -62,6 +62,7 @@ fragment RepsWorkSheetItem on RepsWorksheetItem {
   id
   type
   status
+  dueDate
   updatedAt
   createdAt
   forwardCount

@@ -948,24 +948,6 @@ type Query {
   willingnesses(input: FilterInput): [Willingness!]!
 
   """"""
-  wfApiHealth: String!
-
-  """"""
-  requests(projectId: Int!, page: PageInput!): RequestPagedList!
-
-  """"""
-  getActiveSubRequestsBySubmissionIds(submissionIds: [Int!]!, requestType: RequestType, requestStatus: [RequestStatusUnion!]): [RequestSubmission!]!
-
-  """"""
-  getSubRequestsCount(
-    """"""
-    id: ID!
-
-    """Request status"""
-    status: [RequestStatus!]
-  ): Float!
-
-  """"""
   mediaRequestDetails(id: ID!): MediaRequest!
 
   """"""
@@ -973,27 +955,6 @@ type Query {
 
   """"""
   mediaSubRequestDetails(id: ID!): MediaSubRequest!
-
-  """"""
-  askQuestionRequestDetails(id: ID!): AskQuestionRequest!
-
-  """"""
-  askQuestionSubRequestDetails(id: ID!): AskQuestionSubRequest!
-
-  """Get details for talent invitation by token"""
-  rosterTalentInvitationByToken(token: String!): RosterTalentInvitation!
-
-  """"""
-  rosterInvitations(page: PageInput!): RosterTalentInvitationPagedList!
-
-  """Get roster invitation history for provided talent's name and email"""
-  rosterInvitationTalentHistory(filter: RosterInvitationTalentHistoryFilterInput!): [RosterTalentInvitation!]! @deprecated(reason: "Use rosterTalentInvitationHistory instead")
-
-  """Get roster invitation history for provided talent's name and email"""
-  rosterTalentInvitationHistory(filter: [RosterInvitationTalentHistoryFilterInput!]!): [RosterTalentInvitation!]!
-
-  """Returns talent response by rep's request id"""
-  talentResponse(id: ID!): RepWorksheetResponse
 
   """"""
   scheduleInviteSubRequestDetails(id: ID!): ScheduleInviteSubRequest!
@@ -1014,13 +975,52 @@ type Query {
   previousScheduleResponses(scheduleId: Int!, submissionIds: [Int!]!): [ScheduleInvitePreviousResponse!]!
 
   """"""
+  requests(projectId: Int!, page: PageInput!): RequestPagedList!
+
+  """"""
+  getActiveSubRequestsBySubmissionIds(submissionIds: [Int!]!, requestType: RequestType, requestStatus: [RequestStatusUnion!]): [RequestSubmission!]!
+
+  """"""
+  getSubRequestsCount(
+    """"""
+    id: ID!
+
+    """Request status"""
+    status: [RequestStatus!]
+  ): Float!
+
+  """"""
+  wfApiHealth: String!
+
+  """"""
+  askQuestionRequestDetails(id: ID!): AskQuestionRequest!
+
+  """"""
+  askQuestionSubRequestDetails(id: ID!): AskQuestionSubRequest!
+
+  """Get details for talent invitation by token"""
+  rosterTalentInvitationByToken(token: String!): RosterTalentInvitation!
+
+  """"""
+  rosterInvitations(page: PageInput!): RosterTalentInvitationPagedList!
+
+  """Get roster invitation history for provided talent's name and email"""
+  rosterInvitationTalentHistory(filter: RosterInvitationTalentHistoryFilterInput!): [RosterTalentInvitation!]! @deprecated(reason: "Use rosterTalentInvitationHistory instead")
+
+  """Get roster invitation history for provided talent's name and email"""
+  rosterTalentInvitationHistory(filter: [RosterInvitationTalentHistoryFilterInput!]!): [RosterTalentInvitation!]!
+
+  """Returns talent response by rep's request id"""
+  talentResponse(id: ID!): RepWorksheetResponseWf
+
+  """Returns talent response by rep's request id"""
+  talentResponseWf(id: ID!): RepWorksheetResponseWf
+
+  """"""
   getActivityLogsBySubmissionId(id: Int!, page: PageInput!): ActivityLogPagedList!
 
   """"""
   getLastActivityLogBySubmissionIds(ids: [Int!]!): [ActivityLog!]!
-
-  """"""
-  voiceOverMediaRequests(roleId: Int!, submissionIds: [Int!]): [MediaSubRequest!]!
 
   """"""
   auditions(
@@ -14722,111 +14722,6 @@ enum TileSchemaEnum {
   PresentationPick
 }
 
-""""""
-type RequestPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [Request!]!
-}
-
-""""""
-type Request {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: RequestType!
-
-  """"""
-  name: String!
-
-  """"""
-  sentAt: DateTime
-
-  """"""
-  lastActionAt: DateTime
-}
-
-""""""
-enum RequestType {
-  """"""
-  MEDIA
-
-  """"""
-  AUDITION
-
-  """"""
-  CALLBACK
-
-  """"""
-  ASK_QUESTION
-
-  """"""
-  ROSTER_INVITATION
-}
-
-""""""
-type RequestSubmission {
-  """Request ID"""
-  id: ID!
-
-  """Submission ID"""
-  submissionId: ID!
-}
-
-""""""
-enum RequestStatus {
-  """"""
-  NOT_SENT
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
-
-  """"""
-  NEW_REQUEST
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  REVIEW_RESPONSE
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  COMPLETED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-}
-
 """'Media Request' Type"""
 type MediaRequest {
   """"""
@@ -14875,7 +14770,7 @@ type MediaRequest {
   allowAdditionalMedia: Boolean
 
   """"""
-  responses(statuses: [String!], page: PageInput!): MediaResponsePagedList!
+  responses(page: PageInput!, statuses: [String!]): MediaResponsePagedList!
 
   """"""
   submissionIds: [Int!]!
@@ -16188,6 +16083,317 @@ type MediaSubRequest {
   chatTopic: WfChatTopic
 }
 
+"""
+Schedule Invite Request type. The Schedule Invite is always sent from a schedule
+and some fields are based on the schedule data.
+"""
+type ScheduleInviteSubRequest {
+  """Schedule Invite Request id."""
+  id: ID!
+
+  """
+  A message to Representatives of the talents that are connected to submissions.
+  """
+  noteForRepresentative: String
+
+  """An instruction for Talents connected to submissions."""
+  noteForTalents: String
+
+  """"""
+  schedule: WfSchedule
+
+  """"""
+  project: WfProject!
+
+  """"""
+  role: WfRole!
+
+  """"""
+  profile: WfProfile
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  status: ScheduleInviteRequestStatus!
+
+  """Reps Worksheet Status"""
+  repsWorksheetStatus: String!
+
+  """"""
+  responseNote: String
+
+  """Response Status"""
+  responseStatus: String
+
+  """Forwarded Note"""
+  forwardNote: String
+
+  """Date of Slot"""
+  slotDate: DateTime
+
+  """Previous Response Status"""
+  prevResponseStatus: String
+
+  """Previous Response Note"""
+  prevResponseNote: String
+
+  """Previous Slot Date"""
+  prevSlotDate: DateTime
+
+  """"""
+  chatTopicKey: String!
+
+  """Cancellation note"""
+  cancellationNote: String
+}
+
+""""""
+type WfSchedule {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
+
+  """"""
+  type: ScheduleRequestType!
+
+  """"""
+  address: WfAddress
+
+  """"""
+  date: DateTime
+
+  """Time Zone"""
+  timeZone: WfTimeZone
+
+  """"""
+  note: String
+
+  """"""
+  isLocationHidden: Boolean!
+}
+
+""""""
+enum ScheduleRequestType {
+  """"""
+  AUDITION
+
+  """"""
+  CALLBACK
+}
+
+""""""
+type WfAddress {
+  """"""
+  id: Int!
+
+  """Postal code"""
+  postalCode: String!
+
+  """"""
+  countryName: String
+
+  """"""
+  countryCode: String
+
+  """"""
+  state: String
+
+  """"""
+  city: String
+
+  """"""
+  line1: String
+
+  """"""
+  line2: String
+
+  """"""
+  line3: String
+
+  """"""
+  note: String
+}
+
+""""""
+type ScheduleInviteResponse {
+  """"""
+  id: ID!
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  sentAt: DateTime
+
+  """"""
+  repliedAt: DateTime
+
+  """"""
+  note: String
+
+  """"""
+  status: ScheduleInviteRequestStatus!
+
+  """"""
+  prevRevisionResponseStatus: ScheduleInviteRequestStatus
+
+  """"""
+  slotId: Int!
+
+  """"""
+  chatTopicKey: String!
+
+  """"""
+  slotStartDate: DateTime
+
+  """"""
+  chatTopic: WfChatTopic
+}
+
+""""""
+type ScheduleInvitePreviousResponse {
+  """"""
+  id: ID!
+
+  """"""
+  status: ScheduleInviteResponseStatus!
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  responseNote: String
+
+  """"""
+  schedule: WfSchedule!
+
+  """"""
+  slotDate: DateTime
+}
+
+""""""
+enum ScheduleInviteResponseStatus {
+  """"""
+  PENDING
+
+  """"""
+  DECLINED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  RESCHEDULE_REQUESTED
+}
+
+""""""
+type RequestPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [Request!]!
+}
+
+""""""
+type Request {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: RequestType!
+
+  """"""
+  name: String!
+
+  """"""
+  sentAt: DateTime
+
+  """"""
+  lastActionAt: DateTime
+}
+
+""""""
+enum RequestType {
+  """"""
+  MEDIA
+
+  """"""
+  AUDITION
+
+  """"""
+  CALLBACK
+
+  """"""
+  ASK_QUESTION
+
+  """"""
+  ROSTER_INVITATION
+}
+
+""""""
+type RequestSubmission {
+  """Request ID"""
+  id: ID!
+
+  """Submission ID"""
+  submissionId: ID!
+}
+
+""""""
+enum RequestStatus {
+  """"""
+  NOT_SENT
+
+  """"""
+  PENDING
+
+  """"""
+  CANCELLED
+
+  """"""
+  NEW_REQUEST
+
+  """"""
+  RESCHEDULED
+
+  """"""
+  REVIEW_RESPONSE
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  ON_HOLD
+
+  """"""
+  COMPLETED
+
+  """"""
+  CANCELLED_RESCHEDULED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
+}
+
 """'Ask Question Request' Type"""
 type AskQuestionRequest {
   """"""
@@ -16413,219 +16619,37 @@ input RosterInvitationTalentHistoryFilterInput {
   email: String!
 }
 
-"""Response type for Rep Worksheet"""
-type RepWorksheetResponse {
-  """"""
-  status: String!
-
-  """"""
-  repliedAt: DateTime!
-
-  """Response note"""
-  note: String
-}
-
-"""
-Schedule Invite Request type. The Schedule Invite is always sent from a schedule
-and some fields are based on the schedule data.
-"""
-type ScheduleInviteSubRequest {
-  """Schedule Invite Request id."""
-  id: ID!
-
-  """
-  A message to Representatives of the talents that are connected to submissions.
-  """
-  noteForRepresentative: String
-
-  """An instruction for Talents connected to submissions."""
-  noteForTalents: String
-
-  """"""
-  schedule: WfSchedule
-
-  """"""
-  project: WfProject!
-
-  """"""
-  role: WfRole!
-
-  """"""
-  profile: WfProfile
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  status: ScheduleInviteRequestStatus!
-
-  """Reps Worksheet Status"""
-  repsWorksheetStatus: String!
-
-  """"""
-  responseNote: String
-
-  """Response Status"""
-  responseStatus: String
-
-  """Forwarded Note"""
-  forwardNote: String
-
-  """Date of Slot"""
-  slotDate: DateTime
-
-  """Previous Response Status"""
-  prevResponseStatus: String
-
-  """Previous Response Note"""
-  prevResponseNote: String
-
-  """Previous Slot Date"""
-  prevSlotDate: DateTime
-
-  """"""
-  chatTopicKey: String!
-
-  """Cancellation note"""
-  cancellationNote: String
-}
-
-""""""
-type WfSchedule {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-
-  """"""
-  type: ScheduleRequestType!
-
-  """"""
-  address: WfAddress
-
-  """"""
-  date: DateTime
-
-  """Time Zone"""
-  timeZone: WfTimeZone
-
-  """"""
-  note: String
-
-  """"""
-  isLocationHidden: Boolean!
-}
-
-""""""
-enum ScheduleRequestType {
-  """"""
-  AUDITION
-
-  """"""
-  CALLBACK
-}
-
-""""""
-type WfAddress {
-  """"""
-  id: Int!
-
-  """Postal code"""
-  postalCode: String!
-
-  """"""
-  countryName: String
-
-  """"""
-  countryCode: String
-
-  """"""
-  state: String
-
-  """"""
-  city: String
-
-  """"""
-  line1: String
-
-  """"""
-  line2: String
-
-  """"""
-  line3: String
-
-  """"""
-  note: String
-}
-
-""""""
-type ScheduleInviteResponse {
-  """"""
-  id: ID!
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  sentAt: DateTime
+"""Backup Response type for Rep Worksheet"""
+type RepWorksheetResponseWf {
+  """Response status"""
+  status: ResponseStatus!
 
   """"""
   repliedAt: DateTime
 
-  """"""
+  """Response note"""
   note: String
 
   """"""
-  status: ScheduleInviteRequestStatus!
-
-  """"""
-  prevRevisionResponseStatus: ScheduleInviteRequestStatus
-
-  """"""
-  slotId: Int!
-
-  """"""
-  chatTopicKey: String!
-
-  """"""
-  slotStartDate: DateTime
-
-  """"""
-  chatTopic: WfChatTopic
+  mediaList: [MediaResponseItem!]
 }
 
 """"""
-type ScheduleInvitePreviousResponse {
+enum ResponseStatus {
   """"""
-  id: ID!
-
-  """"""
-  status: ScheduleInviteResponseStatus!
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  responseNote: String
-
-  """"""
-  schedule: WfSchedule!
-
-  """"""
-  slotDate: DateTime
-}
-
-""""""
-enum ScheduleInviteResponseStatus {
-  """"""
-  PENDING
+  CONFIRMED
 
   """"""
   DECLINED
 
   """"""
-  CONFIRMED
+  ANSWERED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  CHANGE_REQUESTED
 
   """"""
   RESCHEDULE_REQUESTED
@@ -17718,27 +17742,6 @@ enum RepRequestStatus {
 }
 
 """"""
-enum ResponseStatus {
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  ANSWERED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  RESCHEDULE_REQUESTED
-}
-
-""""""
 enum RepWorksheetFieldOrder {
   """"""
   receivedAt
@@ -17916,6 +17919,18 @@ type RepWorksheetProject {
 
   """Casting company"""
   castingCompany: String
+}
+
+"""Response type for Rep Worksheet"""
+type RepWorksheetResponse {
+  """"""
+  status: String!
+
+  """"""
+  repliedAt: DateTime!
+
+  """Response note"""
+  note: String
 }
 
 """"""
@@ -19363,24 +19378,6 @@ type Mutation {
   """"""
   widenPublicationRoles(messageToReps: String, messageToTalents: String, roleIds: [Int!]!, rolePublicationSettings: [RolePublicationSettingInput!]!): Boolean!
 
-  """Sends request to media-request for all selected request statuses"""
-  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
-
-  """"""
-  cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
-
-  """"""
-  createChatTopicFromSubRequest(subRequestId: String!): Boolean!
-
-  """"""
-  forwardRequests(ids: [ID!]!, message: String, ccManagerEmail: Boolean): [RepWorksheetItem!]!
-
-  """"""
-  deleteRequest(id: ID!): Boolean!
-
-  """"""
-  updateRequestDueDate(id: ID!, input: UpdateDueDateInput!): RequestUnion!
-
   """Creates 'Media' request type"""
   createMediaRequest(input: MediaRequestInput!): MediaRequest!
 
@@ -19402,6 +19399,33 @@ type Mutation {
   """"""
   updateMediaRequestMessageForRepresentatives(id: ID!, message: String = null): MediaRequest!
 
+  """Send 'Schedule Invite' request"""
+  sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
+
+  """Reply to 'Schedule Invite' request"""
+  replyToScheduleInviteRequest(input: ScheduleInviteResponseInput!): ScheduleInviteSubRequest!
+
+  """Casting Director can set reply status"""
+  setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
+
+  """Sends request to media-request for all selected request statuses"""
+  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
+
+  """"""
+  cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
+
+  """"""
+  createChatTopicFromSubRequest(subRequestId: String!): Boolean!
+
+  """"""
+  forwardRequests(ids: [ID!]!, message: String, ccManagerEmail: Boolean): [RepWorksheetItem!]!
+
+  """"""
+  deleteRequest(id: ID!): Boolean!
+
+  """"""
+  updateRequestDueDate(id: ID!, input: UpdateDueDateInput!): RequestUnion!
+
   """Creates 'Ask Question' request type"""
   createAskQuestionRequest(input: AskQuestionRequestInput!): AskQuestionRequest!
 
@@ -19416,18 +19440,6 @@ type Mutation {
 
   """Creates 'Roster Invitation Request' type"""
   createRosterInvitationRequest(input: RosterInvitationRequestInput!): RosterInvitationRequest!
-
-  """Send 'Schedule Invite' request"""
-  sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
-
-  """Reply to 'Schedule Invite' request"""
-  replyToScheduleInviteRequest(input: ScheduleInviteResponseInput!): ScheduleInviteSubRequest!
-
-  """Casting Director can set reply status"""
-  setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
-
-  """Sends Voice Over 'Media' request"""
-  sendVoiceOverMediaRequest(input: SendVoiceOverMediaRequestInput!): [MediaSubRequest!]!
 
   """Returns a session bearer token."""
   login(email: String!, password: String!): AuthToken!
@@ -23987,108 +23999,6 @@ input UpdateSubmissionStatusInput {
 }
 
 """"""
-enum RequestSendTo {
-  """"""
-  SEND_TO_ALL
-
-  """"""
-  ONLY_NEW
-
-  """"""
-  NEW_AND_PENDING
-
-  """"""
-  PENDING
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  COMPLETED
-}
-
-""""""
-input CancelRequestInput {
-  """"""
-  submissionIds: [Int!]
-
-  """"""
-  note: String
-}
-
-""""""
-type RepWorksheetItem {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: String!
-
-  """Request Status"""
-  status: RepRequestStatus!
-
-  """"""
-  updatedAt: DateTime
-
-  """Date when request was created"""
-  createdAt: DateTime!
-
-  """Talent's response to a request"""
-  talentResponse: RepWorksheetResponse
-
-  """Response to a request"""
-  response: RepWorksheetResponse
-
-  """How many times a request has been forwarded to a talent"""
-  forwardCount: Int
-
-  """"""
-  project: RepWorksheetProject @deprecated(reason: "Will be removed")
-
-  """"""
-  talent: RepWorksheetTalent @deprecated(reason: "Will be removed")
-
-  """Timezone of a Schedule"""
-  scheduleTimeZone: WfTimeZone @deprecated(reason: "Will be removed")
-
-  """Date of Slot"""
-  slotDate: DateTime @deprecated(reason: "Will be removed")
-}
-
-"""Talent info"""
-type RepWorksheetTalent {
-  """Talent's ID"""
-  id: Int!
-
-  """Talent's stage name"""
-  stageName: String!
-
-  """Talents phone"""
-  phone: String
-
-  """Talent's email"""
-  email: String
-
-  """Talent's cover"""
-  coverUrl: String
-}
-
-""""""
-input UpdateDueDateInput {
-  """"""
-  dueDate: DateTime = null
-
-  """"""
-  dueDateTimeZoneId: Int = null
-}
-
-""""""
-union RequestUnion = MediaRequest | AskQuestionRequest
-
-""""""
 input MediaRequestInput {
   """"""
   name: String!
@@ -24211,6 +24121,173 @@ input WfSubmissionSearchInput {
   tileSchemeValueCodes: [String!]
 }
 
+"""
+Schedule Invite Request input. The Schedule Invite is always sent from a
+schedule and some fields are based on the schedule data.
+"""
+input ScheduleInviteRequestInput {
+  """Schedule Id"""
+  scheduleId: Int!
+
+  """Schedule type: AUDITION / CALLBACK"""
+  type: ScheduleRequestType!
+
+  """Field for choosing which requests should trigger email notification."""
+  scheduleReceiver: ScheduleReceiver!
+
+  """
+  A message to Representatives of the talents that are connected to submissions.
+  """
+  noteForRepresentative: String = null
+
+  """A message to Talent of the talents that are connected to submissions."""
+  noteForTalents: String = null
+
+  """Filter Requests by role"""
+  roleIds: [Int!]
+}
+
+""""""
+enum ScheduleReceiver {
+  """"""
+  ALL
+
+  """"""
+  UPDATED
+
+  """"""
+  UPDATED_AND_UNCONFIRMED
+}
+
+"""
+Schedule Invite Response input that can be sent by a Representative or Talent user.
+"""
+input ScheduleInviteResponseInput {
+  """Schedule Invite Response id."""
+  id: ID!
+
+  """A note. Should be filled if declining or rescheduling the invite."""
+  responseNote: String = null
+
+  """
+  A response: a user can confirm, decline or request rescheduling the Schedule.
+  """
+  response: ScheduleInviteResponseStatus!
+}
+
+"""Schedule Invite Response input that can be sent by a Casting Director"""
+input ScheduleInviteSetStatusInput {
+  """Schedule Invite Response id."""
+  id: ID!
+
+  """
+  A response: a user can confirm, decline or request rescheduling the Schedule.
+  """
+  response: ScheduleInviteResponseStatus!
+}
+
+""""""
+enum RequestSendTo {
+  """"""
+  SEND_TO_ALL
+
+  """"""
+  ONLY_NEW
+
+  """"""
+  NEW_AND_PENDING
+
+  """"""
+  PENDING
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  COMPLETED
+}
+
+""""""
+input CancelRequestInput {
+  """"""
+  submissionIds: [Int!]
+
+  """"""
+  note: String
+}
+
+""""""
+type RepWorksheetItem {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: String!
+
+  """Request Status"""
+  status: RepRequestStatus!
+
+  """"""
+  updatedAt: DateTime
+
+  """Date when request was created"""
+  createdAt: DateTime!
+
+  """Talent's response to a request"""
+  talentResponse: RepWorksheetResponse
+
+  """Response to a request"""
+  response: RepWorksheetResponse
+
+  """How many times a request has been forwarded to a talent"""
+  forwardCount: Int
+
+  """"""
+  project: RepWorksheetProject @deprecated(reason: "Will be removed")
+
+  """"""
+  talent: RepWorksheetTalent @deprecated(reason: "Will be removed")
+
+  """Timezone of a Schedule"""
+  scheduleTimeZone: WfTimeZone @deprecated(reason: "Will be removed")
+
+  """Date of Slot"""
+  slotDate: DateTime @deprecated(reason: "Will be removed")
+}
+
+"""Talent info"""
+type RepWorksheetTalent {
+  """Talent's ID"""
+  id: Int!
+
+  """Talent's stage name"""
+  stageName: String!
+
+  """Talents phone"""
+  phone: String
+
+  """Talent's email"""
+  email: String
+
+  """Talent's cover"""
+  coverUrl: String
+}
+
+""""""
+input UpdateDueDateInput {
+  """"""
+  dueDate: DateTime = null
+
+  """"""
+  dueDateTimeZoneId: Int = null
+}
+
+""""""
+union RequestUnion = MediaRequest | AskQuestionRequest
+
 """"""
 input AskQuestionRequestInput {
   """"""
@@ -24293,83 +24370,6 @@ type RosterInvitationRequest {
 
   """"""
   invitations: [RosterTalentInvitation!]!
-}
-
-"""
-Schedule Invite Request input. The Schedule Invite is always sent from a
-schedule and some fields are based on the schedule data.
-"""
-input ScheduleInviteRequestInput {
-  """Schedule Id"""
-  scheduleId: Int!
-
-  """Schedule type: AUDITION / CALLBACK"""
-  type: ScheduleRequestType!
-
-  """Field for choosing which requests should trigger email notification."""
-  scheduleReceiver: ScheduleReceiver!
-
-  """
-  A message to Representatives of the talents that are connected to submissions.
-  """
-  noteForRepresentative: String = null
-
-  """A message to Talent of the talents that are connected to submissions."""
-  noteForTalents: String = null
-
-  """Filter Requests by role"""
-  roleIds: [Int!]
-}
-
-""""""
-enum ScheduleReceiver {
-  """"""
-  ALL
-
-  """"""
-  UPDATED
-
-  """"""
-  UPDATED_AND_UNCONFIRMED
-}
-
-"""
-Schedule Invite Response input that can be sent by a Representative or Talent user.
-"""
-input ScheduleInviteResponseInput {
-  """Schedule Invite Response id."""
-  id: ID!
-
-  """A note. Should be filled if declining or rescheduling the invite."""
-  responseNote: String = null
-
-  """
-  A response: a user can confirm, decline or request rescheduling the Schedule.
-  """
-  response: ScheduleInviteResponseStatus!
-}
-
-"""Schedule Invite Response input that can be sent by a Casting Director"""
-input ScheduleInviteSetStatusInput {
-  """Schedule Invite Response id."""
-  id: ID!
-
-  """
-  A response: a user can confirm, decline or request rescheduling the Schedule.
-  """
-  response: ScheduleInviteResponseStatus!
-}
-
-""""""
-input SendVoiceOverMediaRequestInput {
-  """"""
-  roleId: Int!
-
-  """"""
-  talentInstructions: String!
-
-  """"""
-  submissionIds: [Int!]!
 }
 
 """"""
