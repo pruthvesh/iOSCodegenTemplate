@@ -167,3 +167,373 @@ query getOrganizationsByRepTypeAndName(
     }
   }
 }
+
+query askQuestionSubRequestDetailsForRep($id: ID!) {
+  talentResponse(id: $id) {
+    __typename
+    status
+    note
+  }
+  askQuestionSubRequestDetails(id: $id) {
+    __typename
+    dueDate
+    dueDateTimeZone {
+      __typename
+      id
+      abbreviation
+      standardName
+    }
+    ...QuestionSubRequestFragment
+  }
+}
+
+fragment QuestionSubRequestFragment on AskQuestionSubRequest {
+  __typename
+  id
+  question
+  includeSides
+  messageForRepresentatives
+  cancellationNote
+  status
+  profile {
+    __typename
+    id
+    name
+    dateOfBirth
+    contactInfo {
+      __typename
+      phone
+      email
+    }
+    hairColor {
+      __typename
+      id
+      name
+    }
+    cover {
+      __typename
+      fileKey
+      thumbnail {
+        __typename
+        fileKey
+        transformation {
+          __typename
+          xAxis
+          yAxis
+          width
+          height
+          rotate
+        }
+      }
+      mediaStorageStatus {
+        __typename
+        id
+        name
+        code
+      }
+    }
+  }
+  response
+  repliedAt
+  project {
+    __typename
+    ...ProjectItemFragment
+  }
+  role {
+    __typename
+    ...RoleItemFragmentWithSides
+  }
+}
+
+fragment RoleItemFragmentWithSides on WfRole {
+  ...RoleItemFragment
+  __typename
+  wardrobe
+  sides {
+    __typename
+    roleMediaId
+    mediaObject {
+      __typename
+      ...WorkflowMedia
+    }
+  }
+}
+
+fragment RoleItemFragment on WfRole {
+  __typename
+  id
+  name
+  ageMin
+  ageMax
+  rate
+  rateMax
+  rateSummary
+  description
+  ageInYears
+  roleType {
+    __typename
+    id
+    name
+  }
+  locationDates {
+    __typename
+    id
+    roleDateType {
+      __typename
+      id
+      code
+      name
+    }
+    startDate
+    endDate
+  }
+}
+
+fragment ProjectItemFragment on WfProject {
+  __typename
+  id
+  name
+  castingCompany
+  displayedProjectUnion
+  projectType {
+    __typename
+    id
+    name
+  }
+  projectUnions {
+    __typename
+    union {
+      __typename
+      id
+      name
+    }
+  }
+}
+
+
+query mediaSubRequestDetailsForRep($id: ID!) {
+  talentResponse(id: $id) {
+    __typename
+    status
+    note
+    repliedAt
+    mediaList {
+      ...MediaList
+      __typename
+    }
+  }
+  mediaSubRequestDetails(id: $id) {
+    __typename
+    talentInstructionsUpdatedAt
+    messageForRepresentativesUpdatedAt
+    dueDate
+    dueDateTimeZone {
+      __typename
+      id
+      abbreviation
+      standardName
+    }
+    ...MediaSubRequestDetailsFragment
+  }
+}
+
+fragment MediaSubRequestDetailsFragment on MediaSubRequest {
+  __typename
+  id
+  includeSides
+  submissionId
+  talentInstructions
+  messageForRepresentatives
+  cancellationNote
+  maxNumberOfMediaFiles
+  mediaTypes
+  repliedAt
+  note
+  status
+  forwardNote
+  updatedMedia
+  allowAdditionalMedia
+  mediaList {
+    __typename
+    ...MediaList
+  }
+  project {
+    __typename
+    ...ProjectItemFragment
+  }
+  role {
+    __typename
+    ...RoleItemFragmentWithSides
+  }
+  profile {
+    __typename
+    id
+    name
+    contactInfo {
+      __typename
+      phone
+      email
+    }
+    artistId
+    dateOfBirth
+    hairColor {
+      __typename
+      id
+      name
+    }
+    cover {
+      __typename
+      fileKey
+      thumbnail {
+        __typename
+        fileKey
+        transformation {
+          __typename
+          xAxis
+          yAxis
+          width
+          height
+          rotate
+        }
+      }
+      mediaStorageStatus {
+        __typename
+        id
+        name
+        code
+      }
+    }
+  }
+  chatTopicKey
+  chatTopic {
+    __typename
+    unreadMessageCount
+    lastUserMessage {
+      __typename
+      id
+      createdAt
+      messageBody
+      messageType
+      topicKey
+      senderAccount {
+        __typename
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+
+fragment MediaList on MediaResponseItem {
+  __typename
+  id
+  isForwardedToCD
+  isAdditional
+  alias
+  media {
+    __typename
+    ...WorkflowMedia
+  }
+}
+
+
+query scheduleInviteSubRequestDetailsForRep($id: ID!) {
+  talentResponse(id: $id) {
+    __typename
+    status
+    note
+  }
+  scheduleInviteSubRequestDetails(id: $id) {
+    __typename
+    chatTopicKey
+    ...ScheduleInviteDetailFragment
+  }
+}
+
+fragment ScheduleInviteDetailFragment on ScheduleInviteSubRequest {
+  __typename
+  id
+  noteForRepresentative
+  noteForTalents
+  submissionId
+  responseNote
+  slotDate
+  status
+  prevResponseStatus
+  prevResponseNote
+  cancellationNote
+  prevSlotDate
+  schedule {
+    __typename
+    id
+    type
+    note
+    address {
+      __typename
+      id
+      postalCode
+      countryCode
+      state
+      city
+      line1
+      line2
+      line3
+    }
+    date
+    timeZone {
+      __typename
+      id
+      name
+      standardName
+      abbreviation
+    }
+    isLocationHidden
+  }
+  project {
+    __typename
+    ...ProjectItemFragment
+  }
+  profile {
+    __typename
+    id
+    name
+    dateOfBirth
+    contactInfo {
+      __typename
+      phone
+      email
+    }
+    hairColor {
+      __typename
+      id
+      name
+    }
+    cover {
+      __typename
+      fileKey
+      thumbnail {
+        __typename
+        fileKey
+        transformation {
+          __typename
+          xAxis
+          yAxis
+          width
+          height
+          rotate
+        }
+      }
+      mediaStorageStatus {
+        __typename
+        id
+        name
+        code
+      }
+    }
+  }
+  role {
+    __typename
+    ...RoleItemFragmentWithSides
+  }
+}
