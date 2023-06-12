@@ -42,6 +42,7 @@ query getWorksheetDataByProject(
       dueDate
       createdAt
       updatedAt
+      unreadMessageCount
       slotDate
       type
       submission {
