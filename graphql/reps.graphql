@@ -538,3 +538,107 @@ fragment ScheduleInviteDetailFragment on ScheduleInviteSubRequest {
     ...RoleItemFragmentWithSides
   }
 }
+
+
+query getChatMessageByTopic($topicKey: String!, $pageSize: Int!) {
+  getChatMessageByTopic(topicKey: $topicKey, pageSize: $pageSize) {
+    messages {
+      id
+      createdAt
+      messageBody
+      messageType
+      topicKey
+      messageType
+      senderAccount {
+        id
+        firstName
+        lastName
+        __typename
+      }
+      senderOrganization {
+        id
+        name
+        __typename
+      }
+      ownMessage
+      __typename
+    }
+    lastViewedMessageId
+    unreadMessageCount
+    participantOrganizations {
+      id
+      name
+      parentName
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation createChatTopicFromSubReques($subRequestId: String!) {
+  createChatTopicFromSubRequest(subRequestId: $subRequestId)
+}
+
+mutation createChatMessage($topicKey: String!, $messageBody: String!) {
+  createChatMessage(
+    messageInput: { topicKey: $topicKey, messageBody: $messageBody }
+  ) {
+    id
+    createdAt
+    messageBody
+    messageType
+    topicKey
+    senderAccount {
+      id
+      firstName
+      lastName
+      __typename
+    }
+    senderOrganization {
+      id
+      name
+      __typename
+    }
+    ownMessage
+    __typename
+  }
+}
+
+query getMessageAfterId(
+  $topicKey: String!
+  $afterMessageId: String!
+  $direction: SearchDirection!
+  $pageSize: Int!
+) {
+  getMessageAfterId(
+    topicKey: $topicKey
+    afterMessageId: $afterMessageId
+    direction: $direction
+    pageSize: $pageSize
+  ) {
+    messages {
+      id
+      createdAt
+      messageBody
+      messageType
+      topicKey
+      senderAccount {
+        id
+        firstName
+        lastName
+        __typename
+      }
+      senderOrganization {
+        id
+        name
+        __typename
+      }
+      ownMessage
+      __typename
+    }
+    lastViewedMessageId
+    __typename
+  }
+}
+
+
