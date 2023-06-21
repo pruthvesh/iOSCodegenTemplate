@@ -642,4 +642,10 @@ query getMessageAfterId(
   }
 }
 
-
+mutation requestMediaChanges($input: MediaChangeInput!) {
+  requestMediaChanges(input: $input) {
+    id
+    repsWorksheetStatus
+    __typename
+  }
+}
