@@ -4912,6 +4912,9 @@ type LuminateProfile {
   """"""
   dateOfBirth: String
 
+  """Luminate profile is deceased"""
+  isDeceased: Boolean
+
   """Luminate profile management companies"""
   managements: [LuminateCompanyModel!]
 
@@ -19083,6 +19086,9 @@ type Mutation {
   restoreRole(roleIds: [String!]!): String!
 
   """"""
+  revokeCollaboratorAccessFromOrg(input: CollaboratorRevokeAccessFromOrgInput!): Boolean!
+
+  """"""
   revokeCollaboratorAccessFromProject(input: CollaboratorRevokeAccessFromProjectInput!): Boolean!
 
   """"""
@@ -22562,6 +22568,12 @@ input UpdateAccountInput {
 
   """"""
   timezoneId: Int
+}
+
+"""Revokes Access For User from Organization"""
+input CollaboratorRevokeAccessFromOrgInput {
+  """"""
+  email: String!
 }
 
 """Revokes Access For User from Project"""
