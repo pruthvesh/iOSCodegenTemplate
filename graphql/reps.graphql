@@ -196,6 +196,7 @@ fragment QuestionSubRequestFragment on AskQuestionSubRequest {
   messageForRepresentatives
   cancellationNote
   status
+  repsWorksheetStatus
   profile {
     __typename
     id
@@ -462,6 +463,7 @@ fragment ScheduleInviteDetailFragment on ScheduleInviteSubRequest {
   responseNote
   slotDate
   status
+  repsWorksheetStatus
   prevResponseStatus
   prevResponseNote
   cancellationNote
