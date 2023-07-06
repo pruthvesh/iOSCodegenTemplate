@@ -29,27 +29,6 @@ type Query {
   getBauCountries: [BauCountry!]
 
   """"""
-  authHealth: String!
-
-  """List of sessions"""
-  getAccountSessions(accountId: Float!): [Session!]!
-
-  """Returns true if username and password are matched, otherwise false"""
-  authenticate(email: String!, password: String!): Boolean!
-
-  """Hash a password"""
-  hashPassword(password: String!): String!
-
-  """Compare a password with hashedPassword"""
-  comparePassword(hashedPassword: String!, password: String!): Boolean!
-
-  """"""
-  availableApplications: [String!]!
-
-  """"""
-  permissions: [PermissionsModel!]!
-
-  """"""
   searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
 
   """"""
@@ -74,7 +53,25 @@ type Query {
   repsWorksheetFilters: RepsWorksheetFilters!
 
   """"""
-  getBillingInfo(input: GetBillingInfoInput!): [BillingInfo!]!
+  authHealth: String!
+
+  """List of sessions"""
+  getAccountSessions(accountId: Float!): [Session!]!
+
+  """Returns true if username and password are matched, otherwise false"""
+  authenticate(email: String!, password: String!): Boolean!
+
+  """Hash a password"""
+  hashPassword(password: String!): String!
+
+  """Compare a password with hashedPassword"""
+  comparePassword(hashedPassword: String!, password: String!): Boolean!
+
+  """"""
+  availableApplications: [String!]!
+
+  """"""
+  permissions: [PermissionsModel!]!
 
   """"""
   getLists(projectId: Int, filter: CastingListFilterInput! = {}, pageNumber: Int, pageSize: Int): ListGqlModelPagedList!
@@ -996,31 +993,10 @@ type Query {
   willingnesses(input: FilterInput): [Willingness!]!
 
   """"""
-  mediaRequestDetails(id: ID!): MediaRequest!
+  getBillingInfo(input: GetBillingInfoInput!): [BillingInfo!]!
 
   """"""
-  mediaRequestResponseCount(id: ID!): [MediaResponseCounts!]!
-
-  """"""
-  mediaSubRequestDetails(id: ID!): MediaSubRequest!
-
-  """"""
-  scheduleInviteSubRequestDetails(id: ID!): ScheduleInviteSubRequest!
-
-  """"""
-  scheduleInviteRequestNotes(scheduleId: Int!): ScheduleInviteRequestNotes!
-
-  """"""
-  scheduleInviteResponseStatusCounts(scheduleIds: [Int!]!): [ScheduleInviteResponseStatusCounts!]!
-
-  """"""
-  scheduleResponses(scheduleId: Int!): [ScheduleInviteResponse!]!
-
-  """"""
-  scheduleResponsesCanceled(scheduleId: Int!): [ScheduleInviteResponse!]!
-
-  """"""
-  previousScheduleResponses(scheduleId: Int!, submissionIds: [Int!]!): [ScheduleInvitePreviousResponse!]!
+  wfApiHealth: String!
 
   """"""
   requests(projectId: Int!, page: PageInput!): RequestPagedList!
@@ -1038,7 +1014,13 @@ type Query {
   ): Float!
 
   """"""
-  wfApiHealth: String!
+  mediaRequestDetails(id: ID!): MediaRequest!
+
+  """"""
+  mediaRequestResponseCount(id: ID!): [MediaResponseCounts!]!
+
+  """"""
+  mediaSubRequestDetails(id: ID!): MediaSubRequest!
 
   """"""
   askQuestionRequestDetails(id: ID!): AskQuestionRequest!
@@ -1062,10 +1044,31 @@ type Query {
   talentResponse(id: ID!): RepWorksheetResponse
 
   """"""
+  scheduleInviteSubRequestDetails(id: ID!): ScheduleInviteSubRequest!
+
+  """"""
+  scheduleInviteRequestNotes(scheduleId: Int!): ScheduleInviteRequestNotes!
+
+  """"""
+  scheduleInviteResponseStatusCounts(scheduleIds: [Int!]!): [ScheduleInviteResponseStatusCounts!]!
+
+  """"""
+  scheduleResponses(scheduleId: Int!): [ScheduleInviteResponse!]!
+
+  """"""
+  scheduleResponsesCanceled(scheduleId: Int!): [ScheduleInviteResponse!]!
+
+  """"""
+  previousScheduleResponses(scheduleId: Int!, submissionIds: [Int!]!): [ScheduleInvitePreviousResponse!]!
+
+  """"""
   getActivityLogsBySubmissionId(id: Int!, page: PageInput!): ActivityLogPagedList!
 
   """"""
   getLastActivityLogBySubmissionIds(ids: [Int!]!): [ActivityLog!]!
+
+  """"""
+  voiceOverMediaRequests(roleId: Int!, submissionIds: [Int!]): [MediaSubRequest!]!
 
   """"""
   auditions(
@@ -1092,9 +1095,6 @@ type Query {
     """"""
     groupBy: AuditionsGroupBy!
   ): AuditionsGroups!
-
-  """"""
-  voiceOverMediaRequests(roleId: Int!, submissionIds: [Int!]): [MediaSubRequest!]!
 }
 
 """BAU Account Object"""
@@ -1519,87 +1519,6 @@ type BauCountry {
 
   """Supporting country id"""
   supportingCountryId: Int
-}
-
-""""""
-type Session {
-  """"""
-  accessToken: String
-
-  """"""
-  expirationDate: DateTime
-
-  """"""
-  deviceId: String
-
-  """"""
-  context: AccountContext
-}
-
-""""""
-type AccountContext {
-  """"""
-  role: ContextRole
-
-  """"""
-  artistId: Float
-
-  """"""
-  organizationId: Float
-}
-
-""""""
-type ContextRole {
-  """"""
-  id: Int!
-
-  """"""
-  code: SystemRoleCode!
-}
-
-""""""
-enum SystemRoleCode {
-  """"""
-  API
-
-  """"""
-  AGENT
-
-  """"""
-  TALENT
-
-  """"""
-  MANAGER
-
-  """"""
-  ROOT_USER
-
-  """"""
-  LEGACY_USER
-
-  """"""
-  PROJECT_CREATOR
-
-  """"""
-  CASTING_DIRECTOR
-
-  """"""
-  CREATIVE
-
-  """"""
-  SHARED_PROJECT_USER
-
-  """"""
-  STUDIO
-}
-
-""""""
-type PermissionsModel {
-  """"""
-  action: String!
-
-  """"""
-  subject: String!
 }
 
 """Page Input object"""
@@ -2659,42 +2578,84 @@ type OrganizationFilter {
 }
 
 """"""
-input GetBillingInfoInput {
+type Session {
   """"""
-  ids: [String!]
+  accessToken: String
+
+  """"""
+  expirationDate: DateTime
+
+  """"""
+  deviceId: String
+
+  """"""
+  context: AccountContext
 }
 
-"""Billing information"""
-type BillingInfo {
+""""""
+type AccountContext {
   """"""
-  id: ID
+  role: ContextRole
 
   """"""
-  firstName: String
+  artistId: Float
 
   """"""
-  lastName: String
+  organizationId: Float
+}
+
+""""""
+type ContextRole {
+  """"""
+  id: Int!
 
   """"""
-  isPrimaryPaymentMethod: Boolean
+  code: SystemRoleCode!
+}
+
+""""""
+enum SystemRoleCode {
+  """"""
+  API
 
   """"""
-  isBackupPaymentMethod: Boolean
+  AGENT
 
   """"""
-  cardType: String
+  TALENT
 
   """"""
-  lastFour: String
+  MANAGER
 
   """"""
-  month: Int
+  ROOT_USER
 
   """"""
-  year: Int
+  LEGACY_USER
 
   """"""
-  postalCode: String
+  PROJECT_CREATOR
+
+  """"""
+  CASTING_DIRECTOR
+
+  """"""
+  CREATIVE
+
+  """"""
+  SHARED_PROJECT_USER
+
+  """"""
+  STUDIO
+}
+
+""""""
+type PermissionsModel {
+  """"""
+  action: String!
+
+  """"""
+  subject: String!
 }
 
 """"""
@@ -15841,6 +15802,132 @@ enum TileSchemaEnum {
   PresentationPick
 }
 
+""""""
+input GetBillingInfoInput {
+  """"""
+  ids: [String!]
+}
+
+"""Billing information"""
+type BillingInfo {
+  """"""
+  id: ID
+
+  """"""
+  firstName: String
+
+  """"""
+  lastName: String
+
+  """"""
+  isPrimaryPaymentMethod: Boolean
+
+  """"""
+  isBackupPaymentMethod: Boolean
+
+  """"""
+  cardType: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  month: Int
+
+  """"""
+  year: Int
+
+  """"""
+  postalCode: String
+}
+
+""""""
+type RequestPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [Request!]!
+}
+
+""""""
+type Request {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: RequestType!
+
+  """"""
+  name: String!
+
+  """"""
+  sentAt: DateTime
+
+  """"""
+  lastActionAt: DateTime
+}
+
+""""""
+type RequestSubmission {
+  """Request ID"""
+  id: ID!
+
+  """Submission ID"""
+  submissionId: ID!
+}
+
+""""""
+enum RequestStatus {
+  """"""
+  NOT_SENT
+
+  """"""
+  PENDING
+
+  """"""
+  CANCELLED
+
+  """"""
+  NEW_REQUEST
+
+  """"""
+  RESCHEDULED
+
+  """"""
+  REVIEW_RESPONSE
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  ON_HOLD
+
+  """"""
+  COMPLETED
+
+  """"""
+  CANCELLED_RESCHEDULED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
+}
+
 """'Media Request' Type"""
 type MediaRequest {
   """"""
@@ -15889,7 +15976,7 @@ type MediaRequest {
   allowAdditionalMedia: Boolean
 
   """"""
-  responses(page: PageInput!, statuses: [String!]): MediaResponsePagedList!
+  responses(statuses: [String!], page: PageInput!): MediaResponsePagedList!
 
   """"""
   submissionIds: [Int!]!
@@ -17073,299 +17160,6 @@ type MediaSubRequest {
   chatTopic: WfChatTopic
 }
 
-"""
-Schedule Invite Request type. The Schedule Invite is always sent from a schedule
-and some fields are based on the schedule data.
-"""
-type ScheduleInviteSubRequest {
-  """Schedule Invite Request id."""
-  id: ID!
-
-  """
-  A message to Representatives of the talents that are connected to submissions.
-  """
-  noteForRepresentative: String
-
-  """An instruction for Talents connected to submissions."""
-  noteForTalents: String
-
-  """"""
-  schedule: WfSchedule
-
-  """"""
-  project: WfProject!
-
-  """"""
-  role: WfRole!
-
-  """"""
-  profile: WfProfile
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  status: ScheduleInviteRequestStatus!
-
-  """Reps Worksheet Status"""
-  repsWorksheetStatus: String!
-
-  """"""
-  responseNote: String
-
-  """Response Status"""
-  responseStatus: String
-
-  """Forwarded Note"""
-  forwardNote: String
-
-  """Date of Slot"""
-  slotDate: DateTime
-
-  """Previous Response Status"""
-  prevResponseStatus: String
-
-  """Previous Response Note"""
-  prevResponseNote: String
-
-  """Previous Slot Date"""
-  prevSlotDate: DateTime
-
-  """"""
-  chatTopicKey: String!
-
-  """Cancellation note"""
-  cancellationNote: String
-}
-
-""""""
-type WfSchedule {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-
-  """"""
-  type: ScheduleRequestType!
-
-  """"""
-  address: WfAddress
-
-  """"""
-  date: DateTime
-
-  """Time Zone"""
-  timeZone: WfTimeZone
-
-  """"""
-  note: String
-
-  """"""
-  isLocationHidden: Boolean!
-}
-
-""""""
-enum ScheduleRequestType {
-  """"""
-  AUDITION
-
-  """"""
-  CALLBACK
-}
-
-""""""
-type WfAddress {
-  """"""
-  id: Int!
-
-  """Postal code"""
-  postalCode: String!
-
-  """"""
-  countryName: String
-
-  """"""
-  countryCode: String
-
-  """"""
-  state: String
-
-  """"""
-  city: String
-
-  """"""
-  line1: String
-
-  """"""
-  line2: String
-
-  """"""
-  line3: String
-
-  """"""
-  note: String
-}
-
-""""""
-type ScheduleInviteResponse {
-  """"""
-  id: ID!
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  sentAt: DateTime
-
-  """"""
-  repliedAt: DateTime
-
-  """"""
-  note: String
-
-  """"""
-  status: ScheduleInviteRequestStatus!
-
-  """"""
-  prevRevisionResponseStatus: ScheduleInviteRequestStatus
-
-  """"""
-  slotId: Int!
-
-  """"""
-  chatTopicKey: String!
-
-  """"""
-  slotStartDate: DateTime
-
-  """"""
-  chatTopic: WfChatTopic
-}
-
-""""""
-type ScheduleInvitePreviousResponse {
-  """"""
-  id: ID!
-
-  """"""
-  status: ScheduleInviteResponseStatus!
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  responseNote: String
-
-  """"""
-  schedule: WfSchedule!
-
-  """"""
-  slotDate: DateTime
-}
-
-""""""
-enum ScheduleInviteResponseStatus {
-  """"""
-  PENDING
-
-  """"""
-  DECLINED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  RESCHEDULE_REQUESTED
-}
-
-""""""
-type RequestPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [Request!]!
-}
-
-""""""
-type Request {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: RequestType!
-
-  """"""
-  name: String!
-
-  """"""
-  sentAt: DateTime
-
-  """"""
-  lastActionAt: DateTime
-}
-
-""""""
-type RequestSubmission {
-  """Request ID"""
-  id: ID!
-
-  """Submission ID"""
-  submissionId: ID!
-}
-
-""""""
-enum RequestStatus {
-  """"""
-  NOT_SENT
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
-
-  """"""
-  NEW_REQUEST
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  REVIEW_RESPONSE
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  COMPLETED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-}
-
 """'Ask Question Request' Type"""
 type AskQuestionRequest {
   """"""
@@ -17589,6 +17383,212 @@ input RosterInvitationTalentHistoryFilterInput {
 
   """Filter by email"""
   email: String!
+}
+
+"""
+Schedule Invite Request type. The Schedule Invite is always sent from a schedule
+and some fields are based on the schedule data.
+"""
+type ScheduleInviteSubRequest {
+  """Schedule Invite Request id."""
+  id: ID!
+
+  """
+  A message to Representatives of the talents that are connected to submissions.
+  """
+  noteForRepresentative: String
+
+  """An instruction for Talents connected to submissions."""
+  noteForTalents: String
+
+  """"""
+  schedule: WfSchedule
+
+  """"""
+  project: WfProject!
+
+  """"""
+  role: WfRole!
+
+  """"""
+  profile: WfProfile
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  status: ScheduleInviteRequestStatus!
+
+  """Reps Worksheet Status"""
+  repsWorksheetStatus: String!
+
+  """"""
+  responseNote: String
+
+  """Response Status"""
+  responseStatus: String
+
+  """Forwarded Note"""
+  forwardNote: String
+
+  """Date of Slot"""
+  slotDate: DateTime
+
+  """Previous Response Status"""
+  prevResponseStatus: String
+
+  """Previous Response Note"""
+  prevResponseNote: String
+
+  """Previous Slot Date"""
+  prevSlotDate: DateTime
+
+  """"""
+  chatTopicKey: String!
+
+  """Cancellation note"""
+  cancellationNote: String
+}
+
+""""""
+type WfSchedule {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
+
+  """"""
+  type: ScheduleRequestType!
+
+  """"""
+  address: WfAddress
+
+  """"""
+  date: DateTime
+
+  """Time Zone"""
+  timeZone: WfTimeZone
+
+  """"""
+  note: String
+
+  """"""
+  isLocationHidden: Boolean!
+}
+
+""""""
+enum ScheduleRequestType {
+  """"""
+  AUDITION
+
+  """"""
+  CALLBACK
+}
+
+""""""
+type WfAddress {
+  """"""
+  id: Int!
+
+  """Postal code"""
+  postalCode: String!
+
+  """"""
+  countryName: String
+
+  """"""
+  countryCode: String
+
+  """"""
+  state: String
+
+  """"""
+  city: String
+
+  """"""
+  line1: String
+
+  """"""
+  line2: String
+
+  """"""
+  line3: String
+
+  """"""
+  note: String
+}
+
+""""""
+type ScheduleInviteResponse {
+  """"""
+  id: ID!
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  sentAt: DateTime
+
+  """"""
+  repliedAt: DateTime
+
+  """"""
+  note: String
+
+  """"""
+  status: ScheduleInviteRequestStatus!
+
+  """"""
+  prevRevisionResponseStatus: ScheduleInviteRequestStatus
+
+  """"""
+  slotId: Int!
+
+  """"""
+  chatTopicKey: String!
+
+  """"""
+  slotStartDate: DateTime
+
+  """"""
+  chatTopic: WfChatTopic
+}
+
+""""""
+type ScheduleInvitePreviousResponse {
+  """"""
+  id: ID!
+
+  """"""
+  status: ScheduleInviteResponseStatus!
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  responseNote: String
+
+  """"""
+  schedule: WfSchedule!
+
+  """"""
+  slotDate: DateTime
+}
+
+""""""
+enum ScheduleInviteResponseStatus {
+  """"""
+  PENDING
+
+  """"""
+  DECLINED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  RESCHEDULE_REQUESTED
 }
 
 """"""
@@ -18047,7 +18047,7 @@ type AuditionPagedListSearch {
 """"""
 input SearchPageGroupInput {
   """Page size"""
-  pageSize: Int! = 1
+  pageSize: Int = 1
 
   """Returns dataset after provided key"""
   after: [GroupLastKeyInput!]
@@ -18201,24 +18201,6 @@ type Mutation {
   googleLoginInternal(googleAuthToken: String!): AuthToken!
 
   """"""
-  addBillingInfo(input: AddBillingInfoInput!): BillingInfo!
-
-  """"""
-  updateBillingInfo(input: UpdateBillingInfoInput!): BillingInfo!
-
-  """"""
-  removeBillingInfo(input: RemoveBillingInfoInput!): Boolean!
-
-  """"""
-  setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
-
-  """"""
-  createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
-
-  """"""
-  removeActiveCouponRedemption: Boolean!
-
-  """"""
   createList(projectId: Int!, name: String!): CreateCastingListResult!
 
   """"""
@@ -18265,6 +18247,9 @@ type Mutation {
 
   """"""
   addCastingListProfilesToRole(input: AddCastingListProfileToRoleInput!): AddProfileToRoleResult!
+
+  """"""
+  addSubmittedProfilesToCastingLists(input: AddProfileSubmissionsToCastingListInput!): AddProfileToCastingListResult!
 
   """
   Denotes if the project has been accepted successfully along with it(s) associated role(s)
@@ -19423,6 +19408,42 @@ type Mutation {
   """"""
   widenPublicationRoles(messageToReps: String, messageToTalents: String, roleIds: [Int!]!, rolePublicationSettings: [RolePublicationSettingInput!]!): Boolean!
 
+  """"""
+  addBillingInfo(input: AddBillingInfoInput!): BillingInfo!
+
+  """"""
+  updateBillingInfo(input: UpdateBillingInfoInput!): BillingInfo!
+
+  """"""
+  removeBillingInfo(input: RemoveBillingInfoInput!): Boolean!
+
+  """"""
+  setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
+
+  """"""
+  createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
+
+  """"""
+  removeActiveCouponRedemption: Boolean!
+
+  """Sends request to media-request for all selected request statuses"""
+  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
+
+  """"""
+  cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
+
+  """"""
+  createChatTopicFromSubRequest(subRequestId: String!): Boolean!
+
+  """"""
+  forwardRequests(ids: [ID!]!, message: String, ccManagerEmail: Boolean): [RepWorksheetItem!]!
+
+  """"""
+  deleteRequest(id: ID!): Boolean!
+
+  """"""
+  updateRequestDueDate(id: ID!, input: UpdateDueDateInput!): RequestUnion!
+
   """Creates 'Media' request type"""
   createMediaRequest(input: MediaRequestInput!): MediaRequest!
 
@@ -19444,33 +19465,6 @@ type Mutation {
   """"""
   updateMediaRequestMessageForRepresentatives(id: ID!, message: String = null): MediaRequest!
 
-  """Send 'Schedule Invite' request"""
-  sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
-
-  """Reply to 'Schedule Invite' request"""
-  replyToScheduleInviteRequest(input: ScheduleInviteResponseInput!): ScheduleInviteSubRequest!
-
-  """Casting Director can set reply status"""
-  setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
-
-  """Sends request to media-request for all selected request statuses"""
-  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
-
-  """"""
-  cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
-
-  """"""
-  createChatTopicFromSubRequest(subRequestId: String!): Boolean!
-
-  """"""
-  forwardRequests(ids: [ID!]!, message: String, ccManagerEmail: Boolean): [RepWorksheetItem!]!
-
-  """"""
-  deleteRequest(id: ID!): Boolean!
-
-  """"""
-  updateRequestDueDate(id: ID!, input: UpdateDueDateInput!): RequestUnion!
-
   """Creates 'Ask Question' request type"""
   createAskQuestionRequest(input: AskQuestionRequestInput!): AskQuestionRequest!
 
@@ -19485,6 +19479,15 @@ type Mutation {
 
   """Creates 'Roster Invitation Request' type"""
   createRosterInvitationRequest(input: RosterInvitationRequestInput!): RosterInvitationRequest!
+
+  """Send 'Schedule Invite' request"""
+  sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
+
+  """Reply to 'Schedule Invite' request"""
+  replyToScheduleInviteRequest(input: ScheduleInviteResponseInput!): ScheduleInviteSubRequest!
+
+  """Casting Director can set reply status"""
+  setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
 
   """Sends Voice Over 'Media' request"""
   sendVoiceOverMediaRequest(input: SendVoiceOverMediaRequestInput!): [MediaSubRequest!]!
@@ -19819,60 +19822,6 @@ enum MicroServices {
 }
 
 """"""
-input AddBillingInfoInput {
-  """"""
-  tokenId: String!
-
-  """"""
-  primaryPaymentMethod: Boolean
-
-  """"""
-  backupPaymentMethod: Boolean
-
-  """"""
-  threeDSecureActionResultTokenId: String
-}
-
-""""""
-input UpdateBillingInfoInput {
-  """"""
-  tokenId: String
-
-  """"""
-  billingInfoId: String!
-
-  """"""
-  primaryPaymentMethod: Boolean
-
-  """"""
-  backupPaymentMethod: Boolean
-
-  """"""
-  threeDSecureActionResultTokenId: String
-}
-
-""""""
-input RemoveBillingInfoInput {
-  """"""
-  billingInfoId: String!
-}
-
-""""""
-input SetSubscriptionPaymentMethodInput {
-  """"""
-  subscriptionId: Int!
-
-  """"""
-  billingInfoId: String!
-}
-
-"""Create Coupon Redemption Input"""
-input CreateCouponRedemptionInput {
-  """"""
-  couponId: String!
-}
-
-""""""
 type CreateCastingListResult {
   """"""
   success: Int
@@ -20144,6 +20093,18 @@ type AddProfileToRoleResult {
 
 """"""
 union AddProfileToRoleError = ValidationError | MissingDataError | NotFoundError
+
+""""""
+input AddProfileSubmissionsToCastingListInput {
+  """"""
+  projectId: Int!
+
+  """"""
+  submissionIds: [String!]!
+
+  """"""
+  listIds: [ID!]!
+}
 
 """"""
 input AddProfileToTimeSlotAddInInput {
@@ -24074,6 +24035,162 @@ input UpdateSubmissionStatusInput {
 }
 
 """"""
+input AddBillingInfoInput {
+  """"""
+  tokenId: String!
+
+  """"""
+  primaryPaymentMethod: Boolean
+
+  """"""
+  backupPaymentMethod: Boolean
+
+  """"""
+  threeDSecureActionResultTokenId: String
+}
+
+""""""
+input UpdateBillingInfoInput {
+  """"""
+  tokenId: String
+
+  """"""
+  billingInfoId: String!
+
+  """"""
+  primaryPaymentMethod: Boolean
+
+  """"""
+  backupPaymentMethod: Boolean
+
+  """"""
+  threeDSecureActionResultTokenId: String
+}
+
+""""""
+input RemoveBillingInfoInput {
+  """"""
+  billingInfoId: String!
+}
+
+""""""
+input SetSubscriptionPaymentMethodInput {
+  """"""
+  subscriptionId: Int!
+
+  """"""
+  billingInfoId: String!
+}
+
+"""Create Coupon Redemption Input"""
+input CreateCouponRedemptionInput {
+  """"""
+  couponId: String!
+}
+
+""""""
+enum RequestSendTo {
+  """"""
+  SEND_TO_ALL
+
+  """"""
+  ONLY_NEW
+
+  """"""
+  NEW_AND_PENDING
+
+  """"""
+  PENDING
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  COMPLETED
+}
+
+""""""
+input CancelRequestInput {
+  """"""
+  submissionIds: [Int!]
+
+  """"""
+  note: String
+}
+
+""""""
+type RepWorksheetItem {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: String!
+
+  """Request Status"""
+  status: RepRequestStatus!
+
+  """"""
+  updatedAt: DateTime
+
+  """Date when request was created"""
+  createdAt: DateTime!
+
+  """Talent's response to a request"""
+  talentResponse: RepWorksheetResponse
+
+  """Response to a request"""
+  response: RepWorksheetResponse
+
+  """How many times a request has been forwarded to a talent"""
+  forwardCount: Int
+
+  """"""
+  project: RepWorksheetProject @deprecated(reason: "Will be removed")
+
+  """"""
+  talent: RepWorksheetTalent @deprecated(reason: "Will be removed")
+
+  """Timezone of a Schedule"""
+  scheduleTimeZone: WfTimeZone @deprecated(reason: "Will be removed")
+
+  """Date of Slot"""
+  slotDate: DateTime @deprecated(reason: "Will be removed")
+}
+
+"""Talent info"""
+type RepWorksheetTalent {
+  """Talent's ID"""
+  id: Int!
+
+  """Talent's stage name"""
+  stageName: String!
+
+  """Talents phone"""
+  phone: String
+
+  """Talent's email"""
+  email: String
+
+  """Talent's cover"""
+  coverUrl: String
+}
+
+""""""
+input UpdateDueDateInput {
+  """"""
+  dueDate: DateTime = null
+
+  """"""
+  dueDateTimeZoneId: Int = null
+}
+
+""""""
+union RequestUnion = MediaRequest | AskQuestionRequest
+
+""""""
 input MediaRequestInput {
   """"""
   name: String!
@@ -24196,173 +24313,6 @@ input WfSubmissionSearchInput {
   tileSchemeValueCodes: [String!]
 }
 
-"""
-Schedule Invite Request input. The Schedule Invite is always sent from a
-schedule and some fields are based on the schedule data.
-"""
-input ScheduleInviteRequestInput {
-  """Schedule Id"""
-  scheduleId: Int!
-
-  """Schedule type: AUDITION / CALLBACK"""
-  type: ScheduleRequestType!
-
-  """Field for choosing which requests should trigger email notification."""
-  scheduleReceiver: ScheduleReceiver!
-
-  """
-  A message to Representatives of the talents that are connected to submissions.
-  """
-  noteForRepresentative: String = null
-
-  """A message to Talent of the talents that are connected to submissions."""
-  noteForTalents: String = null
-
-  """Filter Requests by role"""
-  roleIds: [Int!]
-}
-
-""""""
-enum ScheduleReceiver {
-  """"""
-  ALL
-
-  """"""
-  UPDATED
-
-  """"""
-  UPDATED_AND_UNCONFIRMED
-}
-
-"""
-Schedule Invite Response input that can be sent by a Representative or Talent user.
-"""
-input ScheduleInviteResponseInput {
-  """Schedule Invite Response id."""
-  id: ID!
-
-  """A note. Should be filled if declining or rescheduling the invite."""
-  responseNote: String = null
-
-  """
-  A response: a user can confirm, decline or request rescheduling the Schedule.
-  """
-  response: ScheduleInviteResponseStatus!
-}
-
-"""Schedule Invite Response input that can be sent by a Casting Director"""
-input ScheduleInviteSetStatusInput {
-  """Schedule Invite Response id."""
-  id: ID!
-
-  """
-  A response: a user can confirm, decline or request rescheduling the Schedule.
-  """
-  response: ScheduleInviteResponseStatus!
-}
-
-""""""
-enum RequestSendTo {
-  """"""
-  SEND_TO_ALL
-
-  """"""
-  ONLY_NEW
-
-  """"""
-  NEW_AND_PENDING
-
-  """"""
-  PENDING
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  COMPLETED
-}
-
-""""""
-input CancelRequestInput {
-  """"""
-  submissionIds: [Int!]
-
-  """"""
-  note: String
-}
-
-""""""
-type RepWorksheetItem {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: String!
-
-  """Request Status"""
-  status: RepRequestStatus!
-
-  """"""
-  updatedAt: DateTime
-
-  """Date when request was created"""
-  createdAt: DateTime!
-
-  """Talent's response to a request"""
-  talentResponse: RepWorksheetResponse
-
-  """Response to a request"""
-  response: RepWorksheetResponse
-
-  """How many times a request has been forwarded to a talent"""
-  forwardCount: Int
-
-  """"""
-  project: RepWorksheetProject @deprecated(reason: "Will be removed")
-
-  """"""
-  talent: RepWorksheetTalent @deprecated(reason: "Will be removed")
-
-  """Timezone of a Schedule"""
-  scheduleTimeZone: WfTimeZone @deprecated(reason: "Will be removed")
-
-  """Date of Slot"""
-  slotDate: DateTime @deprecated(reason: "Will be removed")
-}
-
-"""Talent info"""
-type RepWorksheetTalent {
-  """Talent's ID"""
-  id: Int!
-
-  """Talent's stage name"""
-  stageName: String!
-
-  """Talents phone"""
-  phone: String
-
-  """Talent's email"""
-  email: String
-
-  """Talent's cover"""
-  coverUrl: String
-}
-
-""""""
-input UpdateDueDateInput {
-  """"""
-  dueDate: DateTime = null
-
-  """"""
-  dueDateTimeZoneId: Int = null
-}
-
-""""""
-union RequestUnion = MediaRequest | AskQuestionRequest
-
 """"""
 input AskQuestionRequestInput {
   """"""
@@ -24445,6 +24395,71 @@ type RosterInvitationRequest {
 
   """"""
   invitations: [RosterTalentInvitation!]!
+}
+
+"""
+Schedule Invite Request input. The Schedule Invite is always sent from a
+schedule and some fields are based on the schedule data.
+"""
+input ScheduleInviteRequestInput {
+  """Schedule Id"""
+  scheduleId: Int!
+
+  """Schedule type: AUDITION / CALLBACK"""
+  type: ScheduleRequestType!
+
+  """Field for choosing which requests should trigger email notification."""
+  scheduleReceiver: ScheduleReceiver!
+
+  """
+  A message to Representatives of the talents that are connected to submissions.
+  """
+  noteForRepresentative: String = null
+
+  """A message to Talent of the talents that are connected to submissions."""
+  noteForTalents: String = null
+
+  """Filter Requests by role"""
+  roleIds: [Int!]
+}
+
+""""""
+enum ScheduleReceiver {
+  """"""
+  ALL
+
+  """"""
+  UPDATED
+
+  """"""
+  UPDATED_AND_UNCONFIRMED
+}
+
+"""
+Schedule Invite Response input that can be sent by a Representative or Talent user.
+"""
+input ScheduleInviteResponseInput {
+  """Schedule Invite Response id."""
+  id: ID!
+
+  """A note. Should be filled if declining or rescheduling the invite."""
+  responseNote: String = null
+
+  """
+  A response: a user can confirm, decline or request rescheduling the Schedule.
+  """
+  response: ScheduleInviteResponseStatus!
+}
+
+"""Schedule Invite Response input that can be sent by a Casting Director"""
+input ScheduleInviteSetStatusInput {
+  """Schedule Invite Response id."""
+  id: ID!
+
+  """
+  A response: a user can confirm, decline or request rescheduling the Schedule.
+  """
+  response: ScheduleInviteResponseStatus!
 }
 
 """"""

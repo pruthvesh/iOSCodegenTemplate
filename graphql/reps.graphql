@@ -353,6 +353,8 @@ fragment MediaSubRequestDetailsFragment on MediaSubRequest {
   note
   status
   repsWorksheetStatus
+  requestedChangesMedia
+  requestedChangesNote
   forwardNote
   updatedMedia
   allowAdditionalMedia
