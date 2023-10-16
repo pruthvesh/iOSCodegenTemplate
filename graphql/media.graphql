@@ -133,17 +133,65 @@ query getArtistStorageUtilization($artistId: Int) {
   artistStorageUtilization(artistId: $artistId) {
     mediaStorages {
       mediaType {
-        mediaType {
           code
           name
           __typename
-        }
-        __typename
       }
       storageSizeBytes
       __typename
     }
     totalSizeBytes
     __typename
+  }
+}
+
+mutation finalizeMediaUploadV2($input: FinalizeMediaUploadInput!) {
+  finalizeMediaUploadV2(input: $input) {
+    media {
+      accountId
+    }
+    storageUtilization {
+      mediaStorages {
+        mediaType {
+          code
+        }
+      }
+      totalSizeBytes
+    }
+  }
+}
+
+mutation initMediaUploadV2($input: InitiateMediaUploadInput!) {
+  initiateMediaUploadV2(input: $input) {
+    media {
+      accountId
+    }
+    storageUtilization {
+      mediaStorages {
+        mediaType {
+          code
+        }
+      }
+      totalSizeBytes
+    }
+  }
+}
+
+mutation deleteMediaV2($input: DeleteMediaV2Input!) {
+  deleteMediaV2(input: $input) {
+    success
+  }
+}
+
+mutation archiveMediaAssetV2($accountId: Float, $artistId: Float, $mediaIds: [Int!]) {
+ archiveMediaAssetV2(accountId: $accountId, artistId: $artistId, mediaIds: $mediaIds)
+}
+
+mutation restoreArchivedMedia($input: RestoreArchivedMediaInput!) {
+  restoreArchivedMedia(input: $input) {
+    media {
+      accountId
+    }
+    success
   }
 }
