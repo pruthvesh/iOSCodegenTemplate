@@ -1,3 +1,18 @@
+""""""
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+""""""
+directive @extends on OBJECT | INTERFACE
+
+""""""
+directive @external on OBJECT | FIELD_DEFINITION
+
+""""""
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+""""""
+directive @provides(fields: String!) on FIELD_DEFINITION
+
 type Query {
   """"""
   currentUser: BauAccount!
@@ -27,30 +42,6 @@ type Query {
 
   """"""
   getBauCountries: [BauCountry!]
-
-  """"""
-  searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
-
-  """"""
-  searchNotifications(startDate: DateTime, endDate: DateTime, page: PageInput!, orderBy: NotificationOrderByInput = {timestamp: DESC}, filters: SearchNotificationFiltersArgs): NotificationPagedList!
-
-  """"""
-  searchCompanies(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
-
-  """"""
-  getCompanyDictionary(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationDictionaryItemPagedList!
-
-  """"""
-  searchCompanyDivisions(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
-
-  """"""
-  repsWorksheet(page: PageInput!, filters: RepsWorksheetFiltersArgs, sortBy: RepWorksheetFieldOrder, sortOptions: [RepWorksheetOrderOption!]): RepsWorksheetItemPagedList!
-
-  """"""
-  repsWorksheetGroups(limit: Int!, groupType: RepsWorksheetGroupType!, groupId: ID, filters: RepsWorksheetFiltersArgs, sortOrder: SortOrder = ASC): RepsWorksheetGroups!
-
-  """"""
-  repsWorksheetFilters: RepsWorksheetFilters!
 
   """"""
   authHealth: String!
@@ -107,6 +98,11 @@ type Query {
 
   """"""
   artistsIndexable(ids: [Int!]!): JSON!
+
+  """
+  This method is used for getting the amount of total storage and individual media types an artist is using.
+  """
+  artistStorageUtilization(artistId: Int): StorageUtilization!
 
   """"""
   artistSubscriptions(input: ArtistSubscriptionInput!): [SubscriptionModel!]!
@@ -296,7 +292,10 @@ type Query {
   getCollaboratorInviteById(input: GetCollaboratorInviteInput!): CollaboratorsInvite!
 
   """"""
-  getCollaboratorsByProjectId(page: PageInput = {pageNumber: 1, pageSize: 100}, projectId: ID): CollaboratorsInvitePaginatedResult!
+  getCollaboratorsByProjectId(page: PageInput = {pageSize: 100, pageNumber: 1}, projectId: ID): CollaboratorsInvitePaginatedResult!
+
+  """"""
+  getCollaboratorsForOrganization(input: GetCollaboratorByEmailInput, page: PageInput = {pageSize: 100, pageNumber: 1}): CollaboratorsInOrganizationPaginatedResult!
 
   """"""
   getCommentsForPresentationSubmissionPublic(
@@ -357,7 +356,9 @@ type Query {
   """Get account by legacy profileId"""
   getLegacyAccountDetails(profileId: Int!): [LegacyAccount!]!
 
-  """"""
+  """
+  This method is used for getting the associated media(s) and relevant detail(s) for specific artist and media type.
+  """
   getMediaByArtist(artistId: Float, mediaTypeCode: String!): [ArtistMedia!]!
 
   """"""
@@ -392,7 +393,7 @@ type Query {
   """
   Returns paginated result of organization representative lists which logged in user belongs to.
   """
-  getOrganizationRepresentativeLists(input: GetOrganizationRepresentativeListsInput = {sortOrder: LAST_MODIFIED}, page: PageInput = {pageNumber: 1, pageSize: 100}): RepresentativeListPaginatedResult!
+  getOrganizationRepresentativeLists(input: GetOrganizationRepresentativeListsInput = {sortOrder: LAST_MODIFIED}, page: PageInput = {pageSize: 100, pageNumber: 1}): RepresentativeListPaginatedResult!
 
   """
   Paginated query for get organizations by specified representation type and partial/full org name match
@@ -400,7 +401,7 @@ type Query {
   getOrganizationsByRepTypeAndName(input: OrganizationsByRepTypeAndNameInput!): OrganizationsByRepTypeAndNameResultPaginatedResult!
 
   """"""
-  getPackageFolderTalent(folderId: Int!, pageInput: PageInput = {pageNumber: 1, pageSize: 100}, profileIds: [Int!]): [PresentationFolderTalent!]!
+  getPackageFolderTalent(folderId: Int!, pageInput: PageInput = {pageSize: 100, pageNumber: 1}, profileIds: [Int!]): [PresentationFolderTalent!]!
 
   """"""
   getPhone(entityType: EntityTypeEnum!, phoneNumber: String!): [Phone!]!
@@ -424,7 +425,7 @@ type Query {
   getPresentationFoldersDetails(folderIds: [Int!]!): [PresentationFolder!]!
 
   """Query for getting Presentation folder talent(s) by folder ids"""
-  getPresentationFolderTalent(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, presentationFolderIds: [Int!]!, profileIds: [Int!]): [PresentationFolderTalent!]!
+  getPresentationFolderTalent(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, presentationFolderIds: [Int!]!, profileIds: [Int!]): [PresentationFolderTalent!]!
 
   """Query for getting Presentation folder talent(s) by talent ids"""
   getPresentationFolderTalentById(groupTalentIds: [Int!]!): [PresentationFolderTalent!]!
@@ -589,10 +590,10 @@ type Query {
   getSubmissionsByProfileId(input: SubmissionByProfileInput, profileId: Float!): [Submission!]!
 
   """"""
-  getSubmissionsByProjectAndProfile(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, profileIds: [Int!]!, projectIds: [Int!]!): SubmissionPaginatedResult!
+  getSubmissionsByProjectAndProfile(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, profileIds: [Int!]!, projectIds: [Int!]!): SubmissionPaginatedResult!
 
   """"""
-  getSubmissionsByRole(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, roleIds: [Int!]!, submissionStatusCodes: [String!]!, tileSchemeCodes: [String!]): SubmissionPaginatedResult!
+  getSubmissionsByRole(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, roleIds: [Int!]!, submissionStatusCodes: [String!]!, tileSchemeCodes: [String!]): SubmissionPaginatedResult!
 
   """Returns submissions data for workflow"""
   getSubmissionsDataForWorkflow(ids: [BigInt!]!): [SubmissionWorkflow!]!
@@ -848,6 +849,9 @@ type Query {
   """Fetch Schedule Details by scheduleId"""
   scheduleDetails(id: ID!): ScheduleDetail!
 
+  """"""
+  searchMedia(input: SearchMediaInput!): SearchMediaPaginatedResult!
+
   """Search in organizations"""
   searchOrganizations(input: OrganizationSearchInput, page: PageInput): OrganizationSearchResult!
 
@@ -855,13 +859,13 @@ type Query {
   searchProfiles(input: ProfileSearchInput!, page: PageInput, resultType: SearchResultType = DOCUMENTS, sortOptions: [ProfileSearchSortOption!]): ProfileSearch
 
   """"""
-  searchProfilesByOrgId(page: PageInput = {pageNumber: 1, pageSize: 100}, partialStageName: String = ""): ProfileSearchResultByOrgIdPaginatedResult!
+  searchProfilesByOrgId(page: PageInput = {pageSize: 100, pageNumber: 1}, partialStageName: String = ""): ProfileSearchResultByOrgIdPaginatedResult!
 
   """"""
-  searchProjectsByOrg(page: PageInput = {pageNumber: 1, pageSize: 100}, partialProjectName: String = ""): ProjectPaginatedResult!
+  searchProjectsByOrg(page: PageInput = {pageSize: 100, pageNumber: 1}, partialProjectName: String = ""): ProjectPaginatedResult!
 
   """Project Series"""
-  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageNumber: 1, pageSize: 100}): ProjectSeriesPaginatedResult!
+  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageSize: 100, pageNumber: 1}): ProjectSeriesPaginatedResult!
 
   """"""
   searchRepresentatives(input: SearchRepresentativeInput!, page: PageInput!): RepresentativeSearchResult!
@@ -996,6 +1000,36 @@ type Query {
   getBillingInfo(input: GetBillingInfoInput!): [BillingInfo!]!
 
   """"""
+  billingPlans: [BillingPlan!]!
+
+  """"""
+  previewSubscriptionRenewal(input: PreviewSubscriptionRenewalInput!): SubscriptionRenewal!
+
+  """"""
+  searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
+
+  """"""
+  searchNotifications(startDate: DateTime, endDate: DateTime, page: PageInput!, orderBy: NotificationOrderByInput = {timestamp: DESC}, filters: SearchNotificationFiltersArgs): NotificationPagedList!
+
+  """"""
+  searchCompanies(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
+
+  """"""
+  getCompanyDictionary(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationDictionaryItemPagedList!
+
+  """"""
+  searchCompanyDivisions(page: PageInput!, filters: SearchOrganizationsFiltersArgs): OrganizationItemPagedList!
+
+  """"""
+  repsWorksheet(page: PageInput!, filters: RepsWorksheetFiltersArgs, sortBy: RepWorksheetFieldOrder, sortOptions: [RepWorksheetOrderOption!]): RepsWorksheetItemPagedList!
+
+  """"""
+  repsWorksheetGroups(limit: Int!, groupType: RepsWorksheetGroupType!, groupId: ID, filters: RepsWorksheetFiltersArgs, sortOrder: SortOrder = ASC): RepsWorksheetGroups!
+
+  """"""
+  repsWorksheetFilters: RepsWorksheetFilters!
+
+  """"""
   wfApiHealth: String!
 
   """"""
@@ -1095,6 +1129,12 @@ type Query {
     """"""
     groupBy: AuditionsGroupBy!
   ): AuditionsGroups!
+
+  """"""
+  _entities(representations: [_Any!]!): [_Entity]!
+
+  """"""
+  _service: _Service!
 }
 
 """BAU Account Object"""
@@ -1521,1062 +1561,6 @@ type BauCountry {
   supportingCountryId: Int
 }
 
-"""Page Input object"""
-input PageInput {
-  """Page number"""
-  pageNumber: Int!
-
-  """Page size"""
-  pageSize: Int!
-}
-
-""""""
-input SearchAccountsFiltersArgs {
-  """"""
-  accountId: Int
-
-  """"""
-  firstName: String
-
-  """"""
-  lastName: String
-
-  """"""
-  phone: String
-
-  """"""
-  email: String
-
-  """"""
-  systemRoleIds: [Int!]
-
-  """"""
-  organizationIds: [Int!]
-
-  """"""
-  former: Boolean
-
-  """"""
-  legacyLogin: String
-
-  """"""
-  legacyInstance: String
-
-  """"""
-  legacyEmail: String
-}
-
-""""""
-type AccountItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [AccountItem!]!
-}
-
-""""""
-type AccountItem {
-  """"""
-  id: Float!
-
-  """"""
-  firstName: String!
-
-  """"""
-  lastName: String!
-
-  """"""
-  email: String!
-
-  """"""
-  phone: String
-
-  """"""
-  accountStatus: AccountStatus
-
-  """"""
-  accountSystemRole: [SystemRole!]
-
-  """"""
-  lastSuccessfulLogin: DateTime
-
-  """"""
-  created: DateTime
-
-  """"""
-  updated: DateTime
-
-  """"""
-  emailToReset: String
-
-  """"""
-  legacyLogin: String
-
-  """"""
-  legacyInstance: String
-
-  """"""
-  legacyEmail: String
-
-  """"""
-  organizationIds: [AccountOrganizationItem!]
-
-  """"""
-  legacyProfileStatus: ProfileStatus
-}
-
-"""Account status object"""
-type AccountStatus {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type AccountOrganizationItem {
-  """"""
-  organizationId: Float!
-
-  """"""
-  organizationParentId: Float
-
-  """"""
-  enabled: Boolean
-
-  """"""
-  admin: Boolean
-}
-
-"""Order By options, default set to timestamp DESC"""
-input NotificationOrderByInput {
-  """Timestamp Sort field"""
-  timestamp: SortOrder!
-}
-
-""""""
-enum SortOrder {
-  """"""
-  ASC
-
-  """"""
-  DESC
-}
-
-""""""
-input SearchNotificationFiltersArgs {
-  """"""
-  archived: Boolean
-}
-
-""""""
-type NotificationPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [Notification!]!
-}
-
-""""""
-type Notification {
-  """"""
-  id: ID!
-
-  """"""
-  timestamp: DateTime!
-
-  """"""
-  toArtistId: Int
-
-  """"""
-  toProfileId: Int!
-
-  """"""
-  toAccountId: Int
-
-  """"""
-  type: String!
-
-  """"""
-  from: String
-
-  """"""
-  subject: String!
-
-  """"""
-  message: String!
-
-  """"""
-  context: NotificationContext
-
-  """"""
-  viewed: Boolean
-
-  """"""
-  archivedAt: DateTime
-}
-
-""""""
-type NotificationContext {
-  """"""
-  requestId: ID
-
-  """"""
-  requestType: RequestType
-
-  """"""
-  auditionDateUTC: DateTime
-}
-
-""""""
-enum RequestType {
-  """"""
-  MEDIA
-
-  """"""
-  AUDITION
-
-  """"""
-  CALLBACK
-
-  """"""
-  ASK_QUESTION
-
-  """"""
-  ROSTER_INVITATION
-}
-
-""""""
-input SearchOrganizationsFiltersArgs {
-  """Organization Id"""
-  organizationId: Int
-
-  """Organization name"""
-  name: String
-
-  """Organization Type Id"""
-  representationTypeId: Int
-
-  """Organization Parent Id"""
-  organizationParentId: Int
-
-  """Organization status code"""
-  organizationStatusCodes: [String!]
-
-  """System role code"""
-  systemRoles: [String!]
-}
-
-""""""
-type OrganizationItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [OrganizationItem!]!
-}
-
-""""""
-type OrganizationItem {
-  """Primary ID"""
-  id: Int!
-
-  """"""
-  created: DateTime
-
-  """"""
-  updated: DateTime
-
-  """Organization name"""
-  name: String
-
-  """Parent organization ID"""
-  organizationParentId: Int
-
-  """abbreviation"""
-  abbreviation: String
-
-  """"""
-  divisions: [OrganizationItem!]
-
-  """"""
-  representationType: RepresentationType
-
-  """Profile Count"""
-  profileCount: Int
-
-  """Account Count"""
-  accountCount: Int
-
-  """"""
-  accounts: [AccountItem!]
-
-  """"""
-  dmas: [DmaItem!]
-
-  """"""
-  representationCategory: [RepresentationCategory!]
-
-  """"""
-  logo: MediaItem
-}
-
-"""RepresentationType object"""
-type RepresentationType {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type DmaItem {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  region: RegionItem
-}
-
-""""""
-type RegionItem {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-
-  """"""
-  country: CountryItem
-}
-
-""""""
-type CountryItem {
-  """Primary ID"""
-  id: ID!
-
-  """code"""
-  code: String!
-
-  """name"""
-  name: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-"""RepresentationCategory object"""
-type RepresentationCategory {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type MediaItem {
-  """Media ID"""
-  mediaId: Int!
-
-  """name"""
-  name: String
-
-  """Upload Path"""
-  uploadPath: String
-}
-
-""""""
-type OrganizationDictionaryItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [OrganizationDictionaryItem!]!
-}
-
-""""""
-type OrganizationDictionaryItem {
-  """Primary ID"""
-  id: Int!
-
-  """Organization name"""
-  name: String
-
-  """Organization abbreviation"""
-  abbreviation: String
-}
-
-""""""
-input RepsWorksheetFiltersArgs {
-  """"""
-  type: RequestType
-
-  """"""
-  receivedFrom: DateTime
-
-  """"""
-  receivedTo: DateTime
-
-  """"""
-  slotDateFrom: DateTime
-
-  """"""
-  slotDateTo: DateTime
-
-  """"""
-  dueDateFrom: DateTime
-
-  """"""
-  dueDateTo: DateTime
-
-  """"""
-  statuses: [RepRequestStatus!]
-
-  """"""
-  projectIds: [Int!]
-
-  """"""
-  profileIds: [Int!]
-
-  """"""
-  fromOrgIds: [Int!]
-
-  """"""
-  responseStatus: ResponseStatus
-
-  """"""
-  talentResponseStatus: ResponseStatus
-}
-
-"""Status enum for rep's worksheet"""
-enum RepRequestStatus {
-  """"""
-  NOT_SENT
-
-  """"""
-  NEW_REQUEST
-
-  """"""
-  NEW_MESSAGE
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  REVIEW_RESPONSE
-
-  """"""
-  UPDATED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
-
-  """"""
-  COMPLETED
-
-  """"""
-  RESCHEDULE_REQUESTED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  DECLINED
-}
-
-""""""
-enum ResponseStatus {
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  ANSWERED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  RESCHEDULE_REQUESTED
-}
-
-""""""
-enum RepWorksheetFieldOrder {
-  """"""
-  receivedAt
-
-  """"""
-  dueDate
-
-  """"""
-  slotDate
-
-  """"""
-  status
-
-  """"""
-  type
-
-  """"""
-  talentName
-
-  """"""
-  projectName
-}
-
-""""""
-input RepWorksheetOrderOption {
-  """"""
-  field: RepWorksheetFieldOrder!
-
-  """"""
-  sortOrder: SortOrder = ASC
-}
-
-""""""
-type RepsWorksheetItemPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [RepsWorksheetItem!]!
-}
-
-""""""
-type RepsWorksheetItem {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: String!
-
-  """Request Status"""
-  status: RepRequestStatus!
-
-  """"""
-  submission: RepWorksheetSubmission
-
-  """"""
-  updatedAt: DateTime
-
-  """Date when request was created"""
-  createdAt: DateTime!
-
-  """Talent's response to a request"""
-  talentResponse: RepWorksheetResponse
-
-  """Response to a request"""
-  response: RepWorksheetResponse
-
-  """How many times a request has been forwarded to a talent"""
-  forwardCount: Int
-
-  """Schedule"""
-  schedule: RepWorksheetScheduleDetail
-
-  """Date of Slot"""
-  slotDate: DateTime
-
-  """"""
-  unreadMessageCount: Int
-
-  """"""
-  lastMessageId: String
-
-  """"""
-  dueDate: DateTime
-}
-
-"""Submission info"""
-type RepWorksheetSubmission {
-  """Talent's ID"""
-  id: Int!
-
-  """"""
-  profile: RepWorksheetProfile
-
-  """"""
-  role: RepWorksheetRole!
-
-  """Submission's note"""
-  note: String
-
-  """"""
-  isCreatedByCD: Boolean
-}
-
-"""Talent info"""
-type RepWorksheetProfile {
-  """Talent's ID"""
-  id: Int!
-
-  """Talent's stage name"""
-  stageName: String!
-
-  """Talents phone"""
-  phone: String
-
-  """Talent's email"""
-  email: String
-
-  """"""
-  defaultSubmissionNote: String
-
-  """"""
-  profileMainDivision: RepWorksheetOrganization
-
-  """"""
-  talentUnions: [RepWorksheetTalentUnion!]
-}
-
-""""""
-type RepWorksheetOrganization {
-  """"""
-  id: Int
-
-  """"""
-  name: String
-}
-
-""""""
-type RepWorksheetTalentUnion {
-  """"""
-  id: String
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-}
-
-""""""
-type RepWorksheetRole {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-
-  """"""
-  project: RepWorksheetProject!
-}
-
-"""Project info"""
-type RepWorksheetProject {
-  """Project's ID"""
-  id: Int!
-
-  """Project's name"""
-  name: String!
-
-  """Casting company"""
-  castingCompany: String
-}
-
-"""Response type for Rep Worksheet"""
-type RepWorksheetResponse {
-  """Response status"""
-  status: ResponseStatus!
-
-  """"""
-  repliedAt: DateTime
-
-  """Response note"""
-  note: String
-
-  """The media files sent in response"""
-  medias: [WfMedia!] @deprecated(reason: "please use mediaList")
-
-  """"""
-  mediaList: [MediaResponseItem!]
-}
-
-""""""
-type WfMedia {
-  """"""
-  mediaId: Int!
-
-  """"""
-  name: String
-
-  """"""
-  filename: String!
-
-  """"""
-  guid: String!
-
-  """"""
-  fileType: WfMediaFileType
-
-  """"""
-  mediaType: WfMediaType
-
-  """"""
-  mediaStatus: WfMediaStatus
-
-  """"""
-  mediaStorageStatus: WfMediaStatus
-
-  """"""
-  tag: String
-
-  """"""
-  url: String
-
-  """"""
-  fileKey: String
-
-  """"""
-  thumbnailUrl: String
-
-  """"""
-  transformation: WfMediaTransformation
-
-  """"""
-  isLocked: Boolean
-
-  """"""
-  thumbnail: WfMedia
-}
-
-""""""
-type WfMediaFileType {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-
-  """"""
-  code: String!
-
-  """"""
-  mediaType: WfMediaType!
-}
-
-""""""
-type WfMediaType {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-
-  """"""
-  code: String!
-}
-
-""""""
-type WfMediaStatus {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-
-  """"""
-  code: String!
-}
-
-""""""
-type WfMediaTransformation {
-  """"""
-  xAxis: Float
-
-  """"""
-  yAxis: Float
-
-  """"""
-  width: Float
-
-  """"""
-  height: Float
-
-  """"""
-  rotate: Float
-}
-
-""""""
-type MediaResponseItem {
-  """"""
-  id: Int!
-
-  """"""
-  alias: String
-
-  """"""
-  timestamp: DateTime!
-
-  """"""
-  isAdditional: Boolean
-
-  """"""
-  isForwardedToCD: Boolean
-
-  """"""
-  type: String!
-
-  """"""
-  media: WfMedia!
-}
-
-""""""
-type RepWorksheetScheduleDetail {
-  """"""
-  id: ID
-
-  """"""
-  timeZone: RepWorksheetTimeZone
-
-  """"""
-  address: RepWorksheetScheduleAddress
-}
-
-"""Measurement object"""
-type RepWorksheetTimeZone {
-  """"""
-  id: ID
-
-  """"""
-  standardName: String!
-
-  """"""
-  abbreviation: String
-}
-
-""""""
-type RepWorksheetScheduleAddress {
-  """"""
-  id: Int!
-
-  """"""
-  line1: String
-
-  """"""
-  line2: String
-
-  """"""
-  line3: String
-
-  """"""
-  postalCode: String
-
-  """"""
-  city: String
-
-  """"""
-  note: String
-
-  """"""
-  otherDetail: String
-
-  """"""
-  state: RepWorksheetScheduleAddressState
-
-  """"""
-  country: RepWorksheetScheduleAddressCountry
-}
-
-""""""
-type RepWorksheetScheduleAddressState {
-  """"""
-  id: ID
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-}
-
-""""""
-type RepWorksheetScheduleAddressCountry {
-  """"""
-  id: ID
-
-  """"""
-  code: String
-
-  """"""
-  name: String
-}
-
-""""""
-enum RepsWorksheetGroupType {
-  """"""
-  PROJECT
-
-  """"""
-  PROFILE
-}
-
-""""""
-type RepsWorksheetGroups {
-  """"""
-  nextGroupId: ID
-
-  """"""
-  groups: [RepsWorksheetGroup!]!
-}
-
-""""""
-type RepsWorksheetGroup {
-  """"""
-  id: ID!
-
-  """"""
-  itemCount: Int!
-
-  """"""
-  details: RepsWorksheetGroupDetails
-}
-
-""""""
-union RepsWorksheetGroupDetails = RepWorksheetProfile | RepWorksheetProject
-
-""""""
-type RepsWorksheetFilters {
-  """"""
-  projects: [ProjectFilter!]
-
-  """"""
-  profiles: [ProfileFilter!]
-
-  """"""
-  organizations: [OrganizationFilter!]
-}
-
-""""""
-type ProjectFilter {
-  """"""
-  id: ID!
-
-  """"""
-  name: String!
-}
-
-""""""
-type ProfileFilter {
-  """"""
-  id: Int!
-
-  """"""
-  stageName: String!
-}
-
-""""""
-type OrganizationFilter {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-}
-
 """"""
 type Session {
   """"""
@@ -2736,6 +1720,9 @@ type Project {
 
   """Casting company name"""
   castingCompany: String
+
+  """Casting Company Name"""
+  castingCompanyName: String
 
   """Casting director"""
   castingDirector: String
@@ -3104,6 +2091,24 @@ type OrganizationInfo {
   name: String!
 }
 
+"""RepresentationCategory object"""
+type RepresentationCategory {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
 """Organization object"""
 type Organization {
   """Abbreviation"""
@@ -3243,6 +2248,9 @@ type Organization {
 
   """Organization status"""
   status: Float
+
+  """"""
+  systemRoleCode: String
 
   """System role ID"""
   sytemRoleId: Int
@@ -3500,7 +2508,24 @@ type Media {
   accountId: Float!
 
   """"""
+  appearancesOnProfiles: Int!
+
+  """"""
+  appearOnSubmissions: Boolean!
+
+  """"""
+  archivableOn: DateTime
+
+  """"""
   created: DateTime
+
+  """Returns the Organization of the media create, if one exists"""
+  createdByOrg: Organization
+
+  """
+  Returns a formatted size and unit of media or null if there is no artist_util_id
+  """
+  displaySize: MediaDisplaySize
 
   """"""
   fileKey: String
@@ -3545,6 +2570,9 @@ type Media {
   name: String
 
   """"""
+  profiles: [ProfileMedia!]
+
+  """"""
   purpose: MediaPurpose!
 
   """"""
@@ -3582,6 +2610,15 @@ type Media {
 
   """"""
   width: Int
+}
+
+"""MediaDisplaySize"""
+type MediaDisplaySize {
+  """"""
+  size: Float!
+
+  """"""
+  unit: String!
 }
 
 """Media File Types"""
@@ -3713,85 +2750,34 @@ type MediaModerationStatus {
   sortOrder: Int
 }
 
-"""MediaPurpose object"""
-type MediaPurpose {
-  """code"""
-  code: String!
+"""Profile Media"""
+type ProfileMedia {
+  """"""
+  created: DateTime!
 
-  """Is this enbaled?"""
-  enabled: Boolean!
+  """Deprecated"""
+  hidden: Boolean! @deprecated(reason: "This field is redundant as profile media visibility depends only on existence in profile_media table.")
 
-  """Primary ID"""
+  """"""
   id: ID!
 
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
-}
-
-""""""
-type MediaTransformation {
   """"""
-  height: Float
+  isPrimary: Boolean!
 
   """"""
-  rotate: Float
+  media: Media!
 
   """"""
-  startOffset: String
+  order: Float!
 
   """"""
-  width: Float
+  photosCount: Int @deprecated(reason: "See the B21-2790: As for the photosCount field, it shouldn't be there at all. Profile photos count should be returned in a different place.")
 
   """"""
-  xAxis: Float
+  profile: Profile!
 
   """"""
-  yAxis: Float
-}
-
-""""""
-type Phone {
-  """"""
-  entityId: BigInt
-
-  """"""
-  entityTypeId: Int
-
-  """"""
-  id: Int!
-
-  """"""
-  name: String
-
-  """"""
-  phoneNumber: String
-
-  """"""
-  phoneTypeId: Int
-}
-
-"""BigInt scalar type"""
-scalar BigInt
-
-"""Organization Status"""
-type OrganizationStatus {
-  """code"""
-  code: String!
-
-  """Is this enbaled?"""
-  enabled: Boolean!
-
-  """Primary ID"""
-  id: ID!
-
-  """name"""
-  name: String!
-
-  """Sort order"""
-  sortOrder: Int
+  profileMediaId: Float!
 }
 
 """Talent Profile - May be associated with Account"""
@@ -4193,34 +3179,7 @@ type Profile {
   workPermitExp: DateTime
 }
 
-"""Profile Media"""
-type ProfileMedia {
-  """"""
-  created: DateTime!
-
-  """Deprecated"""
-  hidden: Boolean! @deprecated(reason: "This field is redundant as profile media visibility depends only on existence in profile_media table.")
-
-  """"""
-  id: ID!
-
-  """"""
-  isPrimary: Boolean!
-
-  """"""
-  media: Media!
-
-  """"""
-  order: Float!
-
-  """"""
-  photosCount: Int @deprecated(reason: "See the B21-2790: As for the photosCount field, it shouldn't be there at all. Profile photos count should be returned in a different place.")
-
-  """"""
-  profileMediaId: Float!
-}
-
-""""""
+"""Billing Item"""
 type BillingItemModel {
   """"""
   availableCredit: Int
@@ -4783,6 +3742,9 @@ type Note {
   """Project status at the moment when note was added"""
   projectStatus: ProjectStatus
 }
+
+"""BigInt scalar type"""
+scalar BigInt
 
 """Entity Type object"""
 type EntityType {
@@ -5840,7 +4802,24 @@ type SubmissionMedia {
   accountId: Float!
 
   """"""
+  appearancesOnProfiles: Int!
+
+  """"""
+  appearOnSubmissions: Boolean!
+
+  """"""
+  archivableOn: DateTime
+
+  """"""
   created: DateTime
+
+  """Returns the Organization of the media create, if one exists"""
+  createdByOrg: Organization
+
+  """
+  Returns a formatted size and unit of media or null if there is no artist_util_id
+  """
+  displaySize: MediaDisplaySize
 
   """Enabled"""
   enabled: Boolean!
@@ -5897,6 +4876,9 @@ type SubmissionMedia {
   orderOfAppearance: Int!
 
   """"""
+  profiles: [ProfileMedia!]
+
+  """"""
   purpose: MediaPurpose!
 
   """"""
@@ -5934,6 +4916,45 @@ type SubmissionMedia {
 
   """"""
   width: Int
+}
+
+"""MediaPurpose object"""
+type MediaPurpose {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+""""""
+type MediaTransformation {
+  """"""
+  height: Float
+
+  """"""
+  rotate: Float
+
+  """"""
+  startOffset: String
+
+  """"""
+  width: Float
+
+  """"""
+  xAxis: Float
+
+  """"""
+  yAxis: Float
 }
 
 """"""
@@ -6103,7 +5124,7 @@ type Role {
   roleEthnicityNationality: String!
 
   """Info about paired reps orgs"""
-  rolePairedOrganizations(pageInput: PageInput = {pageNumber: 1, pageSize: 100}): RoleOrganizationPairPaginatedResult!
+  rolePairedOrganizations(pageInput: PageInput = {pageSize: 100, pageNumber: 1}): RoleOrganizationPairPaginatedResult!
 
   """Role Parent ID"""
   roleParentId: ID
@@ -6521,6 +5542,24 @@ type RepresentationAgeCategory {
   sortOrder: Int
 }
 
+"""RepresentationType object"""
+type RepresentationType {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
 """RatePerType object"""
 type RatePerType {
   """code"""
@@ -6546,6 +5585,15 @@ enum RepRoleStatusEnum {
 
   """"""
   REVIEWED
+}
+
+"""Page Input object"""
+input PageInput {
+  """Page size"""
+  pageSize: Int!
+
+  """Page number"""
+  pageNumber: Int!
 }
 
 """Paginated result with [RoleOrganizationPair] objects"""
@@ -7184,6 +6232,45 @@ type Willingness {
   sortOrder: Int
 }
 
+""""""
+type Phone {
+  """"""
+  entityId: BigInt
+
+  """"""
+  entityTypeId: Int
+
+  """"""
+  id: Int!
+
+  """"""
+  name: String
+
+  """"""
+  phoneNumber: String
+
+  """"""
+  phoneTypeId: Int
+}
+
+"""Organization Status"""
+type OrganizationStatus {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
 """Tag object"""
 type Tag {
   """child objects"""
@@ -7206,6 +6293,24 @@ type Tag {
 
   """Selectable Flag"""
   selectable: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+"""Account status object"""
+type AccountStatus {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
 
   """Sort order"""
   sortOrder: Int
@@ -8032,6 +7137,24 @@ type ProjectRequestsInfo {
   totalProjectRequestsCount: Float!
 }
 
+"""Artist Media Utilization"""
+type StorageUtilization {
+  """Each media type is broken down with its storage utilization"""
+  mediaStorages: [MediaStorage!]!
+
+  """Total size of all media types used in bytes"""
+  totalSizeBytes: Int!
+}
+
+""""""
+type MediaStorage {
+  """Type of Media (i.e. Audio)"""
+  mediaType: MediaType!
+
+  """Total size of media type used in bytes"""
+  storageSizeBytes: Int!
+}
+
 """Subscription Input"""
 input ArtistSubscriptionInput {
   """Artist id"""
@@ -8770,49 +7893,49 @@ input SubmissionRequestSearchInput {
   responseStatuses: [RequestStatusUnion!]
 }
 
-"""Request status union"""
+""""""
 enum RequestStatusUnion {
   """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
-  ANSWERED
-
-  """"""
-  CANCELLED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
   NOT_SENT
-
-  """"""
-  ON_HOLD
 
   """"""
   PENDING
 
   """"""
-  RESCHEDULE_REQUESTED
+  CANCELLED
+
+  """"""
+  ANSWERED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
+  DECLINED
+
+  """"""
+  CONFIRMED
 
   """"""
   RESCHEDULED
 
   """"""
+  ON_HOLD
+
+  """"""
   UPDATED
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  RESCHEDULE_REQUESTED
+
+  """"""
+  CANCELLED_RESCHEDULED
 }
 
 """"""
@@ -8827,31 +7950,31 @@ input SubmissionScheduleRequestSearchInput {
   responseStatuses: [ScheduleInviteRequestStatus!]
 }
 
-"""Schedule request status"""
+""""""
 enum ScheduleInviteRequestStatus {
   """"""
+  PENDING
+
+  """"""
   CANCELLED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CONFIRMED
 
   """"""
   DECLINED
 
   """"""
-  ON_HOLD
+  CONFIRMED
 
   """"""
-  PENDING
+  RESCHEDULED
+
+  """"""
+  CANCELLED_RESCHEDULED
 
   """"""
   RESCHEDULE_REQUESTED
 
   """"""
-  RESCHEDULED
+  ON_HOLD
 
   """"""
   UPDATED
@@ -9575,10 +8698,10 @@ type CalendarType {
 """"""
 type ScheduleInviteRequestNotes {
   """"""
-  noteForRepresentative: String
+  noteForTalents: String
 
   """"""
-  noteForTalents: String
+  noteForRepresentative: String
 }
 
 """Schedule Timeframe Details"""
@@ -9794,6 +8917,12 @@ type CollaboratorInviteFromOrgDetails {
 """"""
 type CollaboratorInviteProjectDetails {
   """"""
+  internalName: String
+
+  """"""
+  projectId: Float
+
+  """"""
   projectName: String
 }
 
@@ -9825,6 +8954,45 @@ type CollaboratorsInvitePaginatedResult {
 
   """Total pages"""
   totalPages: Int!
+}
+
+"""Collaborator Email"""
+input GetCollaboratorByEmailInput {
+  """"""
+  email: String!
+}
+
+"""Paginated result with [CollaboratorsInOrganization] objects"""
+type CollaboratorsInOrganizationPaginatedResult {
+  """Last key """
+  lastKey: String
+
+  """List of CollaboratorsInOrganization objects"""
+  objects: [CollaboratorsInOrganization!]!
+
+  """Current page"""
+  page: Int!
+
+  """Total count of rows"""
+  totalCount: Int!
+
+  """Total pages"""
+  totalPages: Int!
+}
+
+""""""
+type CollaboratorsInOrganization {
+  """"""
+  collaboratorDetails: CollaboratorDetails
+
+  """"""
+  collaboratorInviteeOrgDetails: CollaboratorInviteFromOrgDetails
+
+  """"""
+  collaboratorsProjectDetails(pageProjects: PageInput = {pageSize: 3, pageNumber: 1}): [CollaboratorInviteProjectDetails!]
+
+  """"""
+  email: String
 }
 
 """"""
@@ -11127,7 +10295,7 @@ type PresentationFolderPublic {
   talentCount: Int!
 
   """Folder talents of the package presentation"""
-  talents(pageInput: PageInput = {pageNumber: 1, pageSize: 100}): [PresentationTalentPublic!]!
+  talents(pageInput: PageInput = {pageSize: 100, pageNumber: 1}): [PresentationTalentPublic!]!
 
   """"""
   talentsWithPicksCount: Int!
@@ -14993,11 +14161,17 @@ type ProjectBasePaginatedResult {
 
 """"""
 type ProjectBase {
-  """Created date"""
-  created: DateTime
-
   """Primary ID"""
   id: ID!
+
+  """"""
+  projectHasList: Boolean!
+
+  """Casting Company Name"""
+  castingCompanyName: String
+
+  """Created date"""
+  created: DateTime
 
   """Project internal name"""
   internalName: String
@@ -15350,6 +14524,90 @@ input RoleTypeFilterInput {
   roleTarget: FilterInput
 }
 
+"""Provides filtering, sorting, and pagination for Media searches."""
+input SearchMediaInput {
+  """
+  Filters results to media that belongs to the specified artist. Defaults to null meaning no filtering by artist.
+  """
+  artistId: ID
+
+  """Filters for search results. Defaults to null meaning no filtering."""
+  filter: SearchMediaFilter
+
+  """Pagination for search results. Defaults to first page with 10 results."""
+  page: PageInput!
+
+  """Sorts search results. Defaults to Updated."""
+  sortBy: SearchMediaSortBy = Updated
+}
+
+""""""
+input SearchMediaFilter {
+  """
+  A filter for search results by status. Defaults to null meaning no filtering by status.
+  """
+  status: [SearchMediaStatus!]
+
+  """
+  A filter for search results by type. Defaults to null meaning no filtering by type.
+  """
+  type: [SearchMediaType!]
+}
+
+"""Value used to filter Media search results by status."""
+enum SearchMediaStatus {
+  """"""
+  Archived
+
+  """"""
+  CanArchive
+
+  """"""
+  Ready
+}
+
+"""Value used to filter Media search results by type."""
+enum SearchMediaType {
+  """"""
+  Audio
+
+  """"""
+  Photo
+
+  """"""
+  Video
+}
+
+"""Value used to sort Media search results."""
+enum SearchMediaSortBy {
+  """"""
+  Created
+
+  """"""
+  Status
+
+  """"""
+  Updated
+}
+
+""""""
+type SearchMediaPaginatedResult {
+  """"""
+  lastKey: String
+
+  """"""
+  objects: [Media!]!
+
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+}
+
 """Organization search input"""
 input OrganizationSearchInput {
   """Organization abbreviation"""
@@ -15601,22 +14859,22 @@ type Schedule {
 """"""
 type ScheduleInviteResponseStatusCounts {
   """"""
+  scheduleId: Int!
+
+  """"""
+  notSent: Int!
+
+  """"""
   confirmed: Int!
 
   """"""
   declined: Int!
 
   """"""
-  notSent: Int!
-
-  """"""
   pending: Int!
 
   """"""
   rescheduleRequested: Int!
-
-  """"""
-  scheduleId: Int!
 }
 
 """"""
@@ -15839,6 +15097,1086 @@ type BillingInfo {
 
   """"""
   postalCode: String
+
+  """"""
+  paymentType: String
+}
+
+"""Billing Plan"""
+type BillingPlan {
+  """"""
+  id: Int!
+
+  """"""
+  code: String!
+
+  """"""
+  name: String!
+
+  """"""
+  term: BillingPlanTerm!
+
+  """"""
+  price: Float!
+
+  """"""
+  isBasePlan: Boolean!
+
+  """"""
+  billingCode: String!
+
+  """"""
+  currency: Currency!
+
+  """"""
+  level: Int!
+}
+
+"""Billing Plan Term"""
+type BillingPlanTerm {
+  """"""
+  id: Int!
+
+  """"""
+  code: String!
+
+  """"""
+  name: String!
+}
+
+""""""
+input PreviewSubscriptionRenewalInput {
+  """"""
+  subscriptionId: Int!
+
+  """"""
+  billingInfoId: String!
+}
+
+"""Subscription Renewal Model"""
+type SubscriptionRenewal {
+  """"""
+  currency: Currency!
+
+  """"""
+  cardType: String!
+
+  """"""
+  creditsApplied: Float!
+
+  """"""
+  discount: Float!
+
+  """"""
+  lastFour: String!
+
+  """"""
+  total: Float!
+
+  """"""
+  subscription: BillingItemModel!
+
+  """"""
+  invoiceId: String
+
+  """"""
+  email: String!
+
+  """"""
+  paymentType: String
+}
+
+""""""
+input SearchAccountsFiltersArgs {
+  """"""
+  accountId: Int
+
+  """"""
+  firstName: String
+
+  """"""
+  lastName: String
+
+  """"""
+  phone: String
+
+  """"""
+  email: String
+
+  """"""
+  systemRoleIds: [Int!]
+
+  """"""
+  organizationIds: [Int!]
+
+  """"""
+  former: Boolean
+
+  """"""
+  legacyLogin: String
+
+  """"""
+  legacyInstance: String
+
+  """"""
+  legacyEmail: String
+}
+
+""""""
+type AccountItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [AccountItem!]!
+}
+
+""""""
+type AccountItem {
+  """"""
+  id: Float!
+
+  """"""
+  firstName: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  email: String!
+
+  """"""
+  phone: String
+
+  """"""
+  accountStatus: AccountStatus
+
+  """"""
+  accountSystemRole: [SystemRole!]
+
+  """"""
+  lastSuccessfulLogin: DateTime
+
+  """"""
+  created: DateTime
+
+  """"""
+  updated: DateTime
+
+  """"""
+  emailToReset: String
+
+  """"""
+  legacyLogin: String
+
+  """"""
+  legacyInstance: String
+
+  """"""
+  legacyEmail: String
+
+  """"""
+  organizationIds: [AccountOrganizationItem!]
+
+  """"""
+  legacyProfileStatus: ProfileStatus
+}
+
+""""""
+type AccountOrganizationItem {
+  """"""
+  organizationId: Float!
+
+  """"""
+  organizationParentId: Float
+
+  """"""
+  enabled: Boolean
+
+  """"""
+  admin: Boolean
+}
+
+"""Order By options, default set to timestamp DESC"""
+input NotificationOrderByInput {
+  """Timestamp Sort field"""
+  timestamp: SortOrder!
+}
+
+""""""
+enum SortOrder {
+  """"""
+  ASC
+
+  """"""
+  DESC
+}
+
+""""""
+input SearchNotificationFiltersArgs {
+  """"""
+  archived: Boolean
+}
+
+""""""
+type NotificationPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [Notification!]!
+}
+
+""""""
+type Notification {
+  """"""
+  id: ID!
+
+  """"""
+  timestamp: DateTime!
+
+  """"""
+  toArtistId: Int
+
+  """"""
+  toProfileId: Int!
+
+  """"""
+  toAccountId: Int
+
+  """"""
+  type: String!
+
+  """"""
+  from: String
+
+  """"""
+  subject: String!
+
+  """"""
+  message: String!
+
+  """"""
+  context: NotificationContext
+
+  """"""
+  viewed: Boolean
+
+  """"""
+  archivedAt: DateTime
+}
+
+""""""
+type NotificationContext {
+  """"""
+  requestId: ID
+
+  """"""
+  requestType: RequestType
+
+  """"""
+  auditionDateUTC: DateTime
+}
+
+""""""
+enum RequestType {
+  """"""
+  MEDIA
+
+  """"""
+  AUDITION
+
+  """"""
+  CALLBACK
+
+  """"""
+  ASK_QUESTION
+
+  """"""
+  ROSTER_INVITATION
+}
+
+""""""
+input SearchOrganizationsFiltersArgs {
+  """Organization Id"""
+  organizationId: Int
+
+  """Organization name"""
+  name: String
+
+  """Organization Type Id"""
+  representationTypeId: Int
+
+  """Organization Parent Id"""
+  organizationParentId: Int
+
+  """Organization status code"""
+  organizationStatusCodes: [String!]
+
+  """System role code"""
+  systemRoles: [String!]
+}
+
+""""""
+type OrganizationItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [OrganizationItem!]!
+}
+
+""""""
+type OrganizationItem {
+  """Primary ID"""
+  id: Int!
+
+  """"""
+  created: DateTime
+
+  """"""
+  updated: DateTime
+
+  """Organization name"""
+  name: String
+
+  """Parent organization ID"""
+  organizationParentId: Int
+
+  """abbreviation"""
+  abbreviation: String
+
+  """"""
+  divisions: [OrganizationItem!]
+
+  """"""
+  representationType: RepresentationType
+
+  """Profile Count"""
+  profileCount: Int
+
+  """Account Count"""
+  accountCount: Int
+
+  """"""
+  accounts: [AccountItem!]
+
+  """"""
+  dmas: [DmaItem!]
+
+  """"""
+  representationCategory: [RepresentationCategory!]
+
+  """"""
+  logo: MediaItem
+}
+
+""""""
+type DmaItem {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  region: RegionItem
+}
+
+""""""
+type RegionItem {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+
+  """"""
+  country: CountryItem
+}
+
+""""""
+type CountryItem {
+  """Primary ID"""
+  id: ID!
+
+  """code"""
+  code: String!
+
+  """name"""
+  name: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Sort order"""
+  sortOrder: Int
+}
+
+""""""
+type MediaItem {
+  """Media ID"""
+  mediaId: Int!
+
+  """name"""
+  name: String
+
+  """Upload Path"""
+  uploadPath: String
+}
+
+""""""
+type OrganizationDictionaryItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [OrganizationDictionaryItem!]!
+}
+
+""""""
+type OrganizationDictionaryItem {
+  """Primary ID"""
+  id: Int!
+
+  """Organization name"""
+  name: String
+
+  """Organization abbreviation"""
+  abbreviation: String
+}
+
+""""""
+input RepsWorksheetFiltersArgs {
+  """"""
+  type: RequestType
+
+  """"""
+  receivedFrom: DateTime
+
+  """"""
+  receivedTo: DateTime
+
+  """"""
+  slotDateFrom: DateTime
+
+  """"""
+  slotDateTo: DateTime
+
+  """"""
+  dueDateFrom: DateTime
+
+  """"""
+  dueDateTo: DateTime
+
+  """"""
+  statuses: [RepRequestStatus!]
+
+  """"""
+  projectIds: [Int!]
+
+  """"""
+  profileIds: [Int!]
+
+  """"""
+  fromOrgIds: [Int!]
+
+  """"""
+  responseStatus: ResponseStatus
+
+  """"""
+  talentResponseStatus: ResponseStatus
+}
+
+"""Status enum for rep's worksheet"""
+enum RepRequestStatus {
+  """"""
+  NOT_SENT
+
+  """"""
+  NEW_REQUEST
+
+  """"""
+  NEW_MESSAGE
+
+  """"""
+  RESCHEDULED
+
+  """"""
+  REVIEW_RESPONSE
+
+  """"""
+  UPDATED
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  ON_HOLD
+
+  """"""
+  PENDING
+
+  """"""
+  CANCELLED
+
+  """"""
+  COMPLETED
+
+  """"""
+  RESCHEDULE_REQUESTED
+
+  """"""
+  CANCELLED_RESCHEDULED
+
+  """"""
+  DECLINED
+}
+
+""""""
+enum ResponseStatus {
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  ANSWERED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  RESCHEDULE_REQUESTED
+}
+
+""""""
+enum RepWorksheetFieldOrder {
+  """"""
+  receivedAt
+
+  """"""
+  dueDate
+
+  """"""
+  slotDate
+
+  """"""
+  status
+
+  """"""
+  type
+
+  """"""
+  talentName
+
+  """"""
+  projectName
+}
+
+""""""
+input RepWorksheetOrderOption {
+  """"""
+  field: RepWorksheetFieldOrder!
+
+  """"""
+  sortOrder: SortOrder = ASC
+}
+
+""""""
+type RepsWorksheetItemPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [RepsWorksheetItem!]!
+}
+
+""""""
+type RepsWorksheetItem {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: String!
+
+  """Request Status"""
+  status: RepRequestStatus!
+
+  """"""
+  submission: RepWorksheetSubmission
+
+  """"""
+  updatedAt: DateTime
+
+  """Date when request was created"""
+  createdAt: DateTime!
+
+  """Talent's response to a request"""
+  talentResponse: RepWorksheetResponse
+
+  """Response to a request"""
+  response: RepWorksheetResponse
+
+  """How many times a request has been forwarded to a talent"""
+  forwardCount: Int
+
+  """Schedule"""
+  schedule: RepWorksheetScheduleDetail
+
+  """Date of Slot"""
+  slotDate: DateTime
+
+  """"""
+  unreadMessageCount: Int
+
+  """"""
+  lastMessageId: String
+
+  """"""
+  dueDate: DateTime
+}
+
+"""Submission info"""
+type RepWorksheetSubmission {
+  """Talent's ID"""
+  id: Int!
+
+  """"""
+  profile: RepWorksheetProfile
+
+  """"""
+  role: RepWorksheetRole!
+
+  """Submission's note"""
+  note: String
+
+  """"""
+  isCreatedByCD: Boolean
+}
+
+"""Talent info"""
+type RepWorksheetProfile {
+  """Talent's ID"""
+  id: Int!
+
+  """Talent's stage name"""
+  stageName: String!
+
+  """Talents phone"""
+  phone: String
+
+  """Talent's email"""
+  email: String
+
+  """"""
+  defaultSubmissionNote: String
+
+  """"""
+  profileMainDivision: RepWorksheetOrganization
+
+  """"""
+  talentUnions: [RepWorksheetTalentUnion!]
+}
+
+""""""
+type RepWorksheetOrganization {
+  """"""
+  id: Int
+
+  """"""
+  name: String
+}
+
+""""""
+type RepWorksheetTalentUnion {
+  """"""
+  id: String
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+type RepWorksheetRole {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
+
+  """"""
+  project: RepWorksheetProject!
+}
+
+"""Project info"""
+type RepWorksheetProject {
+  """Project's ID"""
+  id: Int!
+
+  """Project's name"""
+  name: String!
+
+  """Casting company"""
+  castingCompany: String
+}
+
+"""Response type for Rep Worksheet"""
+type RepWorksheetResponse {
+  """Response status"""
+  status: ResponseStatus!
+
+  """"""
+  repliedAt: DateTime
+
+  """Response note"""
+  note: String
+
+  """The media files sent in response"""
+  medias: [WfMedia!] @deprecated(reason: "please use mediaList")
+
+  """"""
+  mediaList: [MediaResponseItem!]
+}
+
+""""""
+type WfMedia {
+  """"""
+  mediaId: Int!
+
+  """"""
+  name: String
+
+  """"""
+  filename: String!
+
+  """"""
+  guid: String!
+
+  """"""
+  fileType: WfMediaFileType
+
+  """"""
+  mediaType: WfMediaType
+
+  """"""
+  mediaStatus: WfMediaStatus
+
+  """"""
+  mediaStorageStatus: WfMediaStatus
+
+  """"""
+  tag: String
+
+  """"""
+  url: String
+
+  """"""
+  fileKey: String
+
+  """"""
+  thumbnailUrl: String
+
+  """"""
+  transformation: WfMediaTransformation
+
+  """"""
+  isLocked: Boolean
+
+  """"""
+  thumbnail: WfMedia
+}
+
+""""""
+type WfMediaFileType {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  code: String!
+
+  """"""
+  mediaType: WfMediaType!
+}
+
+""""""
+type WfMediaType {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  code: String!
+}
+
+""""""
+type WfMediaStatus {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  code: String!
+}
+
+""""""
+type WfMediaTransformation {
+  """"""
+  xAxis: Float
+
+  """"""
+  yAxis: Float
+
+  """"""
+  width: Float
+
+  """"""
+  height: Float
+
+  """"""
+  rotate: Float
+}
+
+""""""
+type MediaResponseItem {
+  """"""
+  id: Int!
+
+  """"""
+  alias: String
+
+  """"""
+  timestamp: DateTime!
+
+  """"""
+  isAdditional: Boolean
+
+  """"""
+  isForwardedToCD: Boolean
+
+  """"""
+  type: String!
+
+  """"""
+  media: WfMedia!
+}
+
+""""""
+type RepWorksheetScheduleDetail {
+  """"""
+  id: ID
+
+  """"""
+  timeZone: RepWorksheetTimeZone
+
+  """"""
+  address: RepWorksheetScheduleAddress
+}
+
+"""Measurement object"""
+type RepWorksheetTimeZone {
+  """"""
+  id: ID
+
+  """"""
+  standardName: String!
+
+  """"""
+  abbreviation: String
+}
+
+""""""
+type RepWorksheetScheduleAddress {
+  """"""
+  id: Int!
+
+  """"""
+  line1: String
+
+  """"""
+  line2: String
+
+  """"""
+  line3: String
+
+  """"""
+  postalCode: String
+
+  """"""
+  city: String
+
+  """"""
+  note: String
+
+  """"""
+  otherDetail: String
+
+  """"""
+  state: RepWorksheetScheduleAddressState
+
+  """"""
+  country: RepWorksheetScheduleAddressCountry
+}
+
+""""""
+type RepWorksheetScheduleAddressState {
+  """"""
+  id: ID
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+type RepWorksheetScheduleAddressCountry {
+  """"""
+  id: ID
+
+  """"""
+  code: String
+
+  """"""
+  name: String
+}
+
+""""""
+enum RepsWorksheetGroupType {
+  """"""
+  PROJECT
+
+  """"""
+  PROFILE
+}
+
+""""""
+type RepsWorksheetGroups {
+  """"""
+  nextGroupId: ID
+
+  """"""
+  groups: [RepsWorksheetGroup!]!
+}
+
+""""""
+type RepsWorksheetGroup {
+  """"""
+  id: ID!
+
+  """"""
+  itemCount: Int!
+
+  """"""
+  details: RepsWorksheetGroupDetails
+}
+
+""""""
+union RepsWorksheetGroupDetails = RepWorksheetProfile | RepWorksheetProject
+
+""""""
+type RepsWorksheetFilters {
+  """"""
+  projects: [ProjectFilter!]
+
+  """"""
+  profiles: [ProfileFilter!]
+
+  """"""
+  organizations: [OrganizationFilter!]
+}
+
+""""""
+type ProjectFilter {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+}
+
+""""""
+type ProfileFilter {
+  """"""
+  id: Int!
+
+  """"""
+  stageName: String!
+}
+
+""""""
+type OrganizationFilter {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
 }
 
 """"""
@@ -16944,28 +17282,28 @@ type WfProfileContactInfo {
 """"""
 enum MediaRequestStatus {
   """"""
-  ADDITIONAL_MEDIA_ADDED
+  NOT_SENT
+
+  """"""
+  PENDING
 
   """"""
   CANCELLED
 
   """"""
-  CHANGE_REQUESTED
+  MEDIA_ADDED
 
   """"""
-  CONFIRMED
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
+  CHANGE_REQUESTED
 
   """"""
   DECLINED
 
   """"""
-  MEDIA_ADDED
-
-  """"""
-  NOT_SENT
-
-  """"""
-  PENDING
+  CONFIRMED
 }
 
 """"""
@@ -18125,6 +18463,21 @@ type GroupLastKey {
   name: String!
 }
 
+scalar _Any
+
+""""""
+union _Entity = RepWorksheetResponse
+
+""""""
+type _Service {
+  """
+  The sdl representing the federated service capabilities. Includes federation
+  directives, removes federation types, and includes rest of full schema after
+  schema directives have been applied
+  """
+  sdl: String
+}
+
 type Mutation {
   """Returns a session bearer token."""
   bauLogin(input: BauLoginInput!): String!
@@ -18483,7 +18836,10 @@ type Mutation {
 
     """"""
     mediaIds: [Int!]
-  ): Boolean!
+  ): Boolean! @deprecated(reason: "use archiveMediaAssetV2 instead")
+
+  """"""
+  archiveMediaAssetV2(accountId: Float, artistId: Float, mediaIds: [Int!]): Boolean!
 
   """Archive notification"""
   archiveNotifications(ids: [String!]!): Boolean!
@@ -18762,7 +19118,7 @@ type Mutation {
   deleteCreditMedia(creditId: Float!, mediaId: Float!): Boolean!
 
   """"""
-  deleteMediaAsset(accountId: Float, mediaId: Float!): Boolean!
+  deleteMediaAsset(accountId: Float, mediaId: Float!): Boolean! @deprecated(reason: "use deleteMediaV2 instead")
 
   """Deletes Audition Group Media"""
   deleteMediaFromAuditionGroup(
@@ -18781,6 +19137,9 @@ type Mutation {
     """"""
     mediaIds: [Int!]!
   ): Boolean!
+
+  """"""
+  deleteMediaV2(input: DeleteMediaV2Input!): DeleteMediaV2Response!
 
   """"""
   deleteNote(noteId: Int!): Boolean!
@@ -18912,7 +19271,10 @@ type Mutation {
   editProjectSeries(input: EditProjectSeriesInput!): Float!
 
   """"""
-  finalizeMediaUpload(input: [MediaMetadataInput!]!): [Media!]!
+  finalizeMediaUpload(input: [MediaMetadataInput!]!): [Media!]! @deprecated(reason: "use finalizeMediaUploadV2 instead")
+
+  """"""
+  finalizeMediaUploadV2(input: FinalizeMediaUploadInput!): FinalizeMediaUploadResponse!
 
   """Generates signature for uploading media"""
   getMediaUploadSignature(params: JSONObject!): String!
@@ -18965,8 +19327,14 @@ type Mutation {
     projectId: Int!
   ): Int!
 
+  """Initiates media bulk download"""
+  initiateMediaBulkDownload(input: InitiateMediaBulkDownloadInput!): InitiateMediaBulkDownloadResponse!
+
   """"""
-  initMediaUpload(input: MediaInitUploadInput!): [Media!]!
+  initiateMediaUploadV2(input: InitiateMediaUploadInput!): InitiateMediaUploadResponse!
+
+  """"""
+  initMediaUpload(input: MediaInitUploadInput!): [Media!]! @deprecated(reason: "use initiateMediaUploadV2 instead")
 
   """Initiates presentation's media downloading"""
   initPresentationMediaToDownloadPublic(input: PresentationMediaDownloadInput!): String!
@@ -19060,6 +19428,9 @@ type Mutation {
     """"""
     email: String!
   ): String!
+
+  """"""
+  restoreArchivedMedia(input: RestoreArchivedMediaInput!): RestoreArchivedMediaResponse!
 
   """Restore notification"""
   restoreNotifications(ids: [String!]!): Boolean!
@@ -19419,6 +19790,9 @@ type Mutation {
 
   """"""
   setSubscriptionPaymentMethod(input: SetSubscriptionPaymentMethodInput!): Boolean!
+
+  """"""
+  renewSubscription(input: RenewSubscriptionInput!): SubscriptionRenewal!
 
   """"""
   createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
@@ -20745,6 +21119,9 @@ type CompletePurchaseBillingDetailsModel {
   lastFour: String
 
   """"""
+  paymentType: String
+
+  """"""
   total: Float
 }
 
@@ -20986,6 +21363,9 @@ input CollaboratorAccountCreateInput {
 
   """"""
   invitationId: String!
+
+  """"""
+  languageLocaleId: Int
 
   """"""
   lastName: String!
@@ -22326,6 +22706,18 @@ input PresentationFolderTalentCustomizedMediaInput {
 }
 
 """"""
+input DeleteMediaV2Input {
+  """"""
+  mediaIds: [ID!]!
+}
+
+"""DeleteMediaV2Response"""
+type DeleteMediaV2Response {
+  """"""
+  success: Boolean!
+}
+
+""""""
 input DeletePresentationProfilePickPublickInput {
   """"""
   pickId: String!
@@ -22424,10 +22816,210 @@ input MediaMetadataInput {
   width: Int
 }
 
+""""""
+input FinalizeMediaUploadInput {
+  """The media items that are to be uploaded."""
+  media: [FinalizeUploadMediaInput!]!
+}
+
+""""""
+input FinalizeUploadMediaInput {
+  """A unique identifier for the new file."""
+  guid: String!
+
+  """"""
+  transformation: MediaTransformationInput
+}
+
+""""""
+type FinalizeMediaUploadResponse {
+  """"""
+  media: [Media!]
+
+  """"""
+  storageUtilization: StorageUtilization
+}
+
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject
+
+""""""
+input InitiateMediaBulkDownloadInput {
+  """Media ids to be downloaded"""
+  ids: [ID!]!
+}
+
+""""""
+type InitiateMediaBulkDownloadResponse {
+  """Whether the operation was successful"""
+  success: Boolean!
+}
+
+""""""
+input InitiateMediaUploadInput {
+  """
+  The ID of the artist associated with the upload. This field is required for certain users.
+  """
+  artistId: ID
+
+  """
+  Indicates whether the new media should be created as a draft, which will result in automatic archiving.
+  """
+  draft: Boolean
+
+  """The media items that are to be uploaded."""
+  media: [InitiateUploadMediaInput!]!
+}
+
+""""""
+input InitiateUploadMediaInput {
+  """
+  The duration of the new file in seconds. This is required for audio and video uploads.
+  """
+  fileDuration: Int
+
+  """
+  The height of the new file in pixels. This is required for image and video uploads.
+  """
+  fileHeight: Int
+
+  """The name of the new file."""
+  fileName: String!
+
+  """The size of the new file in bytes."""
+  fileSize: Int!
+
+  """The extension of the new file."""
+  fileType: MediaFileTypeExtension!
+
+  """The width of the new file in pixels."""
+  fileWidth: Int
+}
+
+"""Describes the file type extension for media files."""
+enum MediaFileTypeExtension {
+  """"""
+  AAC
+
+  """"""
+  AIFF
+
+  """"""
+  AMR
+
+  """"""
+  AVI
+
+  """"""
+  DOC
+
+  """"""
+  DOCX
+
+  """"""
+  FLAC
+
+  """"""
+  FLV
+
+  """"""
+  FMP4
+
+  """"""
+  GIF
+
+  """"""
+  HEIC
+
+  """"""
+  JFIF
+
+  """"""
+  JPE
+
+  """"""
+  JPEG
+
+  """"""
+  JPG
+
+  """"""
+  M4A
+
+  """"""
+  M4V
+
+  """"""
+  MKV
+
+  """"""
+  MOV
+
+  """"""
+  MP3
+
+  """"""
+  MP4
+
+  """"""
+  MPEG
+
+  """"""
+  MPG
+
+  """"""
+  MXF
+
+  """"""
+  ODT
+
+  """"""
+  OGA
+
+  """"""
+  OGG
+
+  """"""
+  OGV
+
+  """"""
+  PDF
+
+  """"""
+  PNG
+
+  """"""
+  RTF
+
+  """"""
+  TIF
+
+  """"""
+  TS
+
+  """"""
+  WAV
+
+  """"""
+  WEBM
+
+  """"""
+  WMA
+
+  """"""
+  WMV
+}
+
+""""""
+type InitiateMediaUploadResponse {
+  """"""
+  media: [Media!]
+
+  """"""
+  storageUtilization: StorageUtilization
+}
 
 """"""
 input MediaInitUploadInput {
@@ -22529,6 +23121,21 @@ input UpdateAccountInput {
 
   """"""
   timezoneId: Int
+}
+
+"""Parameters for restoring archived media."""
+input RestoreArchivedMediaInput {
+  """The IDs of the media to restore."""
+  mediaIds: [ID!]!
+}
+
+""""""
+type RestoreArchivedMediaResponse {
+  """"""
+  media: [Media!]
+
+  """"""
+  success: Boolean!
 }
 
 """Revokes Access For User from Organization"""
@@ -22970,6 +23577,9 @@ input UpdateMediaInput {
 
   """"""
   mediaModerationStatusCode: String
+
+  """"""
+  mediaStatusId: Int
 
   """"""
   name: String
@@ -24082,6 +24692,15 @@ input SetSubscriptionPaymentMethodInput {
   billingInfoId: String!
 }
 
+""""""
+input RenewSubscriptionInput {
+  """"""
+  subscriptionId: Int!
+
+  """"""
+  billingInfoId: String!
+}
+
 """Create Coupon Redemption Input"""
 input CreateCouponRedemptionInput {
   """"""
@@ -24090,9 +24709,6 @@ input CreateCouponRedemptionInput {
 
 """"""
 enum RequestSendTo {
-  """"""
-  SEND_TO_ALL
-
   """"""
   ONLY_NEW
 
@@ -27426,6 +28042,9 @@ enum FeatureEnum {
   PHOTO_UPLOAD
 
   """"""
+  ROLE_TRACKER_OPT_OUT
+
+  """"""
   SET_DEFAULTS_TO_BACKGROUND_FOR_EXTRAS_CASTING
 
   """"""
@@ -27444,7 +28063,16 @@ enum ItemEnum {
   AUDIO_UPLOAD
 
   """"""
+  MOBILE_REELS_ACCESS
+
+  """"""
   PHOTO_UPLOAD
+
+  """"""
+  ROLE_TRACKER_ACCESS
+
+  """"""
+  STORAGE_LIMIT_MB
 
   """"""
   SUBMISSION
@@ -28974,6 +29602,9 @@ enum SkillEnum {
   DIALECTS_MIDDLE_EASTERN_ARABIC_PERSIAN
 
   """"""
+  DIALECTS_NEW_ZEALAND
+
+  """"""
   DIALECTS_PUERTO_RICAN
 
   """"""
@@ -29580,6 +30211,9 @@ enum SkillEnum {
   LANGUAGES_RUSSIAN
 
   """"""
+  LANGUAGES_SAMOAN
+
+  """"""
   LANGUAGES_SANGO
 
   """"""
@@ -29650,6 +30284,9 @@ enum SkillEnum {
 
   """"""
   LANGUAGES_TOK_PISIN
+
+  """"""
+  LANGUAGES_TONGAN
 
   """"""
   LANGUAGES_TORRES_STRAIT_ISLANDER

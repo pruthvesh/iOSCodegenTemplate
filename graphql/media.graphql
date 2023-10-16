@@ -128,3 +128,22 @@ mutation archiveMediaAsset($mediaId: Float, $mediaIds: [Int!]) {
 mutation updateProfileMediaVisibility($mediaId: Int!, $profileIds: [Int!]!) {
   updateProfileMediaVisibility(mediaId: $mediaId, profileIds: $profileIds)
 }
+
+query getArtistStorageUtilization($artistId: Int) {
+  artistStorageUtilization(artistId: $artistId) {
+    mediaStorages {
+      mediaType {
+        mediaType {
+          code
+          name
+          __typename
+        }
+        __typename
+      }
+      storageSizeBytes
+      __typename
+    }
+    totalSizeBytes
+    __typename
+  }
+}
