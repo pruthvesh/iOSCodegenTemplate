@@ -1,0 +1,88 @@
+query SearchMediaForArtist($input: SearchMediaInput!) {
+  searchMedia(input: $input) {
+    __typename
+    objects {
+      __typename
+      createdByOrg {
+        __typename
+        id
+        name
+      }
+      ...BaseSearchMedia
+    }
+  }
+}
+
+fragment BaseSearchMedia on Media {
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  source
+  size
+  mediaId
+  accountId
+  created
+  width
+  height
+  fileKey
+  thumbnail {
+    __typename
+    id
+    fileKey
+  }
+  guid
+  profiles {
+    __typename
+    isPrimary
+    profile {
+      __typename
+      id
+      isPersonal
+      profileId
+      profileStatus {
+        __typename
+        id
+        code
+      }
+      organization {
+        __typename
+        id
+        name
+      }
+    }
+  }
+  transformation {
+    __typename
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+  }
+  mediaStorageStatus {
+    __typename
+    id
+    code
+  }
+  fileType {
+    __typename
+    id
+    code
+    name
+  }
+  mediaType {
+    __typename
+    id
+    code
+  }
+  mediaStatus {
+    __typename
+    id
+    code
+  }
+  isLocked
+  __typename
+}
