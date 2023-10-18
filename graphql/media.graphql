@@ -207,86 +207,8 @@ query SearchMediaForArtist($input: SearchMediaInput!) {
         id
         name
       }
-      ...BaseSearchMedia
+      ...BaseMediaWithThumbnail
     }
   }
 }
 
-fragment BaseSearchMedia on Media {
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  source
-  size
-  mediaId
-  accountId
-  created
-  width
-  height
-  fileKey
-  thumbnail {
-    __typename
-    id
-    fileKey
-  }
-  guid
-  artistMediaProfile: profiles {
-    __typename
-    isPrimary
-    profile {
-      __typename
-      id
-      isPersonal
-      profileId
-      profileStatus {
-        __typename
-        id
-        code
-      }
-      organization {
-        __typename
-        id
-        name
-      }
-      organizations {
-        __typename
-        id
-        name
-      }
-    }
-  }
-  transformation {
-    __typename
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
-  }
-  mediaStorageStatus {
-    __typename
-    id
-    code
-  }
-  fileType {
-    __typename
-    id
-    code
-    name
-  }
-  mediaType {
-    __typename
-    id
-    code
-  }
-  mediaStatus {
-    __typename
-    id
-    code
-  }
-  isLocked
-  __typename
-}
