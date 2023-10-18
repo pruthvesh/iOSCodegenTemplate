@@ -28,7 +28,9 @@ query scheduleInviteRequestDetails($id: ID!) {
       }
       date
       timeZone {
+        id
         abbreviation
+        standardName
         __typename
       }
       note
