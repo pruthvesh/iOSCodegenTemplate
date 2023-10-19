@@ -165,6 +165,8 @@ mutation initMediaUploadV2($input: InitiateMediaUploadInput!) {
   initiateMediaUploadV2(input: $input) {
     media {
       accountId
+      guid
+      mediaId
     }
     storageUtilization {
       mediaStorages {
