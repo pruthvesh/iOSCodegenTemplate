@@ -149,6 +149,7 @@ mutation finalizeMediaUploadV2($input: FinalizeMediaUploadInput!) {
   finalizeMediaUploadV2(input: $input) {
     media {
       accountId
+      ...BaseMediaWithThumbnail
     }
     storageUtilization {
       mediaStorages {
