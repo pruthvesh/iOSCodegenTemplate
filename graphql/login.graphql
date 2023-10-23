@@ -93,6 +93,7 @@ query artistsInfo {
         expirationDate
         plan {
           id
+          name
           code
           isBasePlan
         }
