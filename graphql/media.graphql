@@ -168,6 +168,9 @@ mutation initMediaUploadV2($input: InitiateMediaUploadInput!) {
       accountId
       guid
       mediaId
+      length
+      height
+      width
     }
     storageUtilization {
       mediaStorages {

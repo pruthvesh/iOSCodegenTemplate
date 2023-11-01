@@ -1,18 +1,3 @@
-""""""
-directive @key(fields: String!) on OBJECT | INTERFACE
-
-""""""
-directive @extends on OBJECT | INTERFACE
-
-""""""
-directive @external on OBJECT | FIELD_DEFINITION
-
-""""""
-directive @requires(fields: String!) on FIELD_DEFINITION
-
-""""""
-directive @provides(fields: String!) on FIELD_DEFINITION
-
 type Query {
   """"""
   currentUser: BauAccount!
@@ -102,7 +87,7 @@ type Query {
   """
   This method is used for getting the amount of total storage and individual media types an artist is using.
   """
-  artistStorageUtilization(artistId: Int): StorageUtilization!
+  artistStorageUtilization(artistId: Int): ArtistStorageUtilization!
 
   """"""
   artistSubscriptions(input: ArtistSubscriptionInput!): [SubscriptionModel!]!
@@ -292,10 +277,10 @@ type Query {
   getCollaboratorInviteById(input: GetCollaboratorInviteInput!): CollaboratorsInvite!
 
   """"""
-  getCollaboratorsByProjectId(page: PageInput = {pageSize: 100, pageNumber: 1}, projectId: ID): CollaboratorsInvitePaginatedResult!
+  getCollaboratorsByProjectId(page: PageInput = {pageNumber: 1, pageSize: 100}, projectId: ID): CollaboratorsInvitePaginatedResult!
 
   """"""
-  getCollaboratorsForOrganization(input: GetCollaboratorByEmailInput, page: PageInput = {pageSize: 100, pageNumber: 1}): CollaboratorsInOrganizationPaginatedResult!
+  getCollaboratorsForOrganization(input: GetCollaboratorByEmailInput, page: PageInput = {pageNumber: 1, pageSize: 100}): CollaboratorsInOrganizationPaginatedResult!
 
   """"""
   getCommentsForPresentationSubmissionPublic(
@@ -393,7 +378,7 @@ type Query {
   """
   Returns paginated result of organization representative lists which logged in user belongs to.
   """
-  getOrganizationRepresentativeLists(input: GetOrganizationRepresentativeListsInput = {sortOrder: LAST_MODIFIED}, page: PageInput = {pageSize: 100, pageNumber: 1}): RepresentativeListPaginatedResult!
+  getOrganizationRepresentativeLists(input: GetOrganizationRepresentativeListsInput = {sortOrder: LAST_MODIFIED}, page: PageInput = {pageNumber: 1, pageSize: 100}): RepresentativeListPaginatedResult!
 
   """
   Paginated query for get organizations by specified representation type and partial/full org name match
@@ -401,7 +386,7 @@ type Query {
   getOrganizationsByRepTypeAndName(input: OrganizationsByRepTypeAndNameInput!): OrganizationsByRepTypeAndNameResultPaginatedResult!
 
   """"""
-  getPackageFolderTalent(folderId: Int!, pageInput: PageInput = {pageSize: 100, pageNumber: 1}, profileIds: [Int!]): [PresentationFolderTalent!]!
+  getPackageFolderTalent(folderId: Int!, pageInput: PageInput = {pageNumber: 1, pageSize: 100}, profileIds: [Int!]): [PresentationFolderTalent!]!
 
   """"""
   getPhone(entityType: EntityTypeEnum!, phoneNumber: String!): [Phone!]!
@@ -425,7 +410,7 @@ type Query {
   getPresentationFoldersDetails(folderIds: [Int!]!): [PresentationFolder!]!
 
   """Query for getting Presentation folder talent(s) by folder ids"""
-  getPresentationFolderTalent(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, presentationFolderIds: [Int!]!, profileIds: [Int!]): [PresentationFolderTalent!]!
+  getPresentationFolderTalent(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, presentationFolderIds: [Int!]!, profileIds: [Int!]): [PresentationFolderTalent!]!
 
   """Query for getting Presentation folder talent(s) by talent ids"""
   getPresentationFolderTalentById(groupTalentIds: [Int!]!): [PresentationFolderTalent!]!
@@ -590,10 +575,10 @@ type Query {
   getSubmissionsByProfileId(input: SubmissionByProfileInput, profileId: Float!): [Submission!]!
 
   """"""
-  getSubmissionsByProjectAndProfile(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, profileIds: [Int!]!, projectIds: [Int!]!): SubmissionPaginatedResult!
+  getSubmissionsByProjectAndProfile(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, profileIds: [Int!]!, projectIds: [Int!]!): SubmissionPaginatedResult!
 
   """"""
-  getSubmissionsByRole(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, roleIds: [Int!]!, submissionStatusCodes: [String!]!, tileSchemeCodes: [String!]): SubmissionPaginatedResult!
+  getSubmissionsByRole(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, roleIds: [Int!]!, submissionStatusCodes: [String!]!, tileSchemeCodes: [String!]): SubmissionPaginatedResult!
 
   """Returns submissions data for workflow"""
   getSubmissionsDataForWorkflow(ids: [BigInt!]!): [SubmissionWorkflow!]!
@@ -859,13 +844,13 @@ type Query {
   searchProfiles(input: ProfileSearchInput!, page: PageInput, resultType: SearchResultType = DOCUMENTS, sortOptions: [ProfileSearchSortOption!]): ProfileSearch
 
   """"""
-  searchProfilesByOrgId(page: PageInput = {pageSize: 100, pageNumber: 1}, partialStageName: String = ""): ProfileSearchResultByOrgIdPaginatedResult!
+  searchProfilesByOrgId(page: PageInput = {pageNumber: 1, pageSize: 100}, partialStageName: String = ""): ProfileSearchResultByOrgIdPaginatedResult!
 
   """"""
-  searchProjectsByOrg(page: PageInput = {pageSize: 100, pageNumber: 1}, partialProjectName: String = ""): ProjectPaginatedResult!
+  searchProjectsByOrg(page: PageInput = {pageNumber: 1, pageSize: 100}, partialProjectName: String = ""): ProjectPaginatedResult!
 
   """Project Series"""
-  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageSize: 100, pageNumber: 1}): ProjectSeriesPaginatedResult!
+  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageNumber: 1, pageSize: 100}): ProjectSeriesPaginatedResult!
 
   """"""
   searchRepresentatives(input: SearchRepresentativeInput!, page: PageInput!): RepresentativeSearchResult!
@@ -1006,6 +991,9 @@ type Query {
   previewSubscriptionRenewal(input: PreviewSubscriptionRenewalInput!): SubscriptionRenewal!
 
   """"""
+  previewSubscriptionPurchase(input: PreviewSubscriptionInput!): SubscriptionInvoice!
+
+  """"""
   searchAccounts(page: PageInput!, filters: SearchAccountsFiltersArgs): AccountItemPagedList!
 
   """"""
@@ -1129,12 +1117,6 @@ type Query {
     """"""
     groupBy: AuditionsGroupBy!
   ): AuditionsGroups!
-
-  """"""
-  _entities(representations: [_Any!]!): [_Entity]!
-
-  """"""
-  _service: _Service!
 }
 
 """BAU Account Object"""
@@ -4723,6 +4705,9 @@ type Submission {
   """Last note for the submission"""
   lastNote: Note
 
+  """Submission status last changed date"""
+  lastStatusUpdated: DateTime
+
   """Submission's media assets"""
   media: [SubmissionMedia!]!
 
@@ -5124,7 +5109,7 @@ type Role {
   roleEthnicityNationality: String!
 
   """Info about paired reps orgs"""
-  rolePairedOrganizations(pageInput: PageInput = {pageSize: 100, pageNumber: 1}): RoleOrganizationPairPaginatedResult!
+  rolePairedOrganizations(pageInput: PageInput = {pageNumber: 1, pageSize: 100}): RoleOrganizationPairPaginatedResult!
 
   """Role Parent ID"""
   roleParentId: ID
@@ -5589,11 +5574,11 @@ enum RepRoleStatusEnum {
 
 """Page Input object"""
 input PageInput {
-  """Page size"""
-  pageSize: Int!
-
   """Page number"""
   pageNumber: Int!
+
+  """Page size"""
+  pageSize: Int!
 }
 
 """Paginated result with [RoleOrganizationPair] objects"""
@@ -6386,6 +6371,9 @@ type Artist {
 
   """"""
   profiles(oldest: Boolean): [Profile!]
+
+  """"""
+  storageLimitBytes: Int
 }
 
 """Subscription"""
@@ -7138,7 +7126,20 @@ type ProjectRequestsInfo {
 }
 
 """Artist Media Utilization"""
-type StorageUtilization {
+type ArtistStorageUtilization {
+  """
+  The storage limit in bytes for the artist. Returns null if the artist has no storage limit.
+  """
+  artistStorageLimitBytes: Int
+
+  """
+  The remaining storage in bytes for the artist. Returns null if the artist has no storage limit.
+  """
+  artistStorageRemainingBytes: Int
+
+  """"""
+  id: ID!
+
   """Each media type is broken down with its storage utilization"""
   mediaStorages: [MediaStorage!]!
 
@@ -7893,49 +7894,49 @@ input SubmissionRequestSearchInput {
   responseStatuses: [RequestStatusUnion!]
 }
 
-""""""
+"""Request status union"""
 enum RequestStatusUnion {
   """"""
-  NOT_SENT
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
+  ADDITIONAL_MEDIA_ADDED
 
   """"""
   ANSWERED
 
   """"""
-  MEDIA_ADDED
+  CANCELLED
 
   """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
-  DECLINED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  UPDATED
+  CANCELLED_RESCHEDULED
 
   """"""
   CHANGE_REQUESTED
 
   """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  NOT_SENT
+
+  """"""
+  ON_HOLD
+
+  """"""
+  PENDING
+
+  """"""
   RESCHEDULE_REQUESTED
 
   """"""
-  CANCELLED_RESCHEDULED
+  RESCHEDULED
+
+  """"""
+  UPDATED
 }
 
 """"""
@@ -7950,31 +7951,31 @@ input SubmissionScheduleRequestSearchInput {
   responseStatuses: [ScheduleInviteRequestStatus!]
 }
 
-""""""
+"""Schedule request status"""
 enum ScheduleInviteRequestStatus {
   """"""
-  PENDING
-
-  """"""
   CANCELLED
-
-  """"""
-  DECLINED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  RESCHEDULED
 
   """"""
   CANCELLED_RESCHEDULED
 
   """"""
-  RESCHEDULE_REQUESTED
+  CONFIRMED
+
+  """"""
+  DECLINED
 
   """"""
   ON_HOLD
+
+  """"""
+  PENDING
+
+  """"""
+  RESCHEDULE_REQUESTED
+
+  """"""
+  RESCHEDULED
 
   """"""
   UPDATED
@@ -8698,10 +8699,10 @@ type CalendarType {
 """"""
 type ScheduleInviteRequestNotes {
   """"""
-  noteForTalents: String
+  noteForRepresentative: String
 
   """"""
-  noteForRepresentative: String
+  noteForTalents: String
 }
 
 """Schedule Timeframe Details"""
@@ -8989,7 +8990,7 @@ type CollaboratorsInOrganization {
   collaboratorInviteeOrgDetails: CollaboratorInviteFromOrgDetails
 
   """"""
-  collaboratorsProjectDetails(pageProjects: PageInput = {pageSize: 3, pageNumber: 1}): [CollaboratorInviteProjectDetails!]
+  collaboratorsProjectDetails(pageProjects: PageInput = {pageNumber: 1, pageSize: 3}): [CollaboratorInviteProjectDetails!]
 
   """"""
   email: String
@@ -10295,7 +10296,7 @@ type PresentationFolderPublic {
   talentCount: Int!
 
   """Folder talents of the package presentation"""
-  talents(pageInput: PageInput = {pageSize: 100, pageNumber: 1}): [PresentationTalentPublic!]!
+  talents(pageInput: PageInput = {pageNumber: 1, pageSize: 100}): [PresentationTalentPublic!]!
 
   """"""
   talentsWithPicksCount: Int!
@@ -14859,22 +14860,22 @@ type Schedule {
 """"""
 type ScheduleInviteResponseStatusCounts {
   """"""
-  scheduleId: Int!
-
-  """"""
-  notSent: Int!
-
-  """"""
   confirmed: Int!
 
   """"""
   declined: Int!
 
   """"""
+  notSent: Int!
+
+  """"""
   pending: Int!
 
   """"""
   rescheduleRequested: Int!
+
+  """"""
+  scheduleId: Int!
 }
 
 """"""
@@ -15184,6 +15185,95 @@ type SubscriptionRenewal {
 
   """"""
   paymentType: String
+}
+
+""""""
+input PreviewSubscriptionInput {
+  """"""
+  subscriptionBillingCode: String!
+
+  """"""
+  couponCode: String
+}
+
+"""Subscription Info Model"""
+type SubscriptionInvoice {
+  """"""
+  invoiceId: String
+
+  """"""
+  email: String!
+
+  """"""
+  currency: Currency!
+
+  """"""
+  discount: Float!
+
+  """"""
+  creditsApplied: Float!
+
+  """"""
+  total: Float!
+
+  """"""
+  coupon: Coupon
+
+  """"""
+  paymentDetails: PaymentDetails
+
+  """"""
+  subscription: Subscription!
+}
+
+""""""
+type Coupon {
+  """"""
+  code: String!
+
+  """"""
+  description: String!
+
+  """"""
+  state: String!
+}
+
+"""Payment Details"""
+type PaymentDetails {
+  """"""
+  cardType: String
+
+  """"""
+  lastFour: String
+
+  """"""
+  paymentType: String
+}
+
+type Subscription {
+  """"""
+  id: ID!
+
+  """"""
+  plan: BillingPlan!
+
+  """"""
+  nextBillingDate: DateTime
+
+  """"""
+  status: String!
+
+  """"""
+  expirationDate: DateTime
+
+  """"""
+  transaction: String
+
+  """"""
+  billingInfoId: String
+
+  """"""
+  canRenew: Boolean!
 }
 
 """"""
@@ -17282,28 +17372,28 @@ type WfProfileContactInfo {
 """"""
 enum MediaRequestStatus {
   """"""
-  NOT_SENT
-
-  """"""
-  PENDING
+  ADDITIONAL_MEDIA_ADDED
 
   """"""
   CANCELLED
 
   """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
   CHANGE_REQUESTED
+
+  """"""
+  CONFIRMED
 
   """"""
   DECLINED
 
   """"""
-  CONFIRMED
+  MEDIA_ADDED
+
+  """"""
+  NOT_SENT
+
+  """"""
+  PENDING
 }
 
 """"""
@@ -18461,21 +18551,6 @@ type GroupLastKey {
 
   """"""
   name: String!
-}
-
-scalar _Any
-
-""""""
-union _Entity = RepWorksheetResponse
-
-""""""
-type _Service {
-  """
-  The sdl representing the federated service capabilities. Includes federation
-  directives, removes federation types, and includes rest of full schema after
-  schema directives have been applied
-  """
-  sdl: String
 }
 
 type Mutation {
@@ -19799,6 +19874,9 @@ type Mutation {
 
   """"""
   removeActiveCouponRedemption: Boolean!
+
+  """"""
+  purchaseSubscription(input: PurchaseSubscriptionInput!): SubscriptionInvoice!
 
   """Sends request to media-request for all selected request statuses"""
   createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
@@ -22824,6 +22902,19 @@ input FinalizeMediaUploadInput {
 
 """"""
 input FinalizeUploadMediaInput {
+  """
+  The duration of the new file in seconds. This is required for audio and video uploads.
+  """
+  fileDuration: Int
+
+  """
+  The height of the new file in pixels. This is required for image and video uploads.
+  """
+  fileHeight: Int
+
+  """The width of the new file in pixels."""
+  fileWidth: Int
+
   """A unique identifier for the new file."""
   guid: String!
 
@@ -22837,7 +22928,7 @@ type FinalizeMediaUploadResponse {
   media: [Media!]
 
   """"""
-  storageUtilization: StorageUtilization
+  storageUtilization: ArtistStorageUtilization
 }
 
 """
@@ -23018,7 +23109,7 @@ type InitiateMediaUploadResponse {
   media: [Media!]
 
   """"""
-  storageUtilization: StorageUtilization
+  storageUtilization: ArtistStorageUtilization
 }
 
 """"""
@@ -24705,6 +24796,21 @@ input RenewSubscriptionInput {
 input CreateCouponRedemptionInput {
   """"""
   couponId: String!
+}
+
+""""""
+input PurchaseSubscriptionInput {
+  """"""
+  subscriptionBillingCode: String!
+
+  """"""
+  billingInfoId: String!
+
+  """"""
+  couponCode: String
+
+  """"""
+  threeDSecureActionResultTokenId: String
 }
 
 """"""
