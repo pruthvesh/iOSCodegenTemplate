@@ -1,3 +1,18 @@
+""""""
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+""""""
+directive @extends on OBJECT | INTERFACE
+
+""""""
+directive @external on OBJECT | FIELD_DEFINITION
+
+""""""
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+""""""
+directive @provides(fields: String!) on FIELD_DEFINITION
+
 type Query {
   """"""
   currentUser: BauAccount!
@@ -277,10 +292,10 @@ type Query {
   getCollaboratorInviteById(input: GetCollaboratorInviteInput!): CollaboratorsInvite!
 
   """"""
-  getCollaboratorsByProjectId(page: PageInput = {pageNumber: 1, pageSize: 100}, projectId: ID): CollaboratorsInvitePaginatedResult!
+  getCollaboratorsByProjectId(page: PageInput = {pageSize: 100, pageNumber: 1}, projectId: ID): CollaboratorsInvitePaginatedResult!
 
   """"""
-  getCollaboratorsForOrganization(input: GetCollaboratorByEmailInput, page: PageInput = {pageNumber: 1, pageSize: 100}): CollaboratorsInOrganizationPaginatedResult!
+  getCollaboratorsForOrganization(input: GetCollaboratorByEmailInput, page: PageInput = {pageSize: 100, pageNumber: 1}): CollaboratorsInOrganizationPaginatedResult!
 
   """"""
   getCommentsForPresentationSubmissionPublic(
@@ -378,7 +393,7 @@ type Query {
   """
   Returns paginated result of organization representative lists which logged in user belongs to.
   """
-  getOrganizationRepresentativeLists(input: GetOrganizationRepresentativeListsInput = {sortOrder: LAST_MODIFIED}, page: PageInput = {pageNumber: 1, pageSize: 100}): RepresentativeListPaginatedResult!
+  getOrganizationRepresentativeLists(input: GetOrganizationRepresentativeListsInput = {sortOrder: LAST_MODIFIED}, page: PageInput = {pageSize: 100, pageNumber: 1}): RepresentativeListPaginatedResult!
 
   """
   Paginated query for get organizations by specified representation type and partial/full org name match
@@ -386,7 +401,7 @@ type Query {
   getOrganizationsByRepTypeAndName(input: OrganizationsByRepTypeAndNameInput!): OrganizationsByRepTypeAndNameResultPaginatedResult!
 
   """"""
-  getPackageFolderTalent(folderId: Int!, pageInput: PageInput = {pageNumber: 1, pageSize: 100}, profileIds: [Int!]): [PresentationFolderTalent!]!
+  getPackageFolderTalent(folderId: Int!, pageInput: PageInput = {pageSize: 100, pageNumber: 1}, profileIds: [Int!]): [PresentationFolderTalent!]!
 
   """"""
   getPhone(entityType: EntityTypeEnum!, phoneNumber: String!): [Phone!]!
@@ -410,7 +425,7 @@ type Query {
   getPresentationFoldersDetails(folderIds: [Int!]!): [PresentationFolder!]!
 
   """Query for getting Presentation folder talent(s) by folder ids"""
-  getPresentationFolderTalent(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, presentationFolderIds: [Int!]!, profileIds: [Int!]): [PresentationFolderTalent!]!
+  getPresentationFolderTalent(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, presentationFolderIds: [Int!]!, profileIds: [Int!]): [PresentationFolderTalent!]!
 
   """Query for getting Presentation folder talent(s) by talent ids"""
   getPresentationFolderTalentById(groupTalentIds: [Int!]!): [PresentationFolderTalent!]!
@@ -575,10 +590,10 @@ type Query {
   getSubmissionsByProfileId(input: SubmissionByProfileInput, profileId: Float!): [Submission!]!
 
   """"""
-  getSubmissionsByProjectAndProfile(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, profileIds: [Int!]!, projectIds: [Int!]!): SubmissionPaginatedResult!
+  getSubmissionsByProjectAndProfile(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, profileIds: [Int!]!, projectIds: [Int!]!): SubmissionPaginatedResult!
 
   """"""
-  getSubmissionsByRole(pageInput: PageInput = {pageNumber: 1, pageSize: 100}, roleIds: [Int!]!, submissionStatusCodes: [String!]!, tileSchemeCodes: [String!]): SubmissionPaginatedResult!
+  getSubmissionsByRole(pageInput: PageInput = {pageSize: 100, pageNumber: 1}, roleIds: [Int!]!, submissionStatusCodes: [String!]!, tileSchemeCodes: [String!]): SubmissionPaginatedResult!
 
   """Returns submissions data for workflow"""
   getSubmissionsDataForWorkflow(ids: [BigInt!]!): [SubmissionWorkflow!]!
@@ -844,13 +859,13 @@ type Query {
   searchProfiles(input: ProfileSearchInput!, page: PageInput, resultType: SearchResultType = DOCUMENTS, sortOptions: [ProfileSearchSortOption!]): ProfileSearch
 
   """"""
-  searchProfilesByOrgId(page: PageInput = {pageNumber: 1, pageSize: 100}, partialStageName: String = ""): ProfileSearchResultByOrgIdPaginatedResult!
+  searchProfilesByOrgId(page: PageInput = {pageSize: 100, pageNumber: 1}, partialStageName: String = ""): ProfileSearchResultByOrgIdPaginatedResult!
 
   """"""
-  searchProjectsByOrg(page: PageInput = {pageNumber: 1, pageSize: 100}, partialProjectName: String = ""): ProjectPaginatedResult!
+  searchProjectsByOrg(page: PageInput = {pageSize: 100, pageNumber: 1}, partialProjectName: String = ""): ProjectPaginatedResult!
 
   """Project Series"""
-  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageNumber: 1, pageSize: 100}): ProjectSeriesPaginatedResult!
+  searchProjectSeriesByOrg(input: GetProjectSeriesByNameInput!, page: PageInput = {pageSize: 100, pageNumber: 1}): ProjectSeriesPaginatedResult!
 
   """"""
   searchRepresentatives(input: SearchRepresentativeInput!, page: PageInput!): RepresentativeSearchResult!
@@ -1117,6 +1132,12 @@ type Query {
     """"""
     groupBy: AuditionsGroupBy!
   ): AuditionsGroups!
+
+  """"""
+  _entities(representations: [_Any!]!): [_Entity]!
+
+  """"""
+  _service: _Service!
 }
 
 """BAU Account Object"""
@@ -4762,6 +4783,9 @@ type Submission {
   """Snapshot media assets"""
   snapshotMedia: Media
 
+  """Source of the Submission"""
+  source: SubmissionSourceType
+
   """Submission Previous Status"""
   submissionPreviousStatus: SubmissionStatus
 
@@ -5109,7 +5133,7 @@ type Role {
   roleEthnicityNationality: String!
 
   """Info about paired reps orgs"""
-  rolePairedOrganizations(pageInput: PageInput = {pageNumber: 1, pageSize: 100}): RoleOrganizationPairPaginatedResult!
+  rolePairedOrganizations(pageInput: PageInput = {pageSize: 100, pageNumber: 1}): RoleOrganizationPairPaginatedResult!
 
   """Role Parent ID"""
   roleParentId: ID
@@ -5574,11 +5598,11 @@ enum RepRoleStatusEnum {
 
 """Page Input object"""
 input PageInput {
-  """Page number"""
-  pageNumber: Int!
-
   """Page size"""
   pageSize: Int!
+
+  """Page number"""
+  pageNumber: Int!
 }
 
 """Paginated result with [RoleOrganizationPair] objects"""
@@ -5882,6 +5906,24 @@ type SubmissionScheduleSlot {
 
   """Timezone Id"""
   timeZoneId: ID!
+}
+
+"""Submission Source Type"""
+type SubmissionSourceType {
+  """code"""
+  code: String!
+
+  """Is this enbaled?"""
+  enabled: Boolean!
+
+  """Primary ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """Sort order"""
+  sortOrder: Int
 }
 
 """Submissions Responses"""
@@ -7894,49 +7936,49 @@ input SubmissionRequestSearchInput {
   responseStatuses: [RequestStatusUnion!]
 }
 
-"""Request status union"""
+""""""
 enum RequestStatusUnion {
   """"""
-  ADDITIONAL_MEDIA_ADDED
-
-  """"""
-  ANSWERED
-
-  """"""
-  CANCELLED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
   NOT_SENT
-
-  """"""
-  ON_HOLD
 
   """"""
   PENDING
 
   """"""
-  RESCHEDULE_REQUESTED
+  CANCELLED
+
+  """"""
+  ANSWERED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
+  DECLINED
+
+  """"""
+  CONFIRMED
 
   """"""
   RESCHEDULED
 
   """"""
+  ON_HOLD
+
+  """"""
   UPDATED
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  RESCHEDULE_REQUESTED
+
+  """"""
+  CANCELLED_RESCHEDULED
 }
 
 """"""
@@ -7951,31 +7993,31 @@ input SubmissionScheduleRequestSearchInput {
   responseStatuses: [ScheduleInviteRequestStatus!]
 }
 
-"""Schedule request status"""
+""""""
 enum ScheduleInviteRequestStatus {
   """"""
+  PENDING
+
+  """"""
   CANCELLED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CONFIRMED
 
   """"""
   DECLINED
 
   """"""
-  ON_HOLD
+  CONFIRMED
 
   """"""
-  PENDING
+  RESCHEDULED
+
+  """"""
+  CANCELLED_RESCHEDULED
 
   """"""
   RESCHEDULE_REQUESTED
 
   """"""
-  RESCHEDULED
+  ON_HOLD
 
   """"""
   UPDATED
@@ -8699,10 +8741,10 @@ type CalendarType {
 """"""
 type ScheduleInviteRequestNotes {
   """"""
-  noteForRepresentative: String
+  noteForTalents: String
 
   """"""
-  noteForTalents: String
+  noteForRepresentative: String
 }
 
 """Schedule Timeframe Details"""
@@ -8990,7 +9032,7 @@ type CollaboratorsInOrganization {
   collaboratorInviteeOrgDetails: CollaboratorInviteFromOrgDetails
 
   """"""
-  collaboratorsProjectDetails(pageProjects: PageInput = {pageNumber: 1, pageSize: 3}): [CollaboratorInviteProjectDetails!]
+  collaboratorsProjectDetails(pageProjects: PageInput = {pageSize: 3, pageNumber: 1}): [CollaboratorInviteProjectDetails!]
 
   """"""
   email: String
@@ -10296,7 +10338,7 @@ type PresentationFolderPublic {
   talentCount: Int!
 
   """Folder talents of the package presentation"""
-  talents(pageInput: PageInput = {pageNumber: 1, pageSize: 100}): [PresentationTalentPublic!]!
+  talents(pageInput: PageInput = {pageSize: 100, pageNumber: 1}): [PresentationTalentPublic!]!
 
   """"""
   talentsWithPicksCount: Int!
@@ -14860,22 +14902,22 @@ type Schedule {
 """"""
 type ScheduleInviteResponseStatusCounts {
   """"""
+  scheduleId: Int!
+
+  """"""
+  notSent: Int!
+
+  """"""
   confirmed: Int!
 
   """"""
   declined: Int!
 
   """"""
-  notSent: Int!
-
-  """"""
   pending: Int!
 
   """"""
   rescheduleRequested: Int!
-
-  """"""
-  scheduleId: Int!
 }
 
 """"""
@@ -17372,28 +17414,28 @@ type WfProfileContactInfo {
 """"""
 enum MediaRequestStatus {
   """"""
-  ADDITIONAL_MEDIA_ADDED
+  NOT_SENT
+
+  """"""
+  PENDING
 
   """"""
   CANCELLED
 
   """"""
-  CHANGE_REQUESTED
+  MEDIA_ADDED
 
   """"""
-  CONFIRMED
+  ADDITIONAL_MEDIA_ADDED
+
+  """"""
+  CHANGE_REQUESTED
 
   """"""
   DECLINED
 
   """"""
-  MEDIA_ADDED
-
-  """"""
-  NOT_SENT
-
-  """"""
-  PENDING
+  CONFIRMED
 }
 
 """"""
@@ -18553,6 +18595,21 @@ type GroupLastKey {
   name: String!
 }
 
+scalar _Any
+
+""""""
+union _Entity = RepWorksheetResponse
+
+""""""
+type _Service {
+  """
+  The sdl representing the federated service capabilities. Includes federation
+  directives, removes federation types, and includes rest of full schema after
+  schema directives have been applied
+  """
+  sdl: String
+}
+
 type Mutation {
   """Returns a session bearer token."""
   bauLogin(input: BauLoginInput!): String!
@@ -19578,6 +19635,9 @@ type Mutation {
 
   """"""
   unHideProfileInRosterAndSearch(id: ID!): Profile!
+
+  """"""
+  unlockMedia(input: UnlockMediaInput!): UnlockMediaResponse!
 
   """"""
   updateAccount(
@@ -23562,6 +23622,21 @@ input UpdatePCProjectSpecificAddressInput {
   stateId: Int
 }
 
+"""Parameters for unlocking locked media."""
+input UnlockMediaInput {
+  """The IDs of the media to unlock."""
+  mediaIds: [ID!]!
+}
+
+""""""
+type UnlockMediaResponse {
+  """"""
+  mediaExternalStatusIds: [Int!]!
+
+  """"""
+  success: Boolean!
+}
+
 """Input for Updating Artist"""
 input ArtistUpdateInput {
   """Account Id """
@@ -24804,7 +24879,7 @@ input PurchaseSubscriptionInput {
   subscriptionBillingCode: String!
 
   """"""
-  billingInfoId: String!
+  billingInfoId: String
 
   """"""
   couponCode: String

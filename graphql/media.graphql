@@ -80,35 +80,69 @@ fragment BaseMedia on Media {
   thumbnailUrl
   name
   url
+  source
+  size
+  mediaId
+  accountId
+  created
+  width
+  height
+  fileKey
+  thumbnail {
+    __typename
+    id
+    fileKey
+  }
+  guid
+  profiles {
+    __typename
+    isPrimary
+    profile {
+      __typename
+      id
+      isPersonal
+      profileId
+      profileStatus {
+        __typename
+        id
+        code
+      }
+      organization {
+        __typename
+        id
+        name
+      }
+    }
+  }
   transformation {
+    __typename
     xAxis
     yAxis
     width
     height
     rotate
     startOffset
-    __typename
   }
   mediaStorageStatus {
+    __typename
     id
     code
-    __typename
   }
   fileType {
+    __typename
     id
     code
     name
-    __typename
   }
   mediaType {
+    __typename
     id
     code
-    __typename
   }
   mediaStatus {
+    __typename
     id
     code
-    __typename
   }
   isLocked
   __typename
