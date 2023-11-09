@@ -3,86 +3,126 @@ query SearchMediaForArtist($input: SearchMediaInput!) {
     __typename
     objects {
       __typename
-      createdByOrg {
+      id
+      ...SearchMediaResult
+      ...SearchMediaBaseResult
+      thumbnail {
         __typename
         id
-        name
+        ...SearchMediaBaseResult
       }
-      ...BaseSearchMedia
+      thumbnailUrl
     }
   }
 }
 
-fragment BaseSearchMedia on Media {
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  source
-  size
-  mediaId
-  accountId
-  created
+fragment MediaTransformation on MediaTransformation {
+  __typename
+  xAxis
+  yAxis
   width
   height
-  fileKey
-  thumbnail {
+  rotate
+  startOffset
+}
+
+fragment SearchMediaProfileMedia on ProfileMedia {
+  __typename
+  id
+  isPrimary
+  order
+  profile {
     __typename
     id
-    fileKey
-  }
-  guid
-  profiles {
-    __typename
-    isPrimary
-    profile {
+    profileId
+    stageName
+    organizations {
       __typename
       id
-      isPersonal
-      profileId
-      profileStatus {
-        __typename
-        id
-        code
-      }
-      organization {
+      name
+      parentOrganization {
         __typename
         id
         name
       }
     }
+    isPersonal
   }
-  transformation {
+}
+
+fragment SearchMediaResult on Media {
+  __typename
+  id
+  created
+  createdByOrg {
     __typename
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
+    id
+    name
   }
+  displaySize {
+    size
+    unit
+    __typename
+  }
+  mediaId
   mediaStorageStatus {
     __typename
     id
     code
-  }
-  fileType {
-    __typename
-    id
-    code
-    name
   }
   mediaType {
     __typename
     id
     code
   }
+  moderationStatus {
+    __typename
+    id
+    code
+  }
+  purpose {
+    __typename
+    id
+    code
+  }
+}
+
+fragment SearchMediaBaseResult on Media {
+  __typename
+  id
+  accountId
+  archivableOn
+  created
+  fileKey
+  filename
+  guid
+  height
+  length
+  mediaId
+  name
+  size
+  source
+  fileType {
+    __typename
+    id
+    code
+  }
+  transformation {
+    __typename
+    ...MediaTransformation
+  }
   mediaStatus {
     __typename
     id
     code
   }
+  artistMediaProfile: profiles {
+    __typename
+    id
+    ...SearchMediaProfileMedia
+  }
   isLocked
-  __typename
+  updated
+  url
+  width
 }
