@@ -116,7 +116,7 @@ fragment SearchMediaBaseResult on Media {
     id
     code
   }
-  artistMediaProfile: profiles {
+  profiles {
     __typename
     id
     ...SearchMediaProfileMedia
