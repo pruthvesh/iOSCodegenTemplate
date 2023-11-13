@@ -165,6 +165,9 @@ mutation updateProfileMediaVisibility($mediaId: Int!, $profileIds: [Int!]!) {
 
 query getArtistStorageUtilization($artistId: Int) {
   artistStorageUtilization(artistId: $artistId) {
+    artistStorageLimitBytes
+    artistStorageRemainingBytes
+    id
     mediaStorages {
       mediaType {
           code
