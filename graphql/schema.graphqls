@@ -109,7 +109,7 @@ type Query {
 
   """Gets paginated result of Audition Groups by provided session id"""
   auditionGroupsBySession(
-    """Paginated input params """
+    """Paginated input params"""
     pageInput: PageInput
 
     """Id of audition session"""
@@ -118,7 +118,7 @@ type Query {
 
   """Gets paginated result of Audition Sessions by provided project id"""
   auditionSessionsByProject(
-    """Paginated input params """
+    """Paginated input params"""
     pageInput: PageInput
 
     """Id of project"""
@@ -395,7 +395,7 @@ type Query {
   getPlanFeatures(planId: ID!): [PlanFeatureModel!]!
 
   """"""
-  getPlans: [PlanModel!]!
+  getPlans: [PlanModel!]! @deprecated(reason: "Use billingPlans query instead")
 
   """Retrieve Presentation by filters"""
   getPresentationByFilters(input: PresentationFilterInput!): PresentationPublic!
@@ -727,7 +727,7 @@ type Query {
   presentationTypes(input: FilterInput): [PresentationType!]!
 
   """"""
-  previewPurchase(input: PurchaseInput!): PurchaseModel!
+  previewPurchase(input: PurchaseInput!): PurchaseModel! @deprecated(reason: "Use previewSubscriptionPurchase query instead")
 
   """Get all the profile ids by account"""
   profileIdsByAccounts(accountIds: [ID!]!): [ProfileIdsByAccount!]
@@ -1018,31 +1018,25 @@ type Query {
   repsWorksheetFilters: RepsWorksheetFilters!
 
   """"""
-  mediaRequestDetails(id: ID!): MediaRequest!
+  roleTracker(page: PageInput = {pageNumber: 1, pageSize: 100}, filters: RoleTrackerFiltersArgs, sortOptions: [RoleTrackerOrderOption!]): RoleTrackerPagedList!
 
   """"""
-  mediaRequestResponseCount(id: ID!): [MediaResponseCounts!]!
+  roleTrackerStats(
+    """"""
+    interval: Int = 30
+
+    """"""
+    timeframe: Int = 60
+
+    """Role Tracker Interval Type"""
+    intervalType: RoleTrackerStatsIntervalEnum = DAYS
+  ): RoleTrackerStatsResponse!
 
   """"""
-  mediaSubRequestDetails(id: ID!): MediaSubRequest!
+  roleTrackerGroups(limit: Int!, groupType: RoleTrackerGroupType!, groupId: ID, sortOrder: SortOrder = ASC): RoleTrackerGroups!
 
   """"""
-  scheduleInviteSubRequestDetails(id: ID!): ScheduleInviteSubRequest!
-
-  """"""
-  scheduleInviteRequestNotes(scheduleId: Int!): ScheduleInviteRequestNotes!
-
-  """"""
-  scheduleInviteResponseStatusCounts(scheduleIds: [Int!]!): [ScheduleInviteResponseStatusCounts!]!
-
-  """"""
-  scheduleResponses(scheduleId: Int!): [ScheduleInviteResponse!]!
-
-  """"""
-  scheduleResponsesCanceled(scheduleId: Int!): [ScheduleInviteResponse!]!
-
-  """"""
-  previousScheduleResponses(scheduleId: Int!, submissionIds: [Int!]!): [ScheduleInvitePreviousResponse!]!
+  wfApiHealth: String!
 
   """"""
   requests(projectId: Int!, page: PageInput!): RequestPagedList!
@@ -1060,7 +1054,13 @@ type Query {
   ): Float!
 
   """"""
-  wfApiHealth: String!
+  mediaRequestDetails(id: ID!): MediaRequest!
+
+  """"""
+  mediaRequestResponseCount(id: ID!): [MediaResponseCounts!]!
+
+  """"""
+  mediaSubRequestDetails(id: ID!): MediaSubRequest!
 
   """"""
   askQuestionRequestDetails(id: ID!): AskQuestionRequest!
@@ -1084,10 +1084,31 @@ type Query {
   talentResponse(id: ID!): RepWorksheetResponse
 
   """"""
+  scheduleInviteSubRequestDetails(id: ID!): ScheduleInviteSubRequest!
+
+  """"""
+  scheduleInviteRequestNotes(scheduleId: Int!): ScheduleInviteRequestNotes!
+
+  """"""
+  scheduleInviteResponseStatusCounts(scheduleIds: [Int!]!): [ScheduleInviteResponseStatusCounts!]!
+
+  """"""
+  scheduleResponses(scheduleId: Int!): [ScheduleInviteResponse!]!
+
+  """"""
+  scheduleResponsesCanceled(scheduleId: Int!): [ScheduleInviteResponse!]!
+
+  """"""
+  previousScheduleResponses(scheduleId: Int!, submissionIds: [Int!]!): [ScheduleInvitePreviousResponse!]!
+
+  """"""
   getActivityLogsBySubmissionId(id: Int!, page: PageInput!): ActivityLogPagedList!
 
   """"""
   getLastActivityLogBySubmissionIds(ids: [Int!]!): [ActivityLog!]!
+
+  """"""
+  voiceOverMediaRequests(roleId: Int!, submissionIds: [Int!]): [MediaSubRequest!]!
 
   """"""
   auditions(
@@ -1406,8 +1427,7 @@ type BauMedia {
   mediaFileKey: String
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+""" A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. 
 """
 scalar DateTime
 
@@ -1790,7 +1810,7 @@ type Project {
   """Project organizations"""
   organizations: [Organization!]
 
-  """Parent Project- eg series """
+  """Parent Project- eg series"""
   parent: Project
 
   """"""
@@ -2501,9 +2521,7 @@ type Media {
   """Returns the Organization of the media create, if one exists"""
   createdByOrg: Organization
 
-  """
-  Returns a formatted size and unit of media or null if there is no artist_util_id
-  """
+  """Formatted size with units"""
   displaySize: MediaDisplaySize
 
   """"""
@@ -2624,7 +2642,7 @@ type MediaFileType {
   sortOrder: Int
 }
 
-"""MediaType  object"""
+"""MediaType object"""
 type MediaType {
   """code"""
   code: String!
@@ -3937,7 +3955,7 @@ type ProfileGenderIdentity {
   """Profile Gender Identity"""
   genderIdentity: GenderIdentity!
 
-  """Profile Gender Other Identity Note """
+  """Profile Gender Other Identity Note"""
   genderOtherIdentityNote: String
 }
 
@@ -4694,7 +4712,7 @@ type Submission {
   id: BigInt!
 
   """"""
-  isCreatedByCD: Boolean
+  isCreatedByCD: Boolean @deprecated(reason: "DEPRECATED. Use submission.source instead.")
 
   """Identify the submission is cutomized or not."""
   isCustomized: Boolean!
@@ -4804,9 +4822,7 @@ type SubmissionMedia {
   """Returns the Organization of the media create, if one exists"""
   createdByOrg: Organization
 
-  """
-  Returns a formatted size and unit of media or null if there is no artist_util_id
-  """
+  """Formatted size with units"""
   displaySize: MediaDisplaySize
 
   """Enabled"""
@@ -5007,7 +5023,7 @@ type Role {
   """"""
   fieldRestrictions: [RoleFieldRestriction!]
 
-  """Gender """
+  """Gender"""
   genderAppearance: [GenderAppearance!]
 
   """Role public GUID"""
@@ -5246,7 +5262,7 @@ type RoleCountOfPairedRepsAndCB {
 
   """
   Represents the Count of paired reps organizations for current published role,
-  or count of potentially paired reps organizations for not published role 
+  or count of potentially paired reps organizations for not published role
   """
   repsOrgs: Int!
 }
@@ -5586,7 +5602,7 @@ input PageInput {
 
 """Paginated result with [RoleOrganizationPair] objects"""
 type RoleOrganizationPairPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of RoleOrganizationPair objects"""
@@ -5629,7 +5645,7 @@ type RoleStatus {
   sortOrder: Int
 }
 
-"""RoleType  object"""
+"""RoleType object"""
 type RoleType {
   """code"""
   code: String!
@@ -5871,7 +5887,7 @@ type SubmissionScheduleSlot {
   """Calendar Slot EndTime"""
   slotEndTime: DateTime
 
-  """Calendar Slot StartTime """
+  """Calendar Slot StartTime"""
   slotStartTime: DateTime
 
   """Schedule StartTime"""
@@ -6363,7 +6379,7 @@ type Artist {
   """"""
   account: Account
 
-  """Artist Id """
+  """Artist Id"""
   artistId: Int!
 
   """"""
@@ -6446,6 +6462,12 @@ type PlanModel {
 
   """"""
   isBasePlan: Boolean
+
+  """"""
+  isComped: Boolean
+
+  """"""
+  level: Int
 
   """"""
   name: String
@@ -7006,8 +7028,7 @@ interface IError {
   message: String!
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+""" The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). 
 """
 scalar JSON
 
@@ -7138,7 +7159,7 @@ type ProjectVisibility {
 """"""
 type ProjectRequestsInfo {
   """
-  # of Requested talent in Project with worksheer request status of New, Rescheduled, Review 
+  # of Requested talent in Project with worksheer request status of New, Rescheduled, Review
   """
   newProjectRequestsCount: Float
 
@@ -7151,12 +7172,12 @@ type ArtistStorageUtilization {
   """
   The storage limit in bytes for the artist. Returns null if the artist has no storage limit.
   """
-  artistStorageLimitBytes: Int
+  artistStorageLimitBytes: BigInt
 
   """
   The remaining storage in bytes for the artist. Returns null if the artist has no storage limit.
   """
-  artistStorageRemainingBytes: Int
+  artistStorageRemainingBytes: BigInt
 
   """"""
   id: ID!
@@ -7165,7 +7186,7 @@ type ArtistStorageUtilization {
   mediaStorages: [MediaStorage!]!
 
   """Total size of all media types used in bytes"""
-  totalSizeBytes: Int!
+  totalSizeBytes: BigInt!
 }
 
 """"""
@@ -7174,7 +7195,7 @@ type MediaStorage {
   mediaType: MediaType!
 
   """Total size of media type used in bytes"""
-  storageSizeBytes: Int!
+  storageSizeBytes: BigInt!
 }
 
 """Subscription Input"""
@@ -7260,7 +7281,7 @@ type AuditionGroupTalent {
 
 """Paginated result with [AuditionGroup] objects"""
 type AuditionGroupPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of AuditionGroup objects"""
@@ -7278,7 +7299,7 @@ type AuditionGroupPaginatedResult {
 
 """Paginated result with [AuditionSession] objects"""
 type AuditionSessionPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of AuditionSession objects"""
@@ -8007,7 +8028,7 @@ type SubmissionPaginatedResult {
   """"""
   facets: [Facet!]
 
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of Submission objects"""
@@ -8142,7 +8163,7 @@ type AccountActiveOnboardedPaypal {
 
 """Paginated result with [AuditionHistory] objects"""
 type AuditionHistoryPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of AuditionHistory objects"""
@@ -8962,7 +8983,7 @@ enum CollaboratorInviteStatusCode {
 
 """Paginated result with [CollaboratorsInvite] objects"""
 type CollaboratorsInvitePaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of CollaboratorsInvite objects"""
@@ -8986,7 +9007,7 @@ input GetCollaboratorByEmailInput {
 
 """Paginated result with [CollaboratorsInOrganization] objects"""
 type CollaboratorsInOrganizationPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of CollaboratorsInOrganization objects"""
@@ -9040,7 +9061,7 @@ type PresentationSubmissionComment {
 
 """Paginated result with [PresentationSubmissionComment] objects"""
 type PresentationSubmissionCommentPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of PresentationSubmissionComment objects"""
@@ -9337,7 +9358,7 @@ enum NoteTypeEnum {
 
 """Paginated result with [Note] objects"""
 type NotePaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of Note objects"""
@@ -9886,7 +9907,7 @@ enum ListSortOrderEnum {
 
 """Paginated result with [ProfileList] objects"""
 type ProfileListPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of ProfileList objects"""
@@ -9976,7 +9997,7 @@ input GetOrganizationRepresentativeListsInput {
 
 """Paginated result with [RepresentativeList] objects"""
 type RepresentativeListPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of RepresentativeList objects"""
@@ -10051,7 +10072,7 @@ input OrganizationsByRepTypeAndNameInput {
 
 """Paginated result with [OrganizationsByRepTypeAndNameResult] objects"""
 type OrganizationsByRepTypeAndNameResultPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of OrganizationsByRepTypeAndNameResult objects"""
@@ -11261,7 +11282,7 @@ type Presentation {
 
 """Paginated result with [PresentationGroupSubmission] objects"""
 type PresentationGroupSubmissionPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of PresentationGroupSubmission objects"""
@@ -11303,7 +11324,7 @@ type PresentationGroupSubmission {
 
 """Paginated result with [PresentationTalentPublic] objects"""
 type PresentationTalentPublicPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of PresentationTalentPublic objects"""
@@ -11462,7 +11483,7 @@ input ProjectBacklotSearchInput {
 
 """Paginated result with [ProjectBacklotSearchResult] objects"""
 type ProjectBacklotSearchResultPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of ProjectBacklotSearchResult objects"""
@@ -13715,7 +13736,7 @@ type RoleWorkflow {
   """"""
   roleType: RoleType!
 
-  """Sexual Situations """
+  """Sexual Situations"""
   sexualSituations: [SexualSituation!]
 
   """"""
@@ -14165,7 +14186,7 @@ enum ProjectStatusFilterEnum {
 
 """Paginated result with [ProjectBase] objects"""
 type ProjectBasePaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of ProjectBase objects"""
@@ -14231,7 +14252,7 @@ enum ProjectGroupType {
 
 """Paginated result with [OrganizationProjectGroup] objects"""
 type OrganizationProjectGroupPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of OrganizationProjectGroup objects"""
@@ -14261,7 +14282,7 @@ union OrganizationProjectGroupDetails = ProjectSeries | ProjectStatus | ProjectT
 
 """Paginated result with [OrganizationsByRoleSubmissionsAndName] objects"""
 type OrganizationsByRoleSubmissionsAndNamePaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of OrganizationsByRoleSubmissionsAndName objects"""
@@ -14431,7 +14452,7 @@ enum RoleStatusCodes {
 
 """Paginated result with [RolePublication] objects"""
 type RolePublicationPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of RolePublication objects"""
@@ -14561,6 +14582,9 @@ input SearchMediaInput {
 
   """Sorts search results. Defaults to Updated."""
   sortBy: SearchMediaSortBy = Updated
+
+  """Direction used to sort search results. Defaults to Desc."""
+  sortOrder: SearchMediaSortOrder = Desc
 }
 
 """"""
@@ -14610,6 +14634,15 @@ enum SearchMediaSortBy {
 
   """"""
   Updated
+}
+
+"""Direction used to sort Media search results."""
+enum SearchMediaSortOrder {
+  """"""
+  Asc
+
+  """"""
+  Desc
 }
 
 """"""
@@ -14730,7 +14763,7 @@ enum ProfileSearchSortField {
 
 """Paginated result with [ProfileSearchResultByOrgId] objects"""
 type ProfileSearchResultByOrgIdPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of ProfileSearchResultByOrgId objects"""
@@ -14757,7 +14790,7 @@ type ProfileSearchResultByOrgId {
 
 """Paginated result with [Project] objects"""
 type ProjectPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of Project objects"""
@@ -14781,7 +14814,7 @@ input GetProjectSeriesByNameInput {
 
 """Paginated result with [ProjectSeries] objects"""
 type ProjectSeriesPaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of ProjectSeries objects"""
@@ -14835,7 +14868,7 @@ input ScheduleSearchInput {
 
 """Paginated result with [Schedule] objects"""
 type SchedulePaginatedResult {
-  """Last key """
+  """Last key"""
   lastKey: String
 
   """List of Schedule objects"""
@@ -15257,6 +15290,9 @@ type Coupon {
 
   """"""
   state: String!
+
+  """"""
+  isRedeemed: Boolean!
 }
 
 """Payment Details"""
@@ -16293,6 +16329,255 @@ type OrganizationFilter {
   name: String!
 }
 
+""""""
+input RoleTrackerFiltersArgs {
+  """"""
+  orgIds: [Int!]
+
+  """"""
+  submissionIds: [BigInt!]
+
+  """"""
+  profileIds: [Int!]
+}
+
+""""""
+input RoleTrackerOrderOption {
+  """"""
+  field: RoleTrackerFieldOrder = created
+
+  """"""
+  sortOrder: SortOrder = ASC
+}
+
+""""""
+enum RoleTrackerFieldOrder {
+  """"""
+  created
+
+  """"""
+  lastStatusUpdated
+}
+
+""""""
+type RoleTrackerPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [RoleTracker!]!
+}
+
+"""Role Tracker Model"""
+type RoleTracker {
+  """Created Date"""
+  created: DateTime
+
+  """Primary ID"""
+  id: BigInt!
+
+  """Last Status Update"""
+  lastStatusUpdated: DateTime
+
+  """Role associated with the Role Tracker"""
+  role: Role
+
+  """Role Tracker Status"""
+  roleTrackerStatus: RoleTrackerStatusEnum
+
+  """The source of the Role Tracker Submission"""
+  source: String
+}
+
+""""""
+enum RoleTrackerStatusEnum {
+  """"""
+  SELECTED
+
+  """"""
+  SUBMITTED
+
+  """"""
+  UNDER_CONSIDERATION
+}
+
+""""""
+enum RoleTrackerStatsIntervalEnum {
+  """"""
+  HOURS
+
+  """"""
+  DAYS
+
+  """"""
+  WEEKS
+}
+
+"""Role Tracker Stats Model"""
+type RoleTrackerStatsResponse {
+  """"""
+  currentPeriod: RoleTrackerStatsPeriod!
+
+  """"""
+  previousPeriod: RoleTrackerStatsPeriod!
+}
+
+"""Role Tracker Stats Period Model"""
+type RoleTrackerStatsPeriod {
+  """"""
+  interval: Int
+
+  """"""
+  nthInterval: Int
+
+  """"""
+  stats: RoleTrackerStatsAggregate!
+}
+
+"""Role Tracker Stats Aggregate Model"""
+type RoleTrackerStatsAggregate {
+  """"""
+  total: Int!
+
+  """"""
+  submitted: Int!
+
+  """"""
+  selected: Int!
+
+  """"""
+  underConsideration: Int!
+}
+
+""""""
+enum RoleTrackerGroupType {
+  """"""
+  PROJECT_TYPE
+
+  """"""
+  ROLE_TYPE
+
+  """"""
+  STATUS
+
+  """"""
+  SOURCE
+}
+
+""""""
+type RoleTrackerGroups {
+  """"""
+  nextGroupId: ID
+
+  """"""
+  groups: [RoleTrackerGroup!]!
+}
+
+""""""
+type RoleTrackerGroup {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  itemCount: Int!
+}
+
+""""""
+type RequestPagedList {
+  """"""
+  page: Int!
+
+  """"""
+  totalCount: Int!
+
+  """"""
+  totalPages: Int!
+
+  """"""
+  data: [Request!]!
+}
+
+""""""
+type Request {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: RequestType!
+
+  """"""
+  name: String!
+
+  """"""
+  sentAt: DateTime
+
+  """"""
+  lastActionAt: DateTime
+}
+
+""""""
+type RequestSubmission {
+  """Request ID"""
+  id: ID!
+
+  """Submission ID"""
+  submissionId: ID!
+}
+
+""""""
+enum RequestStatus {
+  """"""
+  NOT_SENT
+
+  """"""
+  PENDING
+
+  """"""
+  CANCELLED
+
+  """"""
+  NEW_REQUEST
+
+  """"""
+  RESCHEDULED
+
+  """"""
+  REVIEW_RESPONSE
+
+  """"""
+  CHANGE_REQUESTED
+
+  """"""
+  ON_HOLD
+
+  """"""
+  COMPLETED
+
+  """"""
+  CANCELLED_RESCHEDULED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  MEDIA_ADDED
+
+  """"""
+  ADDITIONAL_MEDIA_ADDED
+}
+
 """'Media Request' Type"""
 type MediaRequest {
   """"""
@@ -16341,7 +16626,7 @@ type MediaRequest {
   allowAdditionalMedia: Boolean
 
   """"""
-  responses(page: PageInput!, statuses: [String!]): MediaResponsePagedList!
+  responses(statuses: [String!], page: PageInput!): MediaResponsePagedList!
 
   """"""
   submissionIds: [Int!]!
@@ -17525,299 +17810,6 @@ type MediaSubRequest {
   chatTopic: WfChatTopic
 }
 
-"""
-Schedule Invite Request type. The Schedule Invite is always sent from a schedule
-and some fields are based on the schedule data.
-"""
-type ScheduleInviteSubRequest {
-  """Schedule Invite Request id."""
-  id: ID!
-
-  """
-  A message to Representatives of the talents that are connected to submissions.
-  """
-  noteForRepresentative: String
-
-  """An instruction for Talents connected to submissions."""
-  noteForTalents: String
-
-  """"""
-  schedule: WfSchedule
-
-  """"""
-  project: WfProject!
-
-  """"""
-  role: WfRole!
-
-  """"""
-  profile: WfProfile
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  status: ScheduleInviteRequestStatus!
-
-  """Reps Worksheet Status"""
-  repsWorksheetStatus: String!
-
-  """"""
-  responseNote: String
-
-  """Response Status"""
-  responseStatus: String
-
-  """Forwarded Note"""
-  forwardNote: String
-
-  """Date of Slot"""
-  slotDate: DateTime
-
-  """Previous Response Status"""
-  prevResponseStatus: String
-
-  """Previous Response Note"""
-  prevResponseNote: String
-
-  """Previous Slot Date"""
-  prevSlotDate: DateTime
-
-  """"""
-  chatTopicKey: String!
-
-  """Cancellation note"""
-  cancellationNote: String
-}
-
-""""""
-type WfSchedule {
-  """"""
-  id: Int!
-
-  """"""
-  name: String!
-
-  """"""
-  type: ScheduleRequestType!
-
-  """"""
-  address: WfAddress
-
-  """"""
-  date: DateTime
-
-  """Time Zone"""
-  timeZone: WfTimeZone
-
-  """"""
-  note: String
-
-  """"""
-  isLocationHidden: Boolean!
-}
-
-""""""
-enum ScheduleRequestType {
-  """"""
-  AUDITION
-
-  """"""
-  CALLBACK
-}
-
-""""""
-type WfAddress {
-  """"""
-  id: Int!
-
-  """Postal code"""
-  postalCode: String!
-
-  """"""
-  countryName: String
-
-  """"""
-  countryCode: String
-
-  """"""
-  state: String
-
-  """"""
-  city: String
-
-  """"""
-  line1: String
-
-  """"""
-  line2: String
-
-  """"""
-  line3: String
-
-  """"""
-  note: String
-}
-
-""""""
-type ScheduleInviteResponse {
-  """"""
-  id: ID!
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  sentAt: DateTime
-
-  """"""
-  repliedAt: DateTime
-
-  """"""
-  note: String
-
-  """"""
-  status: ScheduleInviteRequestStatus!
-
-  """"""
-  prevRevisionResponseStatus: ScheduleInviteRequestStatus
-
-  """"""
-  slotId: Int!
-
-  """"""
-  chatTopicKey: String!
-
-  """"""
-  slotStartDate: DateTime
-
-  """"""
-  chatTopic: WfChatTopic
-}
-
-""""""
-type ScheduleInvitePreviousResponse {
-  """"""
-  id: ID!
-
-  """"""
-  status: ScheduleInviteResponseStatus!
-
-  """"""
-  submissionId: Int!
-
-  """"""
-  responseNote: String
-
-  """"""
-  schedule: WfSchedule!
-
-  """"""
-  slotDate: DateTime
-}
-
-""""""
-enum ScheduleInviteResponseStatus {
-  """"""
-  PENDING
-
-  """"""
-  DECLINED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  RESCHEDULE_REQUESTED
-}
-
-""""""
-type RequestPagedList {
-  """"""
-  page: Int!
-
-  """"""
-  totalCount: Int!
-
-  """"""
-  totalPages: Int!
-
-  """"""
-  data: [Request!]!
-}
-
-""""""
-type Request {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: RequestType!
-
-  """"""
-  name: String!
-
-  """"""
-  sentAt: DateTime
-
-  """"""
-  lastActionAt: DateTime
-}
-
-""""""
-type RequestSubmission {
-  """Request ID"""
-  id: ID!
-
-  """Submission ID"""
-  submissionId: ID!
-}
-
-""""""
-enum RequestStatus {
-  """"""
-  NOT_SENT
-
-  """"""
-  PENDING
-
-  """"""
-  CANCELLED
-
-  """"""
-  NEW_REQUEST
-
-  """"""
-  RESCHEDULED
-
-  """"""
-  REVIEW_RESPONSE
-
-  """"""
-  CHANGE_REQUESTED
-
-  """"""
-  ON_HOLD
-
-  """"""
-  COMPLETED
-
-  """"""
-  CANCELLED_RESCHEDULED
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  MEDIA_ADDED
-
-  """"""
-  ADDITIONAL_MEDIA_ADDED
-}
-
 """'Ask Question Request' Type"""
 type AskQuestionRequest {
   """"""
@@ -18041,6 +18033,212 @@ input RosterInvitationTalentHistoryFilterInput {
 
   """Filter by email"""
   email: String!
+}
+
+"""
+Schedule Invite Request type. The Schedule Invite is always sent from a schedule
+and some fields are based on the schedule data.
+"""
+type ScheduleInviteSubRequest {
+  """Schedule Invite Request id."""
+  id: ID!
+
+  """
+  A message to Representatives of the talents that are connected to submissions.
+  """
+  noteForRepresentative: String
+
+  """An instruction for Talents connected to submissions."""
+  noteForTalents: String
+
+  """"""
+  schedule: WfSchedule
+
+  """"""
+  project: WfProject!
+
+  """"""
+  role: WfRole!
+
+  """"""
+  profile: WfProfile
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  status: ScheduleInviteRequestStatus!
+
+  """Reps Worksheet Status"""
+  repsWorksheetStatus: String!
+
+  """"""
+  responseNote: String
+
+  """Response Status"""
+  responseStatus: String
+
+  """Forwarded Note"""
+  forwardNote: String
+
+  """Date of Slot"""
+  slotDate: DateTime
+
+  """Previous Response Status"""
+  prevResponseStatus: String
+
+  """Previous Response Note"""
+  prevResponseNote: String
+
+  """Previous Slot Date"""
+  prevSlotDate: DateTime
+
+  """"""
+  chatTopicKey: String!
+
+  """Cancellation note"""
+  cancellationNote: String
+}
+
+""""""
+type WfSchedule {
+  """"""
+  id: Int!
+
+  """"""
+  name: String!
+
+  """"""
+  type: ScheduleRequestType!
+
+  """"""
+  address: WfAddress
+
+  """"""
+  date: DateTime
+
+  """Time Zone"""
+  timeZone: WfTimeZone
+
+  """"""
+  note: String
+
+  """"""
+  isLocationHidden: Boolean!
+}
+
+""""""
+enum ScheduleRequestType {
+  """"""
+  AUDITION
+
+  """"""
+  CALLBACK
+}
+
+""""""
+type WfAddress {
+  """"""
+  id: Int!
+
+  """Postal code"""
+  postalCode: String!
+
+  """"""
+  countryName: String
+
+  """"""
+  countryCode: String
+
+  """"""
+  state: String
+
+  """"""
+  city: String
+
+  """"""
+  line1: String
+
+  """"""
+  line2: String
+
+  """"""
+  line3: String
+
+  """"""
+  note: String
+}
+
+""""""
+type ScheduleInviteResponse {
+  """"""
+  id: ID!
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  sentAt: DateTime
+
+  """"""
+  repliedAt: DateTime
+
+  """"""
+  note: String
+
+  """"""
+  status: ScheduleInviteRequestStatus!
+
+  """"""
+  prevRevisionResponseStatus: ScheduleInviteRequestStatus
+
+  """"""
+  slotId: Int!
+
+  """"""
+  chatTopicKey: String!
+
+  """"""
+  slotStartDate: DateTime
+
+  """"""
+  chatTopic: WfChatTopic
+}
+
+""""""
+type ScheduleInvitePreviousResponse {
+  """"""
+  id: ID!
+
+  """"""
+  status: ScheduleInviteResponseStatus!
+
+  """"""
+  submissionId: Int!
+
+  """"""
+  responseNote: String
+
+  """"""
+  schedule: WfSchedule!
+
+  """"""
+  slotDate: DateTime
+}
+
+""""""
+enum ScheduleInviteResponseStatus {
+  """"""
+  PENDING
+
+  """"""
+  DECLINED
+
+  """"""
+  CONFIRMED
+
+  """"""
+  RESCHEDULE_REQUESTED
 }
 
 """"""
@@ -18847,13 +19045,13 @@ type Mutation {
 
   """Add break to schedule"""
   addScheduleBreak(
-    """Break's end time """
+    """Break's end time"""
     endTime: DateTime!
 
     """Schedule ID"""
     scheduleId: Int!
 
-    """Break's start time """
+    """Break's start time"""
     startTime: DateTime!
   ): Int!
 
@@ -18957,6 +19155,9 @@ type Mutation {
     attachToProfile: Boolean
 
     """"""
+    checkPayment: Boolean = true
+
+    """"""
     creditId: Float!
 
     """"""
@@ -18985,7 +19186,7 @@ type Mutation {
 
   """Mutation for attaching media to the presentation group"""
   attachMediaToPresentationGroup(
-    """Presentation Group's ID """
+    """Presentation Group's ID"""
     groupId: Int!
 
     """"""
@@ -18996,7 +19197,7 @@ type Mutation {
   attachMediaToProfile(input: AttachMediaToProfileInput!): Media!
 
   """"""
-  attachMediaToProfileSkill(mediaId: Int!, profileId: Int!, profileSkillId: BigInt!): Media!
+  attachMediaToProfileSkill(checkPayment: Boolean = true, mediaId: Int!, profileId: Int!, profileSkillId: BigInt!): Media!
 
   """Attaches uploaded media to the Audition Group in defined order"""
   attachOrderedMediaToAuditionGroup(inputModel: AuditionGroupMediaInput!): Boolean!
@@ -19046,7 +19247,7 @@ type Mutation {
   closeDivision(divisionId: Float!): Float
 
   """"""
-  completePurchase(input: PurchaseInput!): CompletePurchaseBillingDetailsModel!
+  completePurchase(input: PurchaseInput!): CompletePurchaseBillingDetailsModel! @deprecated(reason: "Use purchaseSubscription mutation instead")
 
   """"""
   contactSubTalent(input: ContactSubTalentInput!): Boolean!
@@ -19178,7 +19379,7 @@ type Mutation {
   createShareTalentPresentation(input: ShareTalentPresentationInput!): Presentation!
 
   """"""
-  createSubscription(input: CreateSubscriptionInput!): Boolean!
+  createSubscription(input: CreateSubscriptionInput!): Boolean! @deprecated(reason: "Use createCompedSubscription instead")
 
   """"""
   createTalentScoutHistory(input: CreateTalentScoutHistoryInput!): TalentScoutModel!
@@ -19230,7 +19431,7 @@ type Mutation {
 
   """Mutation for deleting media from the presentation group"""
   deleteMediaFromPresentationGroup(
-    """Presentation Group's ID """
+    """Presentation Group's ID"""
     groupId: Int!
 
     """"""
@@ -19830,13 +20031,13 @@ type Mutation {
     """Timeframe ID"""
     breakId: Int!
 
-    """Break's end time """
+    """Break's end time"""
     endTime: DateTime!
 
     """Schedule ID"""
     scheduleId: Int!
 
-    """Break's start time """
+    """Break's start time"""
     startTime: DateTime!
   ): Boolean!
 
@@ -19860,7 +20061,7 @@ type Mutation {
     """CODE of new status"""
     statusCode: String!
 
-    """List of subscription Ids which should be updated """
+    """List of subscription Ids which should be updated"""
     submissionIds: [BigInt!]!
   ): [Submission!]!
 
@@ -19897,6 +20098,12 @@ type Mutation {
   renewSubscription(input: RenewSubscriptionInput!): SubscriptionRenewal!
 
   """"""
+  createCompedSubscription(input: CreateCompedSubscriptionInput!): Boolean!
+
+  """"""
+  expireCompedSubscription(input: ExpireCompedSubscriptionInput!): Boolean!
+
+  """"""
   createCouponRedemption(input: CreateCouponRedemptionInput!): Boolean!
 
   """"""
@@ -19904,6 +20111,24 @@ type Mutation {
 
   """"""
   purchaseSubscription(input: PurchaseSubscriptionInput!): SubscriptionInvoice!
+
+  """Sends request to media-request for all selected request statuses"""
+  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
+
+  """"""
+  cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
+
+  """"""
+  createChatTopicFromSubRequest(subRequestId: String!): Boolean!
+
+  """"""
+  forwardRequests(ids: [ID!]!, message: String, ccManagerEmail: Boolean): [RepWorksheetItem!]!
+
+  """"""
+  deleteRequest(id: ID!): Boolean!
+
+  """"""
+  updateRequestDueDate(id: ID!, input: UpdateDueDateInput!): RequestUnion!
 
   """Creates 'Media' request type"""
   createMediaRequest(input: MediaRequestInput!): MediaRequest!
@@ -19926,33 +20151,6 @@ type Mutation {
   """"""
   updateMediaRequestMessageForRepresentatives(id: ID!, message: String = null): MediaRequest!
 
-  """Send 'Schedule Invite' request"""
-  sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
-
-  """Reply to 'Schedule Invite' request"""
-  replyToScheduleInviteRequest(input: ScheduleInviteResponseInput!): ScheduleInviteSubRequest!
-
-  """Casting Director can set reply status"""
-  setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
-
-  """Sends request to media-request for all selected request statuses"""
-  createRequest(id: ID!, sendTo: [RequestSendTo!]!, note: String = null): Boolean!
-
-  """"""
-  cancelRequest(id: ID!, input: CancelRequestInput!): Boolean!
-
-  """"""
-  createChatTopicFromSubRequest(subRequestId: String!): Boolean!
-
-  """"""
-  forwardRequests(ids: [ID!]!, message: String, ccManagerEmail: Boolean): [RepWorksheetItem!]!
-
-  """"""
-  deleteRequest(id: ID!): Boolean!
-
-  """"""
-  updateRequestDueDate(id: ID!, input: UpdateDueDateInput!): RequestUnion!
-
   """Creates 'Ask Question' request type"""
   createAskQuestionRequest(input: AskQuestionRequestInput!): AskQuestionRequest!
 
@@ -19967,6 +20165,18 @@ type Mutation {
 
   """Creates 'Roster Invitation Request' type"""
   createRosterInvitationRequest(input: RosterInvitationRequestInput!): RosterInvitationRequest!
+
+  """Send 'Schedule Invite' request"""
+  sendScheduleInviteRequest(input: ScheduleInviteRequestInput!): Boolean!
+
+  """Reply to 'Schedule Invite' request"""
+  replyToScheduleInviteRequest(input: ScheduleInviteResponseInput!): ScheduleInviteSubRequest!
+
+  """Casting Director can set reply status"""
+  setSheduleInviteRequestStatus(input: ScheduleInviteSetStatusInput!): ScheduleInviteSubRequest!
+
+  """Sends Voice Over 'Media' request"""
+  sendVoiceOverMediaRequest(input: SendVoiceOverMediaRequestInput!): [MediaSubRequest!]!
 }
 
 """Creates a user account based on given input values"""
@@ -22675,6 +22885,15 @@ enum BillingCode {
   concierge_semiannual
 
   """"""
+  essential_annual
+
+  """"""
+  essential_comped
+
+  """"""
+  essential_m2m
+
+  """"""
   la_cb_annual
 
   """"""
@@ -22955,8 +23174,7 @@ type FinalizeMediaUploadResponse {
   storageUtilization: ArtistStorageUtilization
 }
 
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+""" The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). 
 """
 scalar JSONObject
 
@@ -23603,10 +23821,10 @@ type UnlockMediaResponse {
 
 """Input for Updating Artist"""
 input ArtistUpdateInput {
-  """Account Id """
+  """Account Id"""
   accountId: Int
 
-  """Artist Id """
+  """Artist Id"""
   artistId: Int!
 
   """First Name"""
@@ -23615,7 +23833,7 @@ input ArtistUpdateInput {
   """Last Name"""
   lastName: String
 
-  """Organization Id """
+  """Organization Id"""
   organizationId: Int
 
   """Profile access token granted by Rep"""
@@ -24831,6 +25049,27 @@ input RenewSubscriptionInput {
   billingInfoId: String!
 }
 
+"""Create Comped Subscription Input"""
+input CreateCompedSubscriptionInput {
+  """Account id"""
+  accountId: Int!
+
+  """Artist id"""
+  artistId: Int!
+
+  """Billing code"""
+  billingCode: String!
+
+  """Subscription ends at"""
+  endsAt: DateTime!
+}
+
+""""""
+input ExpireCompedSubscriptionInput {
+  """Subscription id"""
+  subscriptionId: Int!
+}
+
 """Create Coupon Redemption Input"""
 input CreateCouponRedemptionInput {
   """"""
@@ -24851,6 +25090,105 @@ input PurchaseSubscriptionInput {
   """"""
   threeDSecureActionResultTokenId: String
 }
+
+""""""
+enum RequestSendTo {
+  """"""
+  ONLY_NEW
+
+  """"""
+  NEW_AND_PENDING
+
+  """"""
+  PENDING
+
+  """"""
+  CONFIRMED
+
+  """"""
+  DECLINED
+
+  """"""
+  COMPLETED
+}
+
+""""""
+input CancelRequestInput {
+  """"""
+  submissionIds: [Int!]
+
+  """"""
+  note: String
+}
+
+""""""
+type RepWorksheetItem {
+  """Request ID"""
+  id: ID!
+
+  """Request Type"""
+  type: String!
+
+  """Request Status"""
+  status: RepRequestStatus!
+
+  """"""
+  updatedAt: DateTime
+
+  """Date when request was created"""
+  createdAt: DateTime!
+
+  """Talent's response to a request"""
+  talentResponse: RepWorksheetResponse
+
+  """Response to a request"""
+  response: RepWorksheetResponse
+
+  """How many times a request has been forwarded to a talent"""
+  forwardCount: Int
+
+  """"""
+  project: RepWorksheetProject @deprecated(reason: "Will be removed")
+
+  """"""
+  talent: RepWorksheetTalent @deprecated(reason: "Will be removed")
+
+  """Timezone of a Schedule"""
+  scheduleTimeZone: WfTimeZone @deprecated(reason: "Will be removed")
+
+  """Date of Slot"""
+  slotDate: DateTime @deprecated(reason: "Will be removed")
+}
+
+"""Talent info"""
+type RepWorksheetTalent {
+  """Talent's ID"""
+  id: Int!
+
+  """Talent's stage name"""
+  stageName: String!
+
+  """Talents phone"""
+  phone: String
+
+  """Talent's email"""
+  email: String
+
+  """Talent's cover"""
+  coverUrl: String
+}
+
+""""""
+input UpdateDueDateInput {
+  """"""
+  dueDate: DateTime = null
+
+  """"""
+  dueDateTimeZoneId: Int = null
+}
+
+""""""
+union RequestUnion = MediaRequest | AskQuestionRequest
 
 """"""
 input MediaRequestInput {
@@ -24975,170 +25313,6 @@ input WfSubmissionSearchInput {
   tileSchemeValueCodes: [String!]
 }
 
-"""
-Schedule Invite Request input. The Schedule Invite is always sent from a
-schedule and some fields are based on the schedule data.
-"""
-input ScheduleInviteRequestInput {
-  """Schedule Id"""
-  scheduleId: Int!
-
-  """Schedule type: AUDITION / CALLBACK"""
-  type: ScheduleRequestType!
-
-  """Field for choosing which requests should trigger email notification."""
-  scheduleReceiver: ScheduleReceiver!
-
-  """
-  A message to Representatives of the talents that are connected to submissions.
-  """
-  noteForRepresentative: String = null
-
-  """A message to Talent of the talents that are connected to submissions."""
-  noteForTalents: String = null
-
-  """Filter Requests by role"""
-  roleIds: [Int!]
-}
-
-""""""
-enum ScheduleReceiver {
-  """"""
-  ALL
-
-  """"""
-  UPDATED
-
-  """"""
-  UPDATED_AND_UNCONFIRMED
-}
-
-"""
-Schedule Invite Response input that can be sent by a Representative or Talent user.
-"""
-input ScheduleInviteResponseInput {
-  """Schedule Invite Response id."""
-  id: ID!
-
-  """A note. Should be filled if declining or rescheduling the invite."""
-  responseNote: String = null
-
-  """
-  A response: a user can confirm, decline or request rescheduling the Schedule.
-  """
-  response: ScheduleInviteResponseStatus!
-}
-
-"""Schedule Invite Response input that can be sent by a Casting Director"""
-input ScheduleInviteSetStatusInput {
-  """Schedule Invite Response id."""
-  id: ID!
-
-  """
-  A response: a user can confirm, decline or request rescheduling the Schedule.
-  """
-  response: ScheduleInviteResponseStatus!
-}
-
-""""""
-enum RequestSendTo {
-  """"""
-  ONLY_NEW
-
-  """"""
-  NEW_AND_PENDING
-
-  """"""
-  PENDING
-
-  """"""
-  CONFIRMED
-
-  """"""
-  DECLINED
-
-  """"""
-  COMPLETED
-}
-
-""""""
-input CancelRequestInput {
-  """"""
-  submissionIds: [Int!]
-
-  """"""
-  note: String
-}
-
-""""""
-type RepWorksheetItem {
-  """Request ID"""
-  id: ID!
-
-  """Request Type"""
-  type: String!
-
-  """Request Status"""
-  status: RepRequestStatus!
-
-  """"""
-  updatedAt: DateTime
-
-  """Date when request was created"""
-  createdAt: DateTime!
-
-  """Talent's response to a request"""
-  talentResponse: RepWorksheetResponse
-
-  """Response to a request"""
-  response: RepWorksheetResponse
-
-  """How many times a request has been forwarded to a talent"""
-  forwardCount: Int
-
-  """"""
-  project: RepWorksheetProject @deprecated(reason: "Will be removed")
-
-  """"""
-  talent: RepWorksheetTalent @deprecated(reason: "Will be removed")
-
-  """Timezone of a Schedule"""
-  scheduleTimeZone: WfTimeZone @deprecated(reason: "Will be removed")
-
-  """Date of Slot"""
-  slotDate: DateTime @deprecated(reason: "Will be removed")
-}
-
-"""Talent info"""
-type RepWorksheetTalent {
-  """Talent's ID"""
-  id: Int!
-
-  """Talent's stage name"""
-  stageName: String!
-
-  """Talents phone"""
-  phone: String
-
-  """Talent's email"""
-  email: String
-
-  """Talent's cover"""
-  coverUrl: String
-}
-
-""""""
-input UpdateDueDateInput {
-  """"""
-  dueDate: DateTime = null
-
-  """"""
-  dueDateTimeZoneId: Int = null
-}
-
-""""""
-union RequestUnion = MediaRequest | AskQuestionRequest
-
 """"""
 input AskQuestionRequestInput {
   """"""
@@ -25221,6 +25395,83 @@ type RosterInvitationRequest {
 
   """"""
   invitations: [RosterTalentInvitation!]!
+}
+
+"""
+Schedule Invite Request input. The Schedule Invite is always sent from a
+schedule and some fields are based on the schedule data.
+"""
+input ScheduleInviteRequestInput {
+  """Schedule Id"""
+  scheduleId: Int!
+
+  """Schedule type: AUDITION / CALLBACK"""
+  type: ScheduleRequestType!
+
+  """Field for choosing which requests should trigger email notification."""
+  scheduleReceiver: ScheduleReceiver!
+
+  """
+  A message to Representatives of the talents that are connected to submissions.
+  """
+  noteForRepresentative: String = null
+
+  """A message to Talent of the talents that are connected to submissions."""
+  noteForTalents: String = null
+
+  """Filter Requests by role"""
+  roleIds: [Int!]
+}
+
+""""""
+enum ScheduleReceiver {
+  """"""
+  ALL
+
+  """"""
+  UPDATED
+
+  """"""
+  UPDATED_AND_UNCONFIRMED
+}
+
+"""
+Schedule Invite Response input that can be sent by a Representative or Talent user.
+"""
+input ScheduleInviteResponseInput {
+  """Schedule Invite Response id."""
+  id: ID!
+
+  """A note. Should be filled if declining or rescheduling the invite."""
+  responseNote: String = null
+
+  """
+  A response: a user can confirm, decline or request rescheduling the Schedule.
+  """
+  response: ScheduleInviteResponseStatus!
+}
+
+"""Schedule Invite Response input that can be sent by a Casting Director"""
+input ScheduleInviteSetStatusInput {
+  """Schedule Invite Response id."""
+  id: ID!
+
+  """
+  A response: a user can confirm, decline or request rescheduling the Schedule.
+  """
+  response: ScheduleInviteResponseStatus!
+}
+
+""""""
+input SendVoiceOverMediaRequestInput {
+  """"""
+  roleId: Int!
+
+  """"""
+  talentInstructions: String!
+
+  """"""
+  submissionIds: [Int!]!
 }
 
 """Account status object"""
