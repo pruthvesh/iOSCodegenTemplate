@@ -16,7 +16,7 @@ query SearchMediaForArtist($input: SearchMediaInput!) {
   }
 }
 
-fragment MediaTransformation on MediaTransformation {
+fragment MediaTransformationFragment on MediaTransformation {
   __typename
   xAxis
   yAxis
@@ -109,7 +109,7 @@ fragment SearchMediaBaseResult on Media {
   }
   transformation {
     __typename
-    ...MediaTransformation
+    ...MediaTransformationFragment
   }
   mediaStatus {
     __typename

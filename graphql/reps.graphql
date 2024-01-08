@@ -320,7 +320,7 @@ query mediaSubRequestDetailsForRep($id: ID!) {
     note
     repliedAt
     mediaList {
-      ...MediaList
+      ...MediaResponseItemFragment
       __typename
     }
   }
@@ -360,7 +360,7 @@ fragment MediaSubRequestDetailsFragment on MediaSubRequest {
   allowAdditionalMedia
   mediaList {
     __typename
-    ...MediaList
+    ...MediaResponseItemFragment
   }
   project {
     __typename
@@ -430,7 +430,7 @@ fragment MediaSubRequestDetailsFragment on MediaSubRequest {
   }
 }
 
-fragment MediaList on MediaResponseItem {
+fragment MediaResponseItemFragment on MediaResponseItem {
   __typename
   id
   isForwardedToCD
