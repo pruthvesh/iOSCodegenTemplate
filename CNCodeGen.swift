@@ -90,7 +90,9 @@ struct FetchSchema: AsyncParsableCommand {
 
         let schemaFileOutput = ApolloCodegenConfiguration.SchemaTypesFileOutput(path: codeDirectory, moduleType: .other)
         let fileOutput = ApolloCodegenConfiguration.FileOutput(schemaTypes: schemaFileOutput)
+        
         let config = ApolloCodegenConfiguration(schemaNamespace: CodeGenConstant.nameSpace, input: fileInput, output: fileOutput)
+    
         try await fetchSchema(configuration: subject, schemaDownloadProvider: ApolloSchemaDownloader.self)
         try await fetchSchema(configuration: jsonSubject, schemaDownloadProvider: ApolloSchemaDownloader.self)
         try await generate(configuration: config, codegenProvider: ApolloCodegen.self)
