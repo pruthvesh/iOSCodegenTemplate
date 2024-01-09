@@ -90,9 +90,15 @@ struct FetchSchema: AsyncParsableCommand {
 
         let schemaFileOutput = ApolloCodegenConfiguration.SchemaTypesFileOutput(path: codeDirectory, moduleType: .other)
         let fileOutput = ApolloCodegenConfiguration.FileOutput(schemaTypes: schemaFileOutput)
-        
-        let config = ApolloCodegenConfiguration(schemaNamespace: CodeGenConstant.nameSpace, input: fileInput, output: fileOutput)
-    
+
+        var options = ApolloCodegenConfiguration.OutputOptions(
+            additionalInflectionRules: [],
+            selectionSetInitializers: [.all],
+            pruneGeneratedFiles: true
+        )
+
+        let config = ApolloCodegenConfiguration(schemaNamespace: CodeGenConstant.nameSpace, input: fileInput, output: fileOutput, options: options)
+
         try await fetchSchema(configuration: subject, schemaDownloadProvider: ApolloSchemaDownloader.self)
         try await fetchSchema(configuration: jsonSubject, schemaDownloadProvider: ApolloSchemaDownloader.self)
         try await generate(configuration: config, codegenProvider: ApolloCodegen.self)
@@ -104,7 +110,8 @@ struct FetchSchema: AsyncParsableCommand {
     ) async throws {
         var itemsToGenerate: ApolloCodegen.ItemsToGenerate = .code
         if let operationManifest = configuration.operationManifest,
-           operationManifest.generateManifestOnCodeGeneration {
+           operationManifest.generateManifestOnCodeGeneration
+        {
             itemsToGenerate.insert(.operationManifest)
         }
 
@@ -127,5 +134,3 @@ struct SMUCodeGen: AsyncParsableCommand {
         ]
     )
 }
-
-
