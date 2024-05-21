@@ -170,9 +170,9 @@ query getArtistStorageUtilization($artistId: Int) {
     id
     mediaStorages {
       mediaType {
-          code
-          name
-          __typename
+        code
+        name
+        __typename
       }
       storageSizeBytes
       __typename
@@ -226,8 +226,16 @@ mutation deleteMediaV2($input: DeleteMediaV2Input!) {
   }
 }
 
-mutation archiveMediaAssetV2($accountId: Float, $artistId: Float, $mediaIds: [Int!]) {
- archiveMediaAssetV2(accountId: $accountId, artistId: $artistId, mediaIds: $mediaIds)
+mutation archiveMediaAssetV2(
+  $accountId: Float
+  $artistId: Float
+  $mediaIds: [Int!]
+) {
+  archiveMediaAssetV2(
+    accountId: $accountId
+    artistId: $artistId
+    mediaIds: $mediaIds
+  )
 }
 
 mutation restoreArchivedMedia($input: RestoreArchivedMediaInput!) {
@@ -238,4 +246,3 @@ mutation restoreArchivedMedia($input: RestoreArchivedMediaInput!) {
     success
   }
 }
-
