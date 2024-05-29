@@ -114,6 +114,12 @@ query mediaRequestDetails($id: ID!, $profileId: ID!) {
     requestedChangesMedia
     requestedChangesNote
     dueDate
+    formDetails {
+      formId
+      formTitle
+      formResponseId
+      requestId
+    }
     dueDateTimeZone {
       id
       abbreviation
