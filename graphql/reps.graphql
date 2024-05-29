@@ -358,6 +358,12 @@ fragment MediaSubRequestDetailsFragment on MediaSubRequest {
   forwardNote
   updatedMedia
   allowAdditionalMedia
+  formDetails {
+      formId
+      formTitle
+      formResponseId
+      requestId
+  }
   mediaList {
     __typename
     ...MediaResponseItemFragment
