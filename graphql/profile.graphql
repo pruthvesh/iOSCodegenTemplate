@@ -1,0 +1,1829 @@
+query talentProfileDetail($ids: ID!) {
+  profiles(ids: [$ids]) {
+    ...ProfileDetails
+    __typename
+  }
+}
+
+fragment ProfileDetails on Profile {
+  profileId
+  stageName
+  talentEmail
+  phone
+  blurb
+  otherExperiences
+  hideCreditYear
+  artistId
+  managerEmail
+  contactInfo {
+    phone
+    email
+    __typename
+  }
+  isOverscaled
+  overscaleNote
+  defaultSubmissionNote
+  ageInYears
+  guid
+  workPermitExp
+  profileMainDivision {
+    id
+    name
+    parentName
+    logo {
+      id
+      fileKey
+      __typename
+    }
+    __typename
+  }
+  profileBookOuts {
+    profileBookoutId
+    startDate
+    endDate
+    __typename
+  }
+  multipleBirth {
+    id
+    name
+    __typename
+  }
+  mediaAssets {
+    ...ProfileMediaValues
+    __typename
+  }
+  billingItems {
+    ...BillingItems
+    __typename
+  }
+  height {
+    id
+    IMPERIAL_FEET_INCHES
+    METRIC_CENTIMETERS
+    __typename
+  }
+  photos {
+    __typename
+    ...ProfileMediaValues
+  }
+  videos {
+    __typename
+    ...ProfileMediaValues
+  }
+  audios {
+    __typename
+    ...ProfileMediaValues
+  }
+  weight {
+    id
+    IMPERIAL_LBS
+    METRIC_KG
+    kgRounded
+    __typename
+  }
+  waist {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  inseam {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  gloveSize {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  hatSize {
+    id
+    inch
+    cm
+    __typename
+  }
+  profileTshirtSizes {
+    id
+    name
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  profileShoeSizes {
+    id
+    shoeSizeUS
+    shoeSizeUK
+    shoeSizeEU
+    shoeSizeAU
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    shoeModifier {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  dressSize {
+    id
+    sizeUS
+    sizeUK
+    sizeEU
+    sizeAU
+    __typename
+  }
+  bust {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  underbust {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  hipSize {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  cupSize {
+    id
+    name
+    __typename
+  }
+  profilePants {
+    id
+    sizeUS
+    sizeUK
+    sizeEU
+    sizeAU
+    gender {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  chestSize {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  sleeve {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  neck {
+    id
+    inch
+    cm
+    inchRounded
+    __typename
+  }
+  coat {
+    id
+    code
+    name
+    __typename
+  }
+  profileSizes {
+    id
+    code
+    name
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    sizeModifier {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  playableAgeMin
+  playableAgeMax
+  playableAge
+  profileGenderIdentities {
+    genderIdentity {
+      id
+      code
+      name
+      __typename
+    }
+    genderOtherIdentityNote
+    __typename
+  }
+  genderAppearances {
+    id
+    code
+    name
+    __typename
+  }
+  ethnicAppearances {
+    id
+    name
+    code
+    order
+    __typename
+  }
+  hairColor {
+    id
+    code
+    name
+    __typename
+  }
+  willingness {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+  hairStyle {
+    id
+    code
+    name
+    __typename
+  }
+  facialHair {
+    id
+    code
+    name
+    __typename
+  }
+  eyeColor {
+    id
+    code
+    name
+    __typename
+  }
+  tattoo {
+    id
+    code
+    name
+    __typename
+  }
+  tattooNote
+  profilePiercings {
+    id
+    code
+    name
+    __typename
+  }
+  piercingNote
+  pursuing {
+    id
+    code
+    name
+    __typename
+  }
+  uniqueAttributes {
+    id
+    code
+    name
+    __typename
+  }
+  workingLocations {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+  seekingRepresentations {
+    id
+    code
+    name
+    __typename
+  }
+  hasRepresentation
+  profession
+  pregnancy
+  profileMedia {
+    media {
+      ...BaseMedia
+      __typename
+    }
+    __typename
+  }
+  talentUnions {
+    id
+    name
+    code
+    sortOrder
+    talentMembershipId
+    parentObject {
+      id
+      code
+      name
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+  skills {
+    id
+    code
+    name
+    profileMediaId
+    profileSkillId
+    parentObject {
+      id
+      code
+      name
+      parentObject {
+        id
+        code
+        name
+        __typename
+      }
+      __typename
+    }
+    level {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  profileVehicles {
+    profileVehicleId
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      id
+      type {
+        id
+        code
+        name
+        __typename
+      }
+      make {
+        id
+        code
+        name
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+  profilePets {
+    profilePetId
+    id
+    code
+    name
+    petSize {
+      id
+      code
+      name
+      __typename
+    }
+    parentObject {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+  props {
+    profilePropId
+    id
+    code
+    name
+    parentObject {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+  sportEquipments {
+    profileSportEquipmentId
+    id
+    code
+    name
+    parentObject {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+  profileWardrobes {
+    profileWardrobeId
+    id
+    code
+    name
+    sortOrder
+    parentObject {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+  documentTypes {
+    id
+    code
+    name
+    __typename
+  }
+  resume {
+    media {
+      ...BaseMedia
+      __typename
+    }
+    __typename
+  }
+  dateOfBirth
+  credits {
+    id
+    year
+    title
+    role
+    director
+    highlighted
+    sortOrder
+    creditOrder
+    profileCreditTypeId
+    creditType {
+      id
+      name
+      __typename
+    }
+    creditMedia {
+      ...BaseMedia
+      __typename
+    }
+    __typename
+  }
+  __typename
+}
+
+fragment ProfileMediaValues on ProfileMedia {
+  profileMediaId
+  isPrimary
+  hidden
+  order
+  created
+  media {
+    ...BaseMediaWithThumbnail
+    __typename
+  }
+  __typename
+}
+
+fragment BillingItems on BillingItemModel {
+  code
+  availableCredit
+  __typename
+}
+
+mutation updateProfileMediaList($profileMediaList: [ProfileMediaInput!]!) {
+  updateProfileMediaList(profileMediaList: $profileMediaList)
+}
+
+mutation deleteProfileMedia($mediaId: Float!, $profileId: Float!) {
+  deleteProfileMedia(mediaId: $mediaId, profileId: $profileId)
+}
+
+mutation updateProfileMedia($profileMedia: ProfileMediaInput!) {
+  updateProfileMedia(profileMedia: $profileMedia)
+}
+
+query projectDetail($id: Float!, $checkSidesVisibility: Boolean) {
+  project(id: $id) {
+    ...ProjectDetails
+    projectConflicts {
+      name
+      enabled
+      __typename
+    }
+    conflictNote
+    usage
+    additionalProvisions
+    notes
+    media {
+      id
+      name
+      url
+      __typename
+    }
+    sideVisibility {
+      id
+      code
+      __typename
+    }
+    __typename
+  }
+}
+fragment ProjectDetails on Project {
+  id
+  name
+  legacyInstance
+  legacyInstanceUrl
+  created
+  internalName
+  projectStatus {
+    id
+    code
+    name
+    __typename
+  }
+  projectType {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  projectUnion {
+    contractId
+    contractStatus {
+      id
+      code
+      name
+      __typename
+    }
+    union {
+      parentObject {
+        id
+        code
+        name
+        __typename
+      }
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  synopsis
+  releaseLocations {
+    id
+    code
+    name
+    __typename
+  }
+  canTalentSubmitSelfTape
+  isAuditionInPerson
+  isSpecificLocation
+  auditionAddress {
+    country {
+      id
+      code
+      name
+      __typename
+    }
+    addressLine1
+    addressLine2
+    city
+    state {
+      id
+      code
+      name
+      __typename
+    }
+    postalCode
+    locationNotes
+    __typename
+  }
+  network
+  studio
+  executiveProducer
+  producer
+  writer
+  director
+  productionCompany
+  adAgency
+  photographer
+  organizations {
+    id
+    name
+    __typename
+  }
+  contactEmail
+  castingDirector
+  contactPhone
+  castingAssistant
+  castingAssociate
+  displayedProjectUnion
+  contactInfoPermissions
+  createdByPC
+  roles(roleStatusFilter: Active) {
+    ...CastingRoleDetails
+  }
+  roleDefaults {
+    wardrobe
+    workRequirements
+    publicationSettings {
+      publicationSetting
+      dmas
+      repAgeCategories
+      repCategories
+      repTypes
+      representativeListId
+      representativeIds
+      __typename
+    }
+    locationDates {
+      locationName
+      dateTypeCode
+      startDate
+      endDate
+      __typename
+    }
+    __typename
+  }
+  __typename
+}
+
+query roleDetails($ids: ID!, $checkSidesVisibility: Boolean) {
+  roles(ids: [$ids]) {
+    ...CastingRoleDetails
+    publicationSettings {
+      publicationSetting {
+        id
+        code
+        __typename
+      }
+      dmas {
+        id
+        code
+        name
+        sortOrder
+        region {
+          id
+          code
+          name
+          country {
+            id
+            code
+            name
+            sortOrder
+          }
+        }
+        __typename
+      }
+      __typename
+    }
+    rolePublishedAt
+    locationDates {
+      id
+      startDate
+      roleDateType {
+        id
+        code
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+fragment CastingRoleDetails on Role {
+  id
+  projectId
+  projectName
+  name
+  spot
+  ageInYears
+  ageMinMonth
+  ageMaxMonth
+  wardrobe
+  description
+  sexualSituationDescription
+  workRequirement
+  submissionDueDate
+  submissionInstruction
+  requestMediaInstruction
+  roleParentId
+  scale
+  displayedRoleUnion
+  displayedRoleEthnicAppearance
+  displayedRoleGenderAppearance
+  rateNote
+  rateSummary
+  roleEthnicityNationality
+  requestMediaTypes
+  paidType {
+    id
+    name
+    code
+    __typename
+  }
+  roleStatus {
+    id
+    code
+    name
+    code
+    __typename
+  }
+  roleType {
+    id
+    name
+    __typename
+  }
+  roleUnion {
+    id
+    name
+    __typename
+  }
+  skills {
+    id
+    name
+    __typename
+  }
+  ethnicAppearance {
+    id
+    name
+    __typename
+  }
+  genderAppearance {
+    id
+    name
+    __typename
+  }
+  sexualSituations {
+    id
+    code
+    name
+    __typename
+  }
+  projectType {
+    id
+    name
+    __typename
+  }
+  projectUnion {
+    contractId
+    union {
+      id
+      code
+      name
+      childObjects {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+  project {
+    projectType {
+      id
+      name
+    }
+    projectUnion {
+      __typename
+      id: contractId
+      union {
+        __typename
+        id
+        name
+      }
+    }
+  }
+  photos {
+    mediaObject {
+      ...BaseMedia
+      __typename
+    }
+    __typename
+  }
+  sides(checkSidesVisibility: $checkSidesVisibility) {
+    mediaObject {
+      mediaId
+      name
+      url
+      __typename
+    }
+    __typename
+  }
+  compensations {
+    compensation {
+      id
+      code
+      name
+      __typename
+    }
+    otherCompensation
+    __typename
+  }
+  locationDates {
+    ...LocationDates
+    __typename
+  }
+  timeZone {
+    id
+    standardName
+    abbreviation
+    __typename
+  }
+  __typename
+}
+
+fragment LocationDates on RoleDateWithLocation {
+  id
+  startDate
+  endDate
+  cityName
+  roleDateType {
+    id
+    code
+    __typename
+  }
+  __typename
+}
+
+query talentUnions {
+  talentUnions {
+    id
+    name
+    code
+    sortOrder
+    parentObject {
+      id
+      code
+      name
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+}
+
+query roleTargets {
+  roleTargets {
+    id
+    code
+    name
+    sortOrder
+  }
+}
+
+query paidTypes {
+  paidTypes {
+    id
+    code
+    name
+    sortOrder
+    enabled
+  }
+}
+
+query projectTypes {
+  projectTypes {
+    id
+    code
+    name
+    selectable
+    sortOrder
+    enabled
+    parentObject {
+      id
+      code
+      name
+      sortOrder
+    }
+  }
+}
+
+mutation updateProfile($input: ProfileUpdateInput!) {
+  updateProfile(input: $input) {
+    profileId
+    profileStatus {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+query heights {
+  heights {
+    id
+    IMPERIAL_FEET_INCHES
+    METRIC_CENTIMETERS
+    showInImperialUI
+    __typename
+  }
+}
+
+query weights {
+  weights {
+    id
+    IMPERIAL_LBS
+    showInMetricUI
+    kgRounded
+    METRIC_KG
+    __typename
+  }
+}
+
+mutation attachMediaToProfile($input: AttachMediaToProfileInput!) {
+  attachMediaToProfile(input: $input) {
+    ...BaseMediaWithThumbnail
+    __typename
+  }
+}
+
+mutation attachMediasToProfile($mediaIds: [Int!]!, $profileId: Int!) {
+  attachMediasToProfile(mediaIds: $mediaIds, profileId: $profileId)
+}
+
+query creditDetail($profileId: String!) {
+  credits(profileId: $profileId) {
+    id
+    year
+    title
+    role
+    director
+    highlighted
+    sortOrder
+    creditOrder
+    profileCreditTypeId
+    creditType {
+      id
+      name
+      code
+      __typename
+    }
+    creditMedia {
+      ...BaseMedia
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateCreditOrder($input: [CreditOrderInput!]!) {
+  updateCreditOrder(input: $input)
+}
+
+mutation updateProfileCreditTypeSortOrder(
+  $firstProfileCreditTypeId: Float!
+  $secondProfileCreditTypeId: Float!
+) {
+  updateProfileCreditTypeSortOrder(
+    firstProfileCreditTypeId: $firstProfileCreditTypeId
+    secondProfileCreditTypeId: $secondProfileCreditTypeId
+  )
+}
+
+mutation attachCreditVideo($mediaIds: [Float!]!, $creditId: Float!) {
+  attachCreditVideo(mediaIds: $mediaIds, creditId: $creditId) {
+    mediaId
+    isLocked
+    __typename
+  }
+}
+
+mutation deleteCreditMedia($mediaId: Float!, $creditId: Float!) {
+  deleteCreditMedia(mediaId: $mediaId, creditId: $creditId)
+}
+
+mutation deleteCredit($creditId: Float!) {
+  deleteCredit(creditId: $creditId)
+}
+
+mutation updateCredit($creditUpdateInput: CreditUpdateInput!) {
+  updateCredit(credit: $creditUpdateInput) {
+    id
+    highlighted
+    __typename
+  }
+}
+
+query creditTypes {
+  creditTypes {
+    id
+    name
+    code
+    __typename
+  }
+}
+
+mutation createCredit($creditInput: CreditInput!) {
+  createCredit(credit: $creditInput) {
+    id
+    __typename
+  }
+}
+
+query vehicleTypes {
+  vehicleTypes {
+    id
+    code
+    name
+    __typename
+  }
+  vehicleTypeMakes {
+    id
+    type {
+      id
+      code
+      name
+      __typename
+    }
+    make {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+query pets {
+  pets {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  petSizes {
+    id
+    code
+    name
+    __typename
+  }
+}
+
+query props {
+  props {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+query wardrobes {
+  wardrobes {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+query sportEquipments {
+  sportEquipments {
+    id
+    code
+    name
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileSkill($input: ProfileSkillInput!) {
+  updateProfileSkill(input: $input)
+}
+
+query skillLevels {
+  skillLevels {
+    id
+    code
+    name
+    __typename
+  }
+}
+
+mutation deleteProfileSkill($profileSkillId: BigInt!) {
+  deleteProfileSkill(profileSkillId: $profileSkillId)
+}
+
+mutation attachMediaToProfileSkill(
+  $mediaId: Int!
+  $profileSkillId: BigInt!
+  $profileId: Int!
+) {
+  attachMediaToProfileSkill(
+    mediaId: $mediaId
+    profileSkillId: $profileSkillId
+    profileId: $profileId
+  ) {
+    mediaId
+    isLocked
+    __typename
+  }
+}
+
+query skillsDictionary {
+  skills {
+    id
+    name
+    code
+    childObjects {
+      id
+      name
+      code
+      childObjects {
+        id
+        code
+        name
+        __typename
+      }
+      __typename
+    }
+    parentObject {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation addProfileSkill($skillIds: [Float!]!, $profileId: Float!) {
+  addProfileSkill(skillIds: $skillIds, profileId: $profileId)
+}
+
+mutation deleteProfilePet($profileId: Float!, $profilePetId: Float!) {
+  deleteProfilePet(profileId: $profileId, profilePetId: $profilePetId)
+}
+
+mutation addProfileVehicle($profileId: Float!, $input: ProfileVehicleInput!) {
+  addProfileVehicle(profileId: $profileId, input: $input) {
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      id
+      type {
+        id
+        name
+        code
+        __typename
+      }
+      make {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileVehicle(
+  $profileId: Float!
+  $profileVehicleId: Float!
+  $input: UpdateProfileVehicleInput!
+) {
+  updateProfileVehicle(
+    profileId: $profileId
+    profileVehicleId: $profileVehicleId
+    input: $input
+  ) {
+    vehicleName
+    vehicleYear
+    vehicleTypeMake {
+      type {
+        id
+        name
+        code
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileVehicle($profileId: Float!, $profileVehicleId: Float!) {
+  deleteProfileVehicle(
+    profileId: $profileId
+    profileVehicleId: $profileVehicleId
+  )
+}
+
+mutation addProfilePet($profileId: Float!, $input: ProfilePetInput!) {
+  addProfilePet(profileId: $profileId, input: $input) {
+    id
+    petSize {
+      id
+      code
+      name
+      __typename
+    }
+    code
+    count
+    __typename
+  }
+}
+
+mutation updateProfilePet(
+  $profileId: Float!
+  $profilePetId: Float!
+  $input: ProfilePetInput!
+) {
+  updateProfilePet(
+    profileId: $profileId
+    profilePetId: $profilePetId
+    input: $input
+  ) {
+    id
+    petSize {
+      id
+      code
+      name
+      __typename
+    }
+    code
+    count
+    __typename
+  }
+}
+
+mutation addProfileProp($profileId: Float!, $propId: Float!) {
+  addProfileProp(profileId: $profileId, propId: $propId) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileProp(
+  $profileId: Float!
+  $profilePropId: Float!
+  $propId: Float!
+) {
+  updateProfileProp(
+    profileId: $profileId
+    profilePropId: $profilePropId
+    propId: $propId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileProp($profileId: Float!, $profilePropId: Float!) {
+  deleteProfileProp(profileId: $profileId, profilePropId: $profilePropId)
+}
+
+mutation addProfileWardrobe($profileId: Float!, $wardrobeId: Float!) {
+  addProfileWardrobe(profileId: $profileId, wardrobeId: $wardrobeId) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileWardrobe(
+  $profileId: Float!
+  $profileWardrobeId: Float!
+  $wardrobeId: Float!
+) {
+  updateProfileWardrobe(
+    profileId: $profileId
+    profileWardrobeId: $profileWardrobeId
+    wardrobeId: $wardrobeId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileWardrobe($profileId: Float!, $profileWardrobeId: Float!) {
+  deleteProfileWardrobe(
+    profileId: $profileId
+    profileWardrobeId: $profileWardrobeId
+  )
+}
+
+mutation addProfileSportsEquipment(
+  $profileId: Float!
+  $sportEquipmentId: Float!
+) {
+  addProfileSportsEquipment(
+    profileId: $profileId
+    sportEquipmentId: $sportEquipmentId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updateProfileSportsEquipment(
+  $profileId: Float!
+  $profileSportEquipmentId: Float!
+  $sportEquipmentId: Float!
+) {
+  updateProfileSportsEquipment(
+    profileId: $profileId
+    profileSportEquipmentId: $profileSportEquipmentId
+    sportEquipmentId: $sportEquipmentId
+  ) {
+    id
+    code
+    name
+    childObjects {
+      id
+      name
+      code
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation deleteProfileSportsEquipment(
+  $profileId: Float!
+  $profileSportEquipmentId: Float!
+) {
+  deleteProfileSportsEquipment(
+    profileId: $profileId
+    profileSportEquipmentId: $profileSportEquipmentId
+  )
+}
+
+query ethnicAppearances {
+  ethnicAppearances {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query hairColorsStyles {
+  hairColors {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+  hairStyles {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+  facialHairs {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+  willingnesses {
+    id
+    code
+    name
+    sortOrder
+    parentObject {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    childObjects {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+}
+
+query eyeColors {
+  eyeColors {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query tattoos {
+  tattoos {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query piercings {
+  piercings {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query multipleBirths {
+  multipleBirths {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query uniqueAttributes {
+  uniqueAttributes {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query workTypes {
+  pursuings {
+    id
+    code
+    name
+    sortOrder
+    __typename
+  }
+  willingnesses {
+    id
+    code
+    name
+    sortOrder
+    parentObject {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    childObjects {
+      id
+      name
+      code
+      sortOrder
+      __typename
+    }
+    __typename
+  }
+}
+
+query seekingRepresentations {
+  seekingRepresentations {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+query documentTypes($onlySelectable: Boolean) {
+  documentTypes(onlySelectable: $onlySelectable) {
+    id
+    code
+    name
+    sortOrder
+    country {
+      name
+      code
+      id
+      __typename
+    }
+    childObjects {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+}
+
+query profileSizes {
+  waists {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  inseams {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  gloves {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  hatSizes {
+    id
+    size
+    inch
+    cm
+    enabled
+    __typename
+  }
+  chestSizes {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  necks {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  sleeves {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  coats {
+    id
+    name
+    __typename
+  }
+  tshirtSizes {
+    id
+    code
+    name
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  pants {
+    id
+    sizeUS
+    sizeEU
+    sizeUK
+    sizeAU
+    gender {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  shoeSizes {
+    id
+    shoeSizeUS
+    shoeSizeEU
+    shoeSizeUK
+    shoeSizeAU
+    sortOrder
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  shoeModifier {
+    id
+    code
+    name
+    __typename
+  }
+  dresses {
+    id
+    sizeUS
+    sizeEU
+    sizeUK
+    sizeAU
+    __typename
+  }
+  busts {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  underBusts {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  hips {
+    id
+    cm
+    inch
+    showInImperialUI
+    inchRounded
+    __typename
+  }
+  cupSizes {
+    id
+    name
+    __typename
+  }
+  generalSizes {
+    id
+    code
+    name
+    category {
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  sizeModifiers {
+    id
+    code
+    name
+    __typename
+  }
+}
+
+query genderAppearances {
+  genderAppearances {
+    id
+    code
+    name
+    sortOrder
+    __typename
+  }
+  genderIdentities {
+    id
+    name
+    code
+    sortOrder
+    __typename
+  }
+}
+
+mutation removeProfileResume($profileId: Int!) {
+  removeProfileResume(profileId: $profileId)
+}
+
+mutation setProfileResume($mediaId: Int!, $profileId: Int!) {
+  setProfileResume(mediaId: $mediaId, profileId: $profileId) {
+    mediaId
+    __typename
+  }
+}
+
+mutation createArtistCredits($creditInput: ArtistCreditsInput!) {
+  createArtistCredits(credit: $creditInput) {
+    id
+    __typename
+  }
+}

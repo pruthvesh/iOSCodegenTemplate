@@ -1,0 +1,373 @@
+query verifyAccount($input: VerifyAccountInput!) {
+  verifyAccount(input: $input)
+}
+
+mutation resetPasswordBauB21($legacyInstance: String, $login: String!) {
+  resetPasswordBauB21(legacyInstance: $legacyInstance, login: $login)
+}
+
+mutation switchAuthContext(
+  $refreshToken: String!
+  $role: SystemRoleCode
+  $artistId: Int
+  $organizationId: Int
+) {
+  switchAuthContext(
+    refreshToken: $refreshToken
+    role: $role
+    artistId: $artistId
+    organizationId: $organizationId
+  ) {
+    access
+    refresh
+    __typename
+  }
+}
+
+query artistsInfo {
+  myAccount {
+    id
+    firstName
+    lastName
+    countryId
+    email
+    phone
+    lastArtistId
+    rosterInvitationToken
+    emailResetToken
+    language {
+      id
+      code
+      name
+      enabled
+      locale
+      baseLocale
+    }
+    subscription {
+      id
+      plans {
+        id
+        isBasePlan
+        price
+        code
+        billingCode
+        currency {
+          id
+          code
+        }
+        planTerm {
+          id
+          code
+          name
+        }
+      }
+    }
+    country {
+      id
+      code
+      name
+      unitSystem {
+        id
+        code
+        name
+      }
+      continent {
+        id
+        code
+      }
+      supportingCountry {
+        id
+        code
+      }
+    }
+    isIPC
+    artists {
+      minor
+      artistId
+      firstName
+      lastName
+      created
+      artistSubscriptions {
+        id
+        status
+        expirationDate
+        plan {
+          id
+          name
+          code
+          isBasePlan
+        }
+      }
+      profiles {
+        profileId
+        artistId
+        stageName
+        dateOfBirth
+        created
+        isPersonal
+        deactivatedBy
+        profileStatus {
+          id
+          code
+          name
+          __typename
+        }
+        isPersonal
+        profileVisiblities {
+          id
+          code
+          name
+          __typename
+        }
+        workingLocations {
+          __typename
+          id
+          name
+          code
+          sortOrder
+        }
+        profileMainOrganization {
+          id
+          name
+          __typename
+        }
+        profileMainDivision {
+          __typename
+          id
+          name
+          parentName
+        }
+        organizations {
+          id
+          name
+          logo {
+            ...LogoAsset
+            __typename
+          }
+          parentOrganization {
+            id
+            name
+            logo {
+              ...LogoAsset
+              __typename
+            }
+            __typename
+          }
+          __typename
+        }
+        photos(isPrimary: true) {
+          profileMediaId
+          isPrimary
+          media {
+            ...MediaAssetWithThumbnail
+            __typename
+          }
+          __typename
+        }
+        profileBookOuts {
+          profileBookoutId
+          profileId
+          startDate
+          endDate
+          __typename
+        }
+        billingItems {
+          code
+          name
+          price
+          qty
+          id
+          priceInCents
+          availableCredit
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    timeZone {
+      id
+      code
+      gmtOffset
+      name
+      abbreviation
+      standardName
+    }
+    organizations {
+      __typename
+      id
+      name
+      parentName
+      abbreviation
+      organizationParentId
+      logo {
+        ...MediaAssetWithThumbnail
+      }
+    }
+    accountStatus {
+      __typename
+      id
+      name
+      code
+    }
+    accountSystemRoles {
+      __typename
+      id
+      name
+      code
+    }
+  }
+}
+
+fragment LogoAsset on Media {
+  id
+  url
+  guid
+  name
+  fileKey
+  mediaId
+}
+
+mutation refreshToken($refreshToken: String!) {
+  refreshToken(refreshToken: $refreshToken) {
+    access
+    refresh
+  }
+}
+
+mutation logout($refreshToken: String!) {
+  logout(refreshToken: $refreshToken)
+}
+
+mutation updateAccountFirstName($updateAccountInput: UpdateAccountInput!) {
+  updateAccountName(updateInfo: $updateAccountInput) {
+    firstName
+    lastName
+    __typename
+  }
+}
+
+mutation resetEmail($audience: String!, $updateInfo: UpdateAccountInput!) {
+  resetEmail(audience: $audience, updateInfo: $updateInfo)
+}
+
+mutation checkEmailOtp($otp: String!, $verificationId: String!) {
+  isValid: checkEmailOtp(otp: $otp, verificationId: $verificationId)
+}
+
+mutation verifyAccountEmail {
+  verifyAccountEmail {
+    access
+    refresh
+    __typename
+  }
+}
+
+mutation updateAccountPhone($updateAccountInput: UpdateAccountInput!) {
+  updateAccountPhone(updateInfo: $updateAccountInput) {
+    phone
+    __typename
+  }
+}
+
+query timeZones {
+  timeZones {
+    id
+    code
+    name
+    gmtOffset
+    dstOffset
+    enabled
+    sortOrder
+    __typename
+  }
+}
+
+mutation updateAccountTimeZone(
+  $input: UpdateAccountInput!
+  $accountId: Float!
+) {
+  updateAccount(input: $input, accountId: $accountId) {
+    timeZone {
+      id
+      name
+      code
+      standardName
+      abbreviation
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation updatePassword($oldPassword: String!, $newPassword: String!) {
+  updatePassword(oldPassword: $oldPassword, newPassword: $newPassword)
+}
+
+mutation sendAccountEmailVerificationCode {
+  verificationId: sendAccountEmailVerificationCode
+}
+
+query getLanguageLocales {
+  getLanguageLocales {
+    id
+    name
+    locale
+    code
+    __typename
+  }
+}
+
+mutation updateAccountLanguage(
+  $input: UpdateAccountInput!
+  $accountId: Float!
+) {
+  updateAccount(input: $input, accountId: $accountId) {
+    language {
+      id
+      name
+      code
+      locale
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation registerAccountDevice($input: RegisterDeviceInput!) {
+  registerAccountDevice(input: $input)
+}
+
+query ARTIST_SUBSCRIPTION($input: ArtistSubscriptionInput!) {
+  artistSubscriptions(input: $input) {
+    id
+    status
+    nextBillingDate
+    expirationDate
+    transaction
+    plan {
+      id
+      code
+      name
+      isBasePlan
+      billingCode
+      enabled
+    }
+  }
+}
+
+mutation loginImpersonatedAccount($accountId: Float!) {
+  loginImpersonatedAccount(accountId: $accountId) {
+    access
+    refresh
+    __typename
+  }
+}
+
+mutation googleLoginInternal($googleAuthToken: String!) {
+  googleLoginInternal(googleAuthToken: $googleAuthToken) {
+    refresh
+    access
+    __typename
+  }
+}

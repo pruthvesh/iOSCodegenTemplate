@@ -1,0 +1,548 @@
+mutation markNotifications($ids: [ID!]!, $viewed: Boolean!) {
+  markNotifications(ids: $ids, viewed: $viewed)
+}
+
+query scheduleInviteRequestDetails($id: ID!) {
+  scheduleInviteSubRequestDetails(id: $id) {
+    id
+    noteForTalents
+    forwardNote
+    status
+    responseNote
+    cancellationNote
+    slotDate
+    schedule {
+      id
+      name
+      type
+      address {
+        id
+        countryCode
+        postalCode
+        state
+        city
+        line1
+        line2
+        line3
+        __typename
+      }
+      date
+      timeZone {
+        id
+        abbreviation
+        standardName
+        __typename
+      }
+      note
+      isLocationHidden
+      __typename
+    }
+    profile {
+      id
+      name
+      profileAccessToken
+      accessGranted
+      cover {
+        ...WorkflowMedia
+      }
+      __typename
+    }
+    role {
+      id
+      name
+      wardrobe
+      roleType {
+        id
+        name
+        __typename
+      }
+      locationDates {
+        id
+        roleDateType {
+          id
+          code
+          name
+          __typename
+        }
+        startDate
+        endDate
+        cityName
+        __typename
+      }
+      ageInYears
+      ageMin
+      ageMax
+      rateSummary
+      description
+      sidesVisibility {
+        id
+        code
+        __typename
+      }
+      sides {
+        roleMediaId
+        mediaObject {
+          ...WorkflowMedia
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    project {
+      ...WorkFlowProject
+    }
+    __typename
+  }
+}
+
+query mediaRequestDetails($id: ID!, $profileId: ID!) {
+  mediaSubRequestDetails(id: $id) {
+    id
+    includeSides
+    submissionId
+    talentInstructions
+    talentInstructionsUpdatedAt
+    messageForRepresentatives
+    cancellationNote
+    maxNumberOfMediaFiles
+    mediaTypes
+    repliedAt
+    note
+    status
+    forwardNote
+    requestedChangesMedia
+    requestedChangesNote
+    dueDate
+    dueDateTimeZone {
+      id
+      abbreviation
+      standardName
+      __typename
+    }
+    mediaList {
+      id
+      isAdditional
+      isForwardedToCD
+      alias
+      media {
+        ...WorkflowMedia
+        __typename
+      }
+      __typename
+    }
+    medias {
+      ...WorkflowMedia
+      __typename
+    }
+    profile {
+      id
+      isPersonal
+      name
+      profileAccessToken
+      accessGranted
+      cover {
+        ...WorkflowMedia
+      }
+      __typename
+    }
+    project {
+      ...WorkFlowProject
+    }
+    role {
+      id
+      name
+      ageMin
+      ageMax
+      rateSummary
+      rate
+      rateMax
+      description
+      locationDates {
+        id
+        roleDateType {
+          id
+          code
+          name
+          __typename
+        }
+        startDate
+        endDate
+        cityName
+        __typename
+      }
+      ratePerType {
+        id
+        name
+        __typename
+      }
+      roleType {
+        id
+        name
+        __typename
+      }
+      sides {
+        name
+        roleMediaId
+        isSides
+        mediaObject {
+          ...WorkflowMedia
+          __typename
+        }
+        __typename
+      }
+      synopsis
+      __typename
+    }
+    __typename
+  }
+  profiles(ids: [$profileId]) {
+    stageName
+    isPersonal
+    mediaAssets {
+      profileMediaId
+      media {
+        ...BaseMedia
+        __typename
+      }
+      isPrimary
+      hidden
+      __typename
+    }
+    __typename
+  }
+}
+
+fragment WorkFlowProject on WfProject {
+  id
+  name
+  displayedProjectUnionShort
+  displayedProjectUnion
+  projectType {
+    id
+    name
+    __typename
+  }
+  projectUnions {
+    contractId
+    contractStatus {
+      id
+      code
+      name
+      __typename
+    }
+    union {
+      parentObject {
+        id
+        code
+        name
+        __typename
+      }
+      id
+      code
+      name
+      __typename
+    }
+    __typename
+  }
+  castingCompany
+  synopsis
+  createdByPC
+  __typename
+}
+
+fragment WorkflowMedia on WfMedia {
+  ...BaseWorkflowMedia
+  thumbnail {
+    ...BaseWorkflowMedia
+    __typename
+  }
+  __typename
+}
+
+fragment BaseWorkflowMedia on WfMedia {
+  id: mediaId
+  guid
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  tag
+  mediaStorageStatus {
+    id
+    code
+    __typename
+  }
+  fileType {
+    id
+    code
+    name
+    __typename
+  }
+  mediaType {
+    id
+    code
+    __typename
+  }
+  mediaStatus {
+    id
+    code
+    __typename
+  }
+  transformation {
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    __typename
+  }
+  __typename
+}
+
+mutation replyToMediaRequest($input: MediaResponseInput!) {
+  replyToMediaRequest(input: $input) {
+    id
+    status
+    __typename
+  }
+}
+
+query askQuestionRequestDetails($id: ID!) {
+  askQuestionSubRequestDetails(id: $id) {
+    id
+    question
+    status
+    response
+    includeSides
+    cancellationNote
+    messageForRepresentatives
+    forwardNote
+    sentAt
+    repliedAt
+    dueDate
+    dueDateTimeZone {
+      id
+      abbreviation
+      standardName
+      __typename
+    }
+    profile {
+      id
+      name
+      phone
+      email
+      coverUrl
+      cover {
+        ...WorkflowMedia
+      }
+      profileAccessToken
+      accessGranted
+      __typename
+    }
+    role {
+      id
+      name
+      sides {
+        name
+        roleMediaId
+        mediaObject {
+          ...WorkflowMedia
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    project {
+      ...WorkFlowProject
+    }
+    __typename
+  }
+}
+
+mutation replyToAskQuestionRequest($input: AskQuestionResponseInput!) {
+  replyToAskQuestionRequest(input: $input) {
+    id
+    response
+    __typename
+  }
+}
+
+query getSubmissionByRoleProfile($input: GetSubmissionByRoleProfileInput!) {
+  getSubmissionByRoleProfile(input: $input) {
+    id
+    note
+    profileWorkingLocationId
+    submissionStatus {
+      id
+      code
+      __typename
+    }
+    media {
+      ...SubmissionMediaFragment
+      isPrimary
+      __typename
+    }
+    requestMedia {
+      ...SubmissionMediaFragment
+      __typename
+    }
+  }
+}
+
+fragment SubmissionMediaFragment on SubmissionMedia {
+  __typename
+  id
+  guid
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  created
+  isPrimary
+  orderOfAppearance
+  thumbnail {
+    __typename
+    ...BaseMedia
+  }
+  transformation {
+    __typename
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+  }
+  mediaStorageStatus {
+    __typename
+    id
+    code
+  }
+  fileType {
+    __typename
+    id
+    code
+  }
+  mediaType {
+    __typename
+    id
+    code
+  }
+  mediaStatus {
+    __typename
+    id
+    code
+  }
+  __typename
+}
+
+
+mutation replyToScheduleInviteRequest($input: ScheduleInviteResponseInput!) {
+  replyToScheduleInviteRequest(input: $input) {
+    id
+    status
+    responseNote
+    __typename
+  }
+}
+
+mutation deleteSubmission($submissionId: BigInt!) {
+  deleteSubmission(id: $submissionId)
+}
+
+
+mutation sendRoleSubmission(
+  $roleId: Int!
+  $submissionStatusCode: String!
+  $profileIds: [Int!]!
+  $dmaId: Int
+  $requestMedia: [SubmissionMediaInput!]
+  $submissionProfileMedia: [SubmissionMediaInput!]
+  $note: String
+) {
+  addProfileSubmission(
+    input: {
+      roleId: $roleId
+      submissionStatusCode: $submissionStatusCode
+      profileIds: $profileIds
+      dmaId: $dmaId
+      requestMedia: $requestMedia
+      submissionProfileMedia: $submissionProfileMedia
+      note: $note
+    }
+  ) {
+    id
+    __typename
+  }
+}
+
+query yourAuditions(
+  $page: SearchPageInputWf
+  $sortOptions: [AuditionsSearchSortOptionsInput!]
+) {
+  auditions(searchPage: $page, sortOptions: $sortOptions) {
+    __typename
+    page
+    totalCount
+    totalPages
+    after
+    isBasic
+    data {
+      __typename
+      id
+      status
+      sentAt
+      repliedAt
+      project {
+        __typename
+        name
+        castingCompany
+      }
+      role {
+        __typename
+        name
+        description
+      }
+      dueDateTimeZone {
+        __typename
+        id
+        abbreviation
+        standardName
+      }
+      profile {
+        __typename
+        isRepresented
+        isPersonal
+        email
+        phone
+        profileMainOrganization {
+          __typename
+          id
+          name
+        }
+        profileMainDivision {
+          __typename
+          id
+          name
+        }
+        profileStatus {
+          __typename
+          code
+        }
+      }
+      mediaList {
+        __typename
+        id
+        isAdditional
+        media {
+          __typename
+          ...WorkflowMedia
+        }
+        __typename
+      }
+    }
+  }
+}

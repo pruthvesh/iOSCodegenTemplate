@@ -1,0 +1,327 @@
+query getFitForYouDefaultValues {
+  getFitForYouValuesForArtist {
+    workingLocations {
+      id
+      name
+      code
+    }
+    genderAppearances {
+      id
+      name
+      code
+    }
+    ethnicAppearances {
+      id
+      name
+      code
+    }
+    talentUnions {
+      id
+      name
+      code
+      parentObject {
+        id
+        name
+        code
+      }
+    }
+    projectTypes {
+      id
+      name
+      code
+    }
+    roleTargets {
+      id
+      name
+      code
+    }
+    playableAgeMax
+    playableAgeMin
+    payPreferences {
+      id
+      name
+      code
+    }
+    ageInYears
+  }
+}
+
+query searchSubmissions(
+  $sortOptions: [SubmissionSearchSortOptionsInput!]
+  $page: PageInput
+  $input: SubmissionSearchInput!
+) {
+  searchSubmissions(sortOptions: $sortOptions, page: $page, input: $input) {
+    totalCount
+    objects {
+      id
+      submissionStatus {
+        id
+        code
+        name
+        __typename
+      }
+      created
+      role {
+        ...CastingRoleList
+        rolePublishedAt
+        locationDates {
+          id
+          startDate
+          roleDateType {
+            id
+            code
+          }
+          cityName
+        }
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+query rolesList(
+  $paginationConfig: PageInput!
+  $castingBillBoardFilters: CastingBillboardSearchInput!
+  $sortInput: SortConditionInput
+) {
+  castingBillboardRoles(
+    castingBillBoardFilters: $castingBillBoardFilters
+    paginationConfig: $paginationConfig
+    sortInput: $sortInput
+  ) {
+    totalCount
+    roles {
+      ...CastingRoleList
+      rolePublishedAt
+      locationDates {
+        id
+        startDate
+        roleDateType {
+          id
+          code
+        }
+        cityName
+      }
+    }
+  }
+}
+
+fragment CastingRoleList on Role {
+  id
+  projectId
+  projectName
+  name
+  description
+  submissionDueDate
+  displayedRoleUnion
+  rateNote
+  rateSummary
+  paidType {
+    id
+    code
+    name
+  }
+  ageInYears
+  ageMinMonth
+  ageMaxMonth
+  genderAppearance {
+    id
+    name
+  }
+  ethnicAppearance {
+    id
+    name
+  }
+  roleType {
+    id
+    name
+  }
+  sexualSituations {
+    id
+    name
+  }
+  roleStatus {
+    id
+    code
+  }
+  project {
+    projectType {
+      id
+      name
+    }
+    projectUnion {
+      __typename
+      id: contractId
+      union {
+        __typename
+        id
+        name
+      }
+    }
+  }
+}
+
+query searchAlerts(
+  $startDate: DateTime
+  $endDate: DateTime
+  $page: PageInput!
+  $orderBy: NotificationOrderByInput
+  $filters: SearchNotificationFiltersArgs
+) {
+  searchNotifications(
+    startDate: $startDate
+    endDate: $endDate
+    page: $page
+    orderBy: $orderBy
+    filters: $filters
+  ) {
+    page
+    totalCount
+    totalPages
+    data {
+      id
+      timestamp
+      toArtistId
+      toAccountId
+      toProfileId
+      type
+      from
+      subject
+      message
+      context {
+        requestId
+        requestType
+      }
+      viewed
+      archivedAt
+    }
+  }
+}
+
+mutation archiveNotifications($ids: [String!]!) {
+  archiveNotifications(ids: $ids)
+}
+
+mutation restoreNotifications($ids: [String!]!) {
+  restoreNotifications(ids: $ids)
+}
+
+fragment SavedSearchDetails on SavedSearch {
+  id
+  name
+  isDefault
+  notificationType
+  attributes {
+    workingLocations {
+      id
+      code
+      name
+      __typename
+    }
+    ethnicAppearances {
+      id
+      code
+      name
+      __typename
+    }
+    genderAppearances {
+      id
+      code
+      name
+      __typename
+    }
+    paidTypes {
+      id
+      code
+      name
+      __typename
+    }
+    roleTargets {
+      id
+      code
+      name
+      __typename
+    }
+    projectTypes {
+      id
+      code
+      name
+      __typename
+    }
+    talentUnions {
+      id
+      code
+      name
+      parentObject {
+        id
+        code
+        name
+        __typename
+      }
+      __typename
+    }
+    playableAge {
+      ageMax
+      ageMin
+      inMonths
+      __typename
+    }
+    showRolesNoLongerAcceptingSubmissions
+    roleProjectKeywordSearch
+    keywords
+    __typename
+  }
+  __typename
+}
+
+mutation createSavedSearch($input: CreateSavedSearchInput!) {
+  createSavedSearch(input: $input) {
+    ...SavedSearchDetails
+  }
+}
+
+query getSavedSearchList($limit: Int!, $keyOffset: String) {
+  savedSearchList: getSavedSearchList(limit: $limit, keyOffset: $keyOffset) {
+    nextKeyOffset
+    items {
+      ...SavedSearchDetails
+    }
+  }
+}
+
+query getSavedSearchTypes {
+  savedSearchTypes: getSavedSearchTypes
+}
+
+mutation updateSavedSearch($input: UpdateSavedSearchInput!) {
+  updateSavedSearch(input: $input) {
+    ...SavedSearchDetails
+  }
+}
+
+mutation deleteSavedSearch($ids: [ID!]!) {
+  deleteSavedSearch(ids: $ids)
+}
+
+
+query projectUnions {
+  projectUnions {
+    id
+    name
+    code
+    childObjects {
+      id
+      name
+      projectEnabled
+      __typename
+    }
+    parentObject {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+}

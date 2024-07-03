@@ -1,0 +1,248 @@
+query getArtistMediaList($id: Float!, $mediaTypeCode: String!) {
+  getMediaByArtist(artistId: $id, mediaTypeCode: $mediaTypeCode) {
+    mediaId
+    media {
+      ...MediaAssetWithThumbnail
+      accountId
+      __typename
+    }
+    artistMediaProfile {
+      profileId
+      isPrimary
+      order
+      isPersonal
+      profileStatus {
+        id
+        code
+        __typename
+      }
+      organizations {
+        id
+        name
+        parentOrganization {
+          id
+          name
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation initMediaUpload($MediaInitUploadInput: MediaInitUploadInput!) {
+  initMediaUpload(input: $MediaInitUploadInput) {
+    guid
+    mediaId
+    __typename
+  }
+}
+
+mutation finalizeMediaUpload($MediaMetadataInput: [MediaMetadataInput!]!) {
+  finalizeMediaUpload(input: $MediaMetadataInput) {
+    ...BaseMediaWithThumbnail
+    length
+    __typename
+  }
+}
+
+mutation attachMediaToArtist($artistId: Int, $mediaId: Int!) {
+  attachMediaToArtist(artistId: $artistId, mediaId: $mediaId) {
+    ...BaseMediaWithThumbnail
+    __typename
+  }
+}
+
+fragment BaseMediaWithThumbnail on Media {
+  ...BaseMedia
+  thumbnail {
+    ...BaseMedia
+    __typename
+  }
+  __typename
+}
+
+fragment MediaAssetWithThumbnail on Media {
+  ...BaseMedia
+  thumbnail {
+    ...BaseMedia
+    __typename
+  }
+  __typename
+}
+
+fragment BaseMedia on Media {
+  id
+  mediaId
+  fileKey
+  thumbnailUrl
+  name
+  url
+  source
+  size
+  mediaId
+  accountId
+  created
+  width
+  height
+  fileKey
+  thumbnail {
+    __typename
+    id
+    fileKey
+  }
+  guid
+  profiles {
+    __typename
+    isPrimary
+    profile {
+      __typename
+      id
+      isPersonal
+      profileId
+      profileStatus {
+        __typename
+        id
+        code
+      }
+      organization {
+        __typename
+        id
+        name
+      }
+    }
+  }
+  transformation {
+    __typename
+    xAxis
+    yAxis
+    width
+    height
+    rotate
+    startOffset
+  }
+  mediaStorageStatus {
+    __typename
+    id
+    code
+  }
+  fileType {
+    __typename
+    id
+    code
+    name
+  }
+  mediaType {
+    __typename
+    id
+    code
+  }
+  mediaStatus {
+    __typename
+    id
+    code
+  }
+  isLocked
+  __typename
+}
+
+mutation updateMediaAsset($mediaId: Int!, $name: String!) {
+  updateMediaAsset(input: { mediaId: $mediaId, name: $name }) {
+    mediaId
+    name
+  }
+}
+
+mutation archiveMediaAsset($mediaId: Float, $mediaIds: [Int!]) {
+  archiveMediaAsset(mediaId: $mediaId, mediaIds: $mediaIds)
+}
+
+mutation updateProfileMediaVisibility($mediaId: Int!, $profileIds: [Int!]!) {
+  updateProfileMediaVisibility(mediaId: $mediaId, profileIds: $profileIds)
+}
+
+query getArtistStorageUtilization($artistId: Int) {
+  artistStorageUtilization(artistId: $artistId) {
+    artistStorageLimitBytes
+    artistStorageRemainingBytes
+    id
+    mediaStorages {
+      mediaType {
+        code
+        name
+        __typename
+      }
+      storageSizeBytes
+      __typename
+    }
+    totalSizeBytes
+    __typename
+  }
+}
+
+mutation finalizeMediaUploadV2($input: FinalizeMediaUploadInput!) {
+  finalizeMediaUploadV2(input: $input) {
+    media {
+      accountId
+      ...BaseMediaWithThumbnail
+    }
+    storageUtilization {
+      mediaStorages {
+        mediaType {
+          code
+        }
+      }
+      totalSizeBytes
+    }
+  }
+}
+
+mutation initMediaUploadV2($input: InitiateMediaUploadInput!) {
+  initiateMediaUploadV2(input: $input) {
+    media {
+      accountId
+      guid
+      mediaId
+      length
+      height
+      width
+    }
+    storageUtilization {
+      mediaStorages {
+        mediaType {
+          code
+        }
+      }
+      totalSizeBytes
+    }
+  }
+}
+
+mutation deleteMediaV2($input: DeleteMediaV2Input!) {
+  deleteMediaV2(input: $input) {
+    success
+  }
+}
+
+mutation archiveMediaAssetV2(
+  $accountId: Float
+  $artistId: Float
+  $mediaIds: [Int!]
+) {
+  archiveMediaAssetV2(
+    accountId: $accountId
+    artistId: $artistId
+    mediaIds: $mediaIds
+  )
+}
+
+mutation restoreArchivedMedia($input: RestoreArchivedMediaInput!) {
+  restoreArchivedMedia(input: $input) {
+    media {
+      accountId
+    }
+    success
+  }
+}
