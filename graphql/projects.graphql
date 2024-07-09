@@ -1,6 +1,6 @@
-query PROJECT_DETAIL_QUERY($id: Float!) {
+query PROJECT_DETAIL_QUERY($id: Float!, $checkSidesVisibility: Boolean) {
   project(id: $id) {
-    ...ProjectDetails
+    ...ProjectDetailsForProfile
     projectConflicts {
       name
       enabled
@@ -25,110 +25,9 @@ query PROJECT_DETAIL_QUERY($id: Float!) {
   }
 }
 
-fragment ProjectDetails on Project {
-  id
-  name
-  legacyInstance
-  legacyInstanceUrl
-  created
-  internalName
-  projectStatus {
-    id
-    code
-    name
-    __typename
-  }
-  projectType {
-    id
-    code
-    name
-    parentObject {
-      id
-      code
-      name
-      __typename
-    }
-    __typename
-  }
-  projectUnion {
-    contractId
-    contractStatus {
-      id
-      code
-      name
-      __typename
-    }
-    union {
-      parentObject {
-        id
-        code
-        name
-        __typename
-      }
-      id
-      code
-      name
-      __typename
-    }
-    __typename
-  }
-  synopsis
-  releaseLocations {
-    id
-    code
-    name
-    __typename
-  }
-  canTalentSubmitSelfTape
-  isAuditionInPerson
-  isSpecificLocation
-  auditionAddress {
-    country {
-      id
-      code
-      name
-      __typename
-    }
-    addressLine1
-    addressLine2
-    city
-    state {
-      id
-      code
-      name
-      __typename
-    }
-    postalCode
-    locationNotes
-    __typename
-  }
-  network
-  studio
-  executiveProducer
-  producer
-  writer
-  director
-  productionCompany
-  adAgency
-  photographer
-  organizations {
-    id
-    name
-    __typename
-  }
-  contactEmail
-  castingDirector
-  contactPhone
-  castingAssistant
-  castingAssociate
-  contactInfoPermissions
-  createdByPC
-  __typename
-}
-
 query ROLE_DETAILS($ids: ID!, $checkSidesVisibility: Boolean) {
   roles(ids: [$ids]) {
-    ...CastingRoleDetails
+    ...CastingRoleDetailsForProfile
     publicationSettings {
       publicationSetting {
         id
@@ -159,133 +58,6 @@ query ROLE_DETAILS($ids: ID!, $checkSidesVisibility: Boolean) {
   }
 }
 
-fragment CastingRoleDetails on Role {
-  id
-  projectId
-  projectName
-  name
-  spot
-  ageInYears
-  ageMinMonth
-  ageMaxMonth
-  wardrobe
-  description
-  sexualSituationDescription
-  workRequirement
-  submissionDueDate
-  submissionInstruction
-  requestMediaInstruction
-  roleParentId
-  scale
-  displayedRoleUnion
-  rateNote
-  rateSummary
-  roleEthnicityNationality
-  requestMediaTypes
-  paidType {
-    id
-    name
-    code
-    __typename
-  }
-  roleStatus {
-    id
-    code
-    name
-    code
-    __typename
-  }
-  roleType {
-    id
-    name
-    __typename
-  }
-  roleUnion {
-    id
-    name
-    __typename
-  }
-  skills {
-    id
-    name
-    __typename
-  }
-  ethnicAppearance {
-    id
-    name
-    __typename
-  }
-  genderAppearance {
-    id
-    name
-    __typename
-  }
-  sexualSituations {
-    id
-    code
-    name
-    __typename
-  }
-  projectType {
-    id
-    name
-    __typename
-  }
-  projectUnion {
-    contractId
-    union {
-      id
-      code
-      name
-      childObjects {
-        id
-        name
-        code
-        __typename
-      }
-      __typename
-    }
-    __typename
-  }
-  photos {
-    mediaObject {
-      ...MediaAsset
-      __typename
-    }
-    __typename
-  }
-  sides(checkSidesVisibility: $checkSidesVisibility) {
-    mediaObject {
-      mediaId
-      name
-      url
-      __typename
-    }
-    __typename
-  }
-  compensations {
-    compensation {
-      id
-      code
-      name
-      __typename
-    }
-    otherCompensation
-    __typename
-  }
-  locationDates {
-    ...LocationDates
-    __typename
-  }
-  timeZone {
-    id
-    standardName
-    abbreviation
-    __typename
-  }
-  __typename
-}
-
 fragment LocationDates on RoleDateWithLocation {
   id
   startDate
@@ -302,47 +74,6 @@ fragment LocationDates on RoleDateWithLocation {
 fragment MediaAsset on Media {
   ...BaseMedia
   created
-  __typename
-}
-
-fragment BaseMedia on Media {
-  id
-  mediaId
-  fileKey
-  thumbnailUrl
-  name
-  url
-  transformation {
-    xAxis
-    yAxis
-    width
-    height
-    rotate
-    startOffset
-    __typename
-  }
-  mediaStorageStatus {
-    id
-    code
-    __typename
-  }
-  fileType {
-    id
-    code
-    name
-    __typename
-  }
-  mediaType {
-    id
-    code
-    __typename
-  }
-  mediaStatus {
-    id
-    code
-    __typename
-  }
-  isLocked
   __typename
 }
 

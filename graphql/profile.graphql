@@ -536,7 +536,7 @@ mutation updateProfileMedia($profileMedia: ProfileMediaInput!) {
 
 query projectDetail($id: Float!, $checkSidesVisibility: Boolean) {
   project(id: $id) {
-    ...ProjectDetails
+    ...ProjectDetailsForProfile
     projectConflicts {
       name
       enabled
@@ -560,7 +560,7 @@ query projectDetail($id: Float!, $checkSidesVisibility: Boolean) {
     __typename
   }
 }
-fragment ProjectDetails on Project {
+fragment ProjectDetailsForProfile on Project {
   id
   name
   legacyInstance
@@ -660,7 +660,7 @@ fragment ProjectDetails on Project {
   contactInfoPermissions
   createdByPC
   roles(roleStatusFilter: Active) {
-    ...CastingRoleDetails
+    ...CastingRoleDetailsForProfile
   }
   roleDefaults {
     wardrobe
@@ -689,7 +689,7 @@ fragment ProjectDetails on Project {
 
 query roleDetails($ids: ID!, $checkSidesVisibility: Boolean) {
   roles(ids: [$ids]) {
-    ...CastingRoleDetails
+    ...CastingRoleDetailsForProfile
     publicationSettings {
       publicationSetting {
         id
@@ -731,7 +731,7 @@ query roleDetails($ids: ID!, $checkSidesVisibility: Boolean) {
   }
 }
 
-fragment CastingRoleDetails on Role {
+fragment CastingRoleDetailsForProfile on Role {
   id
   projectId
   projectName
@@ -863,26 +863,21 @@ fragment CastingRoleDetails on Role {
     __typename
   }
   locationDates {
-    ...LocationDates
+    id
+    startDate
+    endDate
+    cityName
+    roleDateType {
+      id
+      code
+      __typename
+    }
     __typename
   }
   timeZone {
     id
     standardName
     abbreviation
-    __typename
-  }
-  __typename
-}
-
-fragment LocationDates on RoleDateWithLocation {
-  id
-  startDate
-  endDate
-  cityName
-  roleDateType {
-    id
-    code
     __typename
   }
   __typename
