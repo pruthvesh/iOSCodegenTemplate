@@ -261,11 +261,7 @@ mutation createArtistMedia(
     }
     media {
       accountId
-      guid
-      mediaId
-      length
-      height
-      width
+      ...BaseMediaWithThumbnail
     }
     utilization {
       photoUpload
@@ -289,11 +285,7 @@ mutation completeArtistMediaCreation(
     }
     media {
       accountId
-      guid
-      mediaId
-      length
-      height
-      width
+      ...BaseMediaWithThumbnail
     }
     utilization {
       photoUpload
