@@ -246,3 +246,59 @@ mutation restoreArchivedMedia($input: RestoreArchivedMediaInput!) {
     success
   }
 }
+
+mutation createArtistMedia(
+  $input: CreateArtistMediaInput!
+) {
+  createArtistMedia(input: $input) {
+    artist {
+      id
+    }
+    entitlement {
+      audioUpload
+      videoUpload
+      photoUpload
+    }
+    media {
+      accountId
+      guid
+      mediaId
+      length
+      height
+      width
+    }
+    utilization {
+      photoUpload
+      audioUpload
+      videoUpload
+    }
+  }
+}
+
+mutation completeArtistMediaCreation(
+  $input: CompleteArtistMediaCreationInput!
+) {
+  completeArtistMediaCreation(input: $input) {
+    artist {
+      id
+    }
+    entitlement {
+      audioUpload
+      videoUpload
+      photoUpload
+    }
+    media {
+      accountId
+      guid
+      mediaId
+      length
+      height
+      width
+    }
+    utilization {
+      photoUpload
+      audioUpload
+      videoUpload
+    }
+  }
+}
