@@ -1,17 +1,37 @@
-query SearchMediaForArtist($input: SearchMediaInput!) {
+query searchMediaForArtist($input: SearchMediaInput!) {
   searchMedia(input: $input) {
-    __typename
     objects {
-      __typename
       id
       ...SearchMediaResult
       ...SearchMediaBaseResult
       thumbnail {
-        __typename
         id
         ...SearchMediaBaseResult
       }
       thumbnailUrl
+    }
+  }
+}
+
+query searchMediaForArtistMatterHorn($input: SearchArtistMediaInput!) {
+  searchArtistMedia(input: $input) {
+    objects {
+      id
+      ...SearchMediaResult
+      ...SearchMediaBaseResult
+      thumbnail {
+        id
+        ...SearchMediaBaseResult
+      }
+      thumbnailUrl
+    }
+  }
+}
+
+mutation purchaseMediaMatterHorn($input: PurchaseMediaInput!) {
+  purchaseMedia(input: $input) {
+    media {
+      id
     }
   }
 }
