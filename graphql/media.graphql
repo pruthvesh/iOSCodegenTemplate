@@ -155,9 +155,10 @@ mutation updateMediaAsset($mediaId: Int!, $name: String!) {
   }
 }
 
-mutation archiveMediaAsset($mediaId: Float, $mediaIds: [Int!]) {
-  archiveMediaAsset(mediaId: $mediaId, mediaIds: $mediaIds)
+mutation archiveMediaAsset($mediaId: Float) {
+  archiveMediaAsset(mediaId: $mediaId)
 }
+
 
 mutation updateProfileMediaVisibility($mediaId: Int!, $profileIds: [Int!]!) {
   updateProfileMediaVisibility(mediaId: $mediaId, profileIds: $profileIds)
