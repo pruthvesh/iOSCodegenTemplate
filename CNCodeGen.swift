@@ -54,7 +54,7 @@ struct FetchSchema: AsyncParsableCommand {
     }
 
     func run() async throws {
-        guard let url = URL(string: "https://ganymede.castingnetworks.io/api-gw/graphql") else {
+        guard let url = URL(string: "http://localhost:3001/graphql") else {
             throw FetchError.networkError(message: "Bad Schema URL")
         }
 

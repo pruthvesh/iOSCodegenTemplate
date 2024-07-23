@@ -255,19 +255,9 @@ mutation createArtistMedia(
     artist {
       id
     }
-    entitlement {
-      audioUpload
-      videoUpload
-      photoUpload
-    }
     media {
       accountId
       ...BaseMediaWithThumbnail
-    }
-    utilization {
-      photoUpload
-      audioUpload
-      videoUpload
     }
   }
 }
@@ -279,19 +269,9 @@ mutation completeArtistMediaCreation(
     artist {
       id
     }
-    entitlement {
-      audioUpload
-      videoUpload
-      photoUpload
-    }
     media {
       accountId
       ...BaseMediaWithThumbnail
-    }
-    utilization {
-      photoUpload
-      audioUpload
-      videoUpload
     }
   }
 }
