@@ -10,6 +10,9 @@ query searchMediaForArtist($input: SearchMediaInput!) {
       }
       thumbnailUrl
     }
+    page
+    totalCount
+    totalPages
   }
 }
 
@@ -25,6 +28,9 @@ query searchMediaForArtistMatterHorn($input: SearchArtistMediaInput!) {
       }
       thumbnailUrl
     }
+    page
+    totalCount
+    totalPages
   }
 }
 
