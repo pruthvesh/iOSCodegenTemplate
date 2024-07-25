@@ -98,6 +98,16 @@ query artistsInfo {
           isBasePlan
         }
       }
+      mediaEntitlement {
+        audioUpload
+        photoUpload
+        videoUpload
+      }
+      mediaUtilization {
+        audioUpload
+        photoUpload
+        videoUpload
+      }
       profiles {
         profileId
         artistId
