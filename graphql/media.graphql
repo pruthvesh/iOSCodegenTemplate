@@ -227,6 +227,10 @@ mutation deleteMediaV2($input: DeleteMediaV2Input!) {
   }
 }
 
+mutation deleteMediaAsset($mediaId: Float!) {
+  deleteMediaAsset(mediaId:$mediaId)
+}
+
 mutation archiveMediaAssetV2(
   $accountId: Float
   $artistId: Float
