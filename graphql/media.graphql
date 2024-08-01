@@ -279,3 +279,10 @@ mutation completeArtistMediaCreation(
     }
   }
 }
+
+
+mutation deleteMedia($input:DeleteMediaInput!) {
+  deleteMedia(input: $input) {
+    success
+  }
+}
