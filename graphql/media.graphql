@@ -84,6 +84,7 @@ fragment BaseMedia on Media {
   size
   mediaId
   accountId
+  purchaseStatus
   created
   width
   height
